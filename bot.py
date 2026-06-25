@@ -14,8 +14,8 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = os.getenv("8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY")
-ADMIN_IDS = list(map(int, os.getenv("7359558983").split(",")))
+BOT_TOKEN = ("8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY")
+ADMIN_IDS = ("7359558983").split(",")))
 SBOR = 500  # yashirin sbor
 
 DATA_FILE = "prices.json"
