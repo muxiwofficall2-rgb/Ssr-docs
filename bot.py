@@ -2,6 +2,7 @@ import asyncio
 import logging
 import json
 import os
+
 from aiogram import Bot, Dispatcher, F
 from aiogram.types import (
     Message, CallbackQuery,
@@ -14,9 +15,9 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = ("8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY")
-ADMIN_IDS = ("7359558983").split(",")))
-SBOR = 500  # yashirin sbor
+BOT_TOKEN = "8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY"
+ADMIN_IDS = [7359558983]
+SBOR = 500
 
 DATA_FILE = "prices.json"
 
@@ -49,8 +50,6 @@ class AdminStates(StatesGroup):
     waiting_price = State()
     waiting_delete = State()
 
-# ─── KLAVIATURALAR ────────────────────────────────────────────
-
 def main_menu_uz():
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="✈️ Narxlar", callback_data="prices_uz"),
@@ -82,10 +81,10 @@ def back_btn(lang):
 def prices_keyboard(lang):
     prices = load_prices()
     buttons = []
-    for direction in prices:
+    for i, direction in enumerate(prices):
         buttons.append([InlineKeyboardButton(
             text=f"✈️ {direction}",
-            callback_data=f"dir_{lang}_{list(prices.keys()).index(direction)}"
+            callback_data=f"dir_{lang}_{i}"
         )])
     back_text = "⬅️ Ortga" if lang == "uz" else "⬅️ Назад"
     buttons.append([InlineKeyboardButton(text=back_text, callback_data=f"back_{lang}")])
@@ -99,12 +98,10 @@ def admin_menu():
         [InlineKeyboardButton(text="📋 Barcha narxlar", callback_data="admin_list")],
     ])
 
-# ─── START ────────────────────────────────────────────────────
-
 @dp.message(Command("start"))
 async def cmd_start(message: Message):
     text = (
-        "✈️ <b>ОМАД ТУР</b> — авиакасса\n\n"
+        "✈️ <b>ОМАД ТУР</b> — Aviakassa\n\n"
         "🇺🇿 Xush kelibsiz! Tilni tanlang:\n"
         "🇷🇺 Добро пожаловать! Выберите язык:"
     )
@@ -117,14 +114,9 @@ async def cmd_admin(message: Message):
         return
     await message.answer("🔧 <b>Admin panel</b>", reply_markup=admin_menu(), parse_mode="HTML")
 
-# ─── TIL TANLASH ──────────────────────────────────────────────
-
 @dp.callback_query(F.data == "lang")
 async def show_lang(callback: CallbackQuery):
-    await callback.message.edit_text(
-        "🌍 Tilni tanlang / Выберите язык:",
-        reply_markup=lang_menu()
-    )
+    await callback.message.edit_text("🌍 Tilni tanlang / Выберите язык:", reply_markup=lang_menu())
 
 @dp.callback_query(F.data == "set_lang_uz")
 async def set_uz(callback: CallbackQuery):
@@ -144,8 +136,6 @@ async def set_ru(callback: CallbackQuery):
     )
     await callback.message.edit_text(text, reply_markup=main_menu_ru(), parse_mode="HTML")
 
-# ─── BACK ─────────────────────────────────────────────────────
-
 @dp.callback_query(F.data == "back_uz")
 async def back_uz(callback: CallbackQuery):
     await set_uz(callback)
@@ -153,8 +143,6 @@ async def back_uz(callback: CallbackQuery):
 @dp.callback_query(F.data == "back_ru")
 async def back_ru(callback: CallbackQuery):
     await set_ru(callback)
-
-# ─── NARXLAR ──────────────────────────────────────────────────
 
 @dp.callback_query(F.data == "prices_uz")
 async def prices_uz(callback: CallbackQuery):
@@ -200,7 +188,7 @@ async def show_direction(callback: CallbackQuery):
         book_btn = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
                 text="📲 Buyurtma qilish",
-                url=f"https://t.me/OMAD_TOUR9094?text=Salom!+{direction}+yo'nalishi+bo'yicha+bilet+olmoqchiman.+Narx:+{final_price}+₽"
+                url=f"https://t.me/OMAD_TOUR9094"
             )],
             [InlineKeyboardButton(text="⬅️ Ortga", callback_data="prices_uz")],
         ])
@@ -216,14 +204,12 @@ async def show_direction(callback: CallbackQuery):
         book_btn = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
                 text="📲 Заказать билет",
-                url=f"https://t.me/OMAD_TOUR9094?text=Здравствуйте!+Хочу+купить+билет+по+направлению+{direction}.+Цена:+{final_price}+₽"
+                url=f"https://t.me/OMAD_TOUR9094"
             )],
             [InlineKeyboardButton(text="⬅️ Назад", callback_data="prices_ru")],
         ])
 
     await callback.message.edit_text(text, reply_markup=book_btn, parse_mode="HTML")
-
-# ─── BOG'LANISH ───────────────────────────────────────────────
 
 @dp.callback_query(F.data == "contact_uz")
 async def contact_uz(callback: CallbackQuery):
@@ -259,8 +245,6 @@ async def contact_ru(callback: CallbackQuery):
     ])
     await callback.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
 
-# ─── BIZ HAQIMIZDA ────────────────────────────────────────────
-
 @dp.callback_query(F.data == "about_uz")
 async def about_uz(callback: CallbackQuery):
     text = (
@@ -270,7 +254,7 @@ async def about_uz(callback: CallbackQuery):
         "🏆 Nima uchun biz?\n"
         "• 10+ yil tajriba\n"
         "• Rasmiy aviakassa\n"
-        "• Barcha aviakompaniyalar bilan ishlаymiz\n"
+        "• Barcha aviakompaniyalar bilan ishlaymiz\n"
         "• Tez va ishonchli xizmat\n"
         "• O'zbek tilida yordam\n\n"
         "✈️ Aeroflot | Uzbekistan Airways |\n"
@@ -295,49 +279,41 @@ async def about_ru(callback: CallbackQuery):
     )
     await callback.message.edit_text(text, reply_markup=back_btn("ru"), parse_mode="HTML")
 
-# ─── ADMIN PANEL ──────────────────────────────────────────────
-
-def is_admin(user_id):
-    return user_id in ADMIN_IDS
-
+# ADMIN PANEL
 @dp.callback_query(F.data == "admin_list")
 async def admin_list(callback: CallbackQuery):
-    if not is_admin(callback.from_user.id):
+    if callback.from_user.id not in ADMIN_IDS:
         return
     prices = load_prices()
     text = "📋 <b>Joriy narxlar (sborsiz):</b>\n\n"
     for i, (d, p) in enumerate(prices.items()):
-        text += f"{i+1}. {d}\n   💰 {p:,} ₽ (mijoz: {p+SBOR:,} ₽)\n\n"
+        text += f"{i+1}. {d}\n   💰 {p:,} ₽ → mijoz: {p+SBOR:,} ₽\n\n"
     await callback.message.edit_text(text, reply_markup=admin_menu(), parse_mode="HTML")
 
 @dp.callback_query(F.data == "admin_add")
 async def admin_add(callback: CallbackQuery, state: FSMContext):
-    if not is_admin(callback.from_user.id):
+    if callback.from_user.id not in ADMIN_IDS:
         return
     await callback.message.edit_text(
-        "➕ <b>Yangi yo'nalish qo'shish</b>\n\n"
-        "Yo'nalish nomini yozing:\n"
-        "<i>Masalan: Санкт-Петербург → Навои</i>",
+        "➕ Yangi yo'nalish nomini yozing:\n\n<i>Masalan: Санкт-Петербург → Навои</i>",
         parse_mode="HTML"
     )
     await state.set_state(AdminStates.waiting_direction)
 
 @dp.message(AdminStates.waiting_direction)
 async def get_direction(message: Message, state: FSMContext):
-    if not is_admin(message.from_user.id):
+    if message.from_user.id not in ADMIN_IDS:
         return
     await state.update_data(direction=message.text)
     await message.answer(
-        f"✅ Yo'nalish: <b>{message.text}</b>\n\n"
-        "Narxni kiriting (faqat raqam, sborsiz):\n"
-        "<i>Masalan: 18500</i>",
+        f"✅ Yo'nalish: <b>{message.text}</b>\n\nNarxni kiriting (faqat raqam):\n<i>Masalan: 18500</i>",
         parse_mode="HTML"
     )
     await state.set_state(AdminStates.waiting_price)
 
 @dp.message(AdminStates.waiting_price)
 async def get_price(message: Message, state: FSMContext):
-    if not is_admin(message.from_user.id):
+    if message.from_user.id not in ADMIN_IDS:
         return
     try:
         price = int(message.text.replace(" ", "").replace(",", ""))
@@ -347,10 +323,7 @@ async def get_price(message: Message, state: FSMContext):
         prices[direction] = price
         save_prices(prices)
         await message.answer(
-            f"✅ <b>Saqlandi!</b>\n\n"
-            f"📍 {direction}\n"
-            f"💰 Asl narx: {price:,} ₽\n"
-            f"👤 Mijoz ko'radi: {price+SBOR:,} ₽",
+            f"✅ <b>Saqlandi!</b>\n\n📍 {direction}\n💰 Asl: {price:,} ₽\n👤 Mijoz: {price+SBOR:,} ₽",
             reply_markup=admin_menu(),
             parse_mode="HTML"
         )
@@ -360,31 +333,31 @@ async def get_price(message: Message, state: FSMContext):
 
 @dp.callback_query(F.data == "admin_edit")
 async def admin_edit(callback: CallbackQuery, state: FSMContext):
-    if not is_admin(callback.from_user.id):
+    if callback.from_user.id not in ADMIN_IDS:
         return
     prices = load_prices()
-    text = "✏️ <b>Qaysi yo'nalishni o'zgartirmoqchisiz?</b>\n\nRaqamini yozing:\n\n"
+    text = "✏️ Qaysi yo'nalishni o'zgartirish? Raqamini yozing:\n\n"
     for i, (d, p) in enumerate(prices.items()):
         text += f"{i+1}. {d} — {p:,} ₽\n"
-    await callback.message.edit_text(text, parse_mode="HTML")
+    await callback.message.edit_text(text)
     await state.set_state(AdminStates.waiting_delete)
     await state.update_data(mode="edit")
 
 @dp.callback_query(F.data == "admin_delete")
 async def admin_delete(callback: CallbackQuery, state: FSMContext):
-    if not is_admin(callback.from_user.id):
+    if callback.from_user.id not in ADMIN_IDS:
         return
     prices = load_prices()
-    text = "🗑 <b>Qaysi yo'nalishni o'chirmoqchisiz?</b>\n\nRaqamini yozing:\n\n"
+    text = "🗑 Qaysi yo'nalishni o'chirish? Raqamini yozing:\n\n"
     for i, (d, p) in enumerate(prices.items()):
         text += f"{i+1}. {d} — {p:,} ₽\n"
-    await callback.message.edit_text(text, parse_mode="HTML")
+    await callback.message.edit_text(text)
     await state.set_state(AdminStates.waiting_delete)
     await state.update_data(mode="delete")
 
 @dp.message(AdminStates.waiting_delete)
 async def process_delete_edit(message: Message, state: FSMContext):
-    if not is_admin(message.from_user.id):
+    if message.from_user.id not in ADMIN_IDS:
         return
     data = await state.get_data()
     mode = data.get("mode", "delete")
@@ -399,23 +372,14 @@ async def process_delete_edit(message: Message, state: FSMContext):
         if mode == "delete":
             del prices[direction]
             save_prices(prices)
-            await message.answer(
-                f"✅ <b>O'chirildi:</b> {direction}",
-                reply_markup=admin_menu(),
-                parse_mode="HTML"
-            )
+            await message.answer(f"✅ O'chirildi: {direction}", reply_markup=admin_menu())
             await state.clear()
         else:
             await state.update_data(direction=direction)
-            await message.answer(
-                f"✏️ <b>{direction}</b>\n\nYangi narxni kiriting (sborsiz):",
-                parse_mode="HTML"
-            )
+            await message.answer(f"✏️ <b>{direction}</b>\n\nYangi narxni kiriting:", parse_mode="HTML")
             await state.set_state(AdminStates.waiting_price)
     except ValueError:
         await message.answer("❌ Faqat raqam kiriting!")
-
-# ─── ISHGA TUSHIRISH ──────────────────────────────────────────
 
 async def main():
     await dp.start_polling(bot)
