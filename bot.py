@@ -15,8 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY"
 ADMIN_ID = 7359558983
-SBOR = 1000
-
+SBOR = 500
 DATA_FILE = "prices.json"
 USERS_FILE = "users.json"
 
@@ -27,16 +26,16 @@ def load_prices():
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     return {
-        "Санкт-Петербург → Ташкент": 16223,
-        "Санкт-Петербург → Самарканд": 18224,
-        "Санкт-Петербург → Фергана": 13120,
+        "Санкт-Петербург → Ташкент": 18500,
+        "Санкт-Петербург → Самарканд": 19500,
+        "Санкт-Петербург → Фергана": 20000,
         "Санкт-Петербург → Наманган": 19500,
-        "Санкт-Петербург → Андижан": 22596,
-        "Санкт-Петербург → Бухара": 18998,
-        "Санкт-Петербург → Термез": 20149,
-        "Санкт-Петербург → Карши": 18652,
-        "Санкт-Петербург → Нукус": 16443,
-        "Санкт-Петербург → Ургенч": 12936,
+        "Санкт-Петербург → Андижан": 20000,
+        "Санкт-Петербург → Бухара": 21000,
+        "Санкт-Петербург → Термез": 22000,
+        "Санкт-Петербург → Карши": 22000,
+        "Санкт-Петербург → Нукус": 23000,
+        "Санкт-Петербург → Ургенч": 23000,
     }
 
 def save_prices(prices):
@@ -53,7 +52,7 @@ def save_user(user_id, username, full_name):
     users = load_users()
     uid = str(user_id)
     if uid not in users:
-        users[uid] = {"username": username, "full_name": full_name, "count": 1}
+        users[uid] = {"username": username or "", "full_name": full_name or "", "count": 1}
     else:
         users[uid]["count"] += 1
     with open(USERS_FILE, "w", encoding="utf-8") as f:
@@ -74,125 +73,99 @@ class States(StatesGroup):
     admin_edit_price = State()
     admin_delete_select = State()
 
-# ── TILLAR ───────────────────────────────────────────────────
-
-T = {
-    "uz": {
-        "start": "✈️ <b>ОМАД ТУР</b> — Aviakassa\n\nXush kelibsiz! Bo'limni tanlang 👇",
-        "visa": "🛂 Viza bo'limi",
-        "aviation": "✈️ Aviakassa",
-        "contact": "📞 Tezkor aloqa",
-        "address": "📍 Manzil",
-        "question": "❓ Savol",
-        "back": "⬅️ Ortga",
-        "lang": "🌍 Til",
-        "prices": "💰 Narxlar",
-        "order": "📲 Buyurtma qilish",
-        "visa_answer": "📋 Viza javobi",
-        "uzb_consul": "🏛 O'zb Konsulstvo guruhi",
-        "anketa": "📝 Anketa to'ldirish",
-        "question_send": "✉️ Savolingizni yozing (matn, rasm yoki fayl):",
-        "question_sent": "✅ Murojaatingiz qabul qilindi!\nIltimos javobni kuting.",
-        "question_new": "📨 Yangi savol",
-        "reply_btn": "💬 Javob berish",
-        "admin": "🔧 Admin panel",
-        "admin_stats": "📊 Statistika",
-        "admin_broadcast": "📢 Xabar yuborish",
-        "admin_prices": "💰 Narxlar boshqaruvi",
-        "add_direction": "➕ Yo'nalish qo'shish",
-        "edit_direction": "✏️ Narx o'zgartirish",
-        "delete_direction": "🗑 Yo'nalish o'chirish",
-        "all_prices": "📋 Barcha narxlar",
-        "broadcast_ask": "📢 Foydalanuvchilarga yuboriladigan xabarni yozing (matn, rasm, video):",
-        "broadcast_done": "✅ Xabar barcha foydalanuvchilarga yuborildi!",
-        "call": "📞 Qo'ng'iroq qilish",
-    },
-    "ru": {
-        "start": "✈️ <b>ОМАД ТУР</b> — Авиакасса\n\nДобро пожаловать! Выберите раздел 👇",
-        "visa": "🛂 Визы",
-        "aviation": "✈️ Авиакасса",
-        "contact": "📞 Быстрая связь",
-        "address": "📍 Адрес",
-        "question": "❓ Вопрос",
-        "back": "⬅️ Назад",
-        "lang": "🌍 Язык",
-        "prices": "💰 Цены",
-        "order": "📲 Заказать билет",
-        "visa_answer": "📋 Ответ по визе",
-        "uzb_consul": "🏛 Группа Консульства Узб",
-        "anketa": "📝 Заполнить анкету",
-        "question_send": "✉️ Напишите ваш вопрос (текст, фото или файл):",
-        "question_sent": "✅ Ваш запрос принят!\nПожалуйста, ожидайте ответа.",
-        "question_new": "📨 Новый вопрос",
-        "reply_btn": "💬 Ответить",
-        "admin": "🔧 Админ панель",
-        "admin_stats": "📊 Статистика",
-        "admin_broadcast": "📢 Рассылка",
-        "admin_prices": "💰 Управление ценами",
-        "add_direction": "➕ Добавить направление",
-        "edit_direction": "✏️ Изменить цену",
-        "delete_direction": "🗑 Удалить направление",
-        "all_prices": "📋 Все цены",
-        "broadcast_ask": "📢 Напишите сообщение для рассылки (текст, фото, видео):",
-        "broadcast_done": "✅ Сообщение отправлено всем пользователям!",
-        "call": "📞 Позвонить",
-    }
-}
-
-def t(lang, key):
-    return T.get(lang, T["uz"]).get(key, key)
-
-# ── KLAVIATURALAR ────────────────────────────────────────────
+# ── KLAVIATURALAR ─────────────────────────────────────────────
 
 def main_menu(lang):
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=t(lang,"visa"), callback_data=f"visa_{lang}"),
-         InlineKeyboardButton(text=t(lang,"aviation"), callback_data=f"aviation_{lang}")],
-        [InlineKeyboardButton(text=t(lang,"contact"), callback_data=f"contact_{lang}"),
-         InlineKeyboardButton(text=t(lang,"address"), callback_data=f"address_{lang}")],
-        [InlineKeyboardButton(text=t(lang,"question"), callback_data=f"question_{lang}")],
-        [InlineKeyboardButton(text="🇺🇿 O'zbek" if lang=="ru" else "🇷🇺 Русский",
-                              callback_data="lang_ru" if lang=="uz" else "lang_uz")],
-    ])
+    if lang == "uz":
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🛂 Viza bo'limi", callback_data="visa_uz"),
+             InlineKeyboardButton(text="✈️ Aviakassa", callback_data="aviation_uz")],
+            [InlineKeyboardButton(text="📞 Tezkor aloqa", callback_data="contact_uz"),
+             InlineKeyboardButton(text="📍 Manzil", callback_data="address_uz")],
+            [InlineKeyboardButton(text="❓ Savol", callback_data="question_uz")],
+            [InlineKeyboardButton(text="🇷🇺 Русский", callback_data="lang_ru")],
+        ])
+    else:
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🛂 Визы", callback_data="visa_ru"),
+             InlineKeyboardButton(text="✈️ Авиакасса", callback_data="aviation_ru")],
+            [InlineKeyboardButton(text="📞 Быстрая связь", callback_data="contact_ru"),
+             InlineKeyboardButton(text="📍 Адрес", callback_data="address_ru")],
+            [InlineKeyboardButton(text="❓ Вопрос", callback_data="question_ru")],
+            [InlineKeyboardButton(text="🇺🇿 O'zbek", callback_data="lang_uz")],
+        ])
 
-def back_btn(lang, to="home"):
+def back_kb(lang):
+    text = "⬅️ Ortga" if lang == "uz" else "⬅️ Назад"
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=t(lang,"back"), callback_data=f"home_{lang}")]
+        [InlineKeyboardButton(text=text, callback_data=f"home_{lang}")]
     ])
 
 def visa_menu(lang):
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=t(lang,"visa_answer"),
-                              url="https://t.me/ISHONCHLI_AVIAKASSA9094_BOT/visa")],
-        [InlineKeyboardButton(text=t(lang,"uzb_consul"),
-                              url="https://t.me/+i8I6ByH_CUVhOWQy")],
-        [InlineKeyboardButton(text=t(lang,"anketa"),
-                              url="https://t.me/AVIAKASSA9094")],
-        [InlineKeyboardButton(text=t(lang,"back"), callback_data=f"home_{lang}")],
-    ])
+    if lang == "uz":
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📋 Viza javobi", url="https://t.me/ISHONCHLI_AVIAKASSA9094_BOT/visa")],
+            [InlineKeyboardButton(text="🏛 O'zb Konsulstvo guruhi", url="https://t.me/+i8I6ByH_CUVhOWQy")],
+            [InlineKeyboardButton(text="📝 Anketa to'ldirish", url="https://t.me/AVIAKASSA9094")],
+            [InlineKeyboardButton(text="🇹🇲 Turkman fuqarolari uchun O'zb viza", callback_data="turkmen_uz")],
+            [InlineKeyboardButton(text="⬅️ Ortga", callback_data="home_uz")],
+        ])
+    else:
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📋 Ответ по визе", url="https://t.me/ISHONCHLI_AVIAKASSA9094_BOT/visa")],
+            [InlineKeyboardButton(text="🏛 Группа Консульства Узб", url="https://t.me/+i8I6ByH_CUVhOWQy")],
+            [InlineKeyboardButton(text="📝 Заполнить анкету", url="https://t.me/AVIAKASSA9094")],
+            [InlineKeyboardButton(text="🇹🇲 Виза Узб для граждан Туркменистана", callback_data="turkmen_ru")],
+            [InlineKeyboardButton(text="⬅️ Назад", callback_data="home_ru")],
+        ])
 
 def aviation_menu(lang):
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="💬 Telegram", url="https://t.me/OMAD_TOUR9094")],
-        [InlineKeyboardButton(text="💚 WhatsApp", url="https://wa.me/79811939094")],
-        [InlineKeyboardButton(text="📱 IMO", url="https://t.me/OMAD_TOUR9094")],
-        [InlineKeyboardButton(text="🔵 Max", url="https://max.ru/u/f9LHodD0cOLLpEmAWC_I3iUUWcn5IO6DFYg0IVz4jEXfm6BJP6OL-L7V0jk")],
-        [InlineKeyboardButton(text=t(lang,"prices"), callback_data=f"prices_{lang}")],
-        [InlineKeyboardButton(text=t(lang,"back"), callback_data=f"home_{lang}")],
-    ])
+    if lang == "uz":
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="💬 Telegram", url="https://t.me/OMAD_TOUR9094"),
+             InlineKeyboardButton(text="💚 WhatsApp", url="https://wa.me/79811939094")],
+            [InlineKeyboardButton(text="📱 IMO", url="https://t.me/OMAD_TOUR9094"),
+             InlineKeyboardButton(text="🔵 Max", url="https://max.ru/u/f9LHodD0cOLLpEmAWC_I3iUUWcn5IO6DFYg0IVz4jEXfm6BJP6OL-L7V0jk")],
+            [InlineKeyboardButton(text="⬅️ Ortga", callback_data="home_uz")],
+        ])
+    else:
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="💬 Telegram", url="https://t.me/OMAD_TOUR9094"),
+             InlineKeyboardButton(text="💚 WhatsApp", url="https://wa.me/79811939094")],
+            [InlineKeyboardButton(text="📱 IMO", url="https://t.me/OMAD_TOUR9094"),
+             InlineKeyboardButton(text="🔵 Max", url="https://max.ru/u/f9LHodD0cOLLpEmAWC_I3iUUWcn5IO6DFYg0IVz4jEXfm6BJP6OL-L7V0jk")],
+            [InlineKeyboardButton(text="⬅️ Назад", callback_data="home_ru")],
+        ])
 
 def contact_menu(lang):
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📞 +7 981 193 90 94", url="tel:+79811939094")],
-        [InlineKeyboardButton(text="📞 +7 921 402 74 89", url="tel:+79214027489")],
-        [InlineKeyboardButton(text=t(lang,"back"), callback_data=f"home_{lang}")],
-    ])
+    if lang == "uz":
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📞 +7 981 193 90 94", url="tel:+79811939094")],
+            [InlineKeyboardButton(text="📞 +7 921 402 74 89", url="tel:+79214027489")],
+            [InlineKeyboardButton(text="📞 +7 937 949 90 94", url="tel:+79379499094")],
+            [InlineKeyboardButton(text="⬅️ Ortga", callback_data="home_uz")],
+        ])
+    else:
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📞 +7 981 193 90 94", url="tel:+79811939094")],
+            [InlineKeyboardButton(text="📞 +7 921 402 74 89", url="tel:+79214027489")],
+            [InlineKeyboardButton(text="📞 +7 937 949 90 94", url="tel:+79379499094")],
+            [InlineKeyboardButton(text="⬅️ Назад", callback_data="home_ru")],
+        ])
 
 def address_menu(lang):
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🗺 Yandex Xarita", url="https://yandex.ru/maps/org/omad_tour/50809406614")],
-        [InlineKeyboardButton(text=t(lang,"back"), callback_data=f"home_{lang}")],
-    ])
+    if lang == "uz":
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🗺 1-manzil xaritada", url="https://yandex.ru/maps/-/CLaRUCPW")],
+            [InlineKeyboardButton(text="🗺 2-manzil xaritada", url="https://yandex.ru/maps/org/omad_tour/50809406614")],
+            [InlineKeyboardButton(text="⬅️ Ortga", callback_data="home_uz")],
+        ])
+    else:
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🗺 Адрес 1 на карте", url="https://yandex.ru/maps/-/CLaRUCPW")],
+            [InlineKeyboardButton(text="🗺 Адрес 2 на карте", url="https://yandex.ru/maps/org/omad_tour/50809406614")],
+            [InlineKeyboardButton(text="⬅️ Назад", callback_data="home_ru")],
+        ])
 
 def prices_keyboard(lang):
     prices = load_prices()
@@ -202,31 +175,33 @@ def prices_keyboard(lang):
             text=f"✈️ {direction}",
             callback_data=f"dir_{lang}_{i}"
         )])
-    buttons.append([InlineKeyboardButton(text=t(lang,"back"), callback_data=f"aviation_{lang}")])
+    back_text = "⬅️ Ortga" if lang == "uz" else "⬅️ Назад"
+    buttons.append([InlineKeyboardButton(text=back_text, callback_data=f"aviation_{lang}")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 def admin_menu_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📊 Statistika", callback_data="adm_stats")],
-        [InlineKeyboardButton(text="📢 Xabar yuborish", callback_data="adm_broadcast")],
-        [InlineKeyboardButton(text="💰 Narxlar", callback_data="adm_prices")],
+        [InlineKeyboardButton(text="📢 Reklama yuborish", callback_data="adm_broadcast")],
+        [InlineKeyboardButton(text="💰 Narxlar boshqaruvi", callback_data="adm_prices")],
     ])
 
 def admin_prices_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="➕ Qo'shish", callback_data="adm_add")],
-        [InlineKeyboardButton(text="✏️ O'zgartirish", callback_data="adm_edit")],
-        [InlineKeyboardButton(text="🗑 O'chirish", callback_data="adm_delete")],
-        [InlineKeyboardButton(text="📋 Barchasi", callback_data="adm_list")],
+        [InlineKeyboardButton(text="➕ Qo'shish", callback_data="adm_add"),
+         InlineKeyboardButton(text="✏️ O'zgartirish", callback_data="adm_edit")],
+        [InlineKeyboardButton(text="🗑 O'chirish", callback_data="adm_delete"),
+         InlineKeyboardButton(text="📋 Barchasi", callback_data="adm_list")],
         [InlineKeyboardButton(text="⬅️ Ortga", callback_data="adm_back")],
     ])
 
-# ── START ────────────────────────────────────────────────────
+# ── START ─────────────────────────────────────────────────────
 
 @dp.message(Command("start"))
 async def cmd_start(message: Message):
     save_user(message.from_user.id, message.from_user.username, message.from_user.full_name)
-    await message.answer(t("uz","start"), reply_markup=main_menu("uz"), parse_mode="HTML")
+    text = "✈️ <b>ОМАД ТУР</b> — Aviakassa\n\nXush kelibsiz! Bo'limni tanlang 👇"
+    await message.answer(text, reply_markup=main_menu("uz"), parse_mode="HTML")
 
 @dp.message(Command("admin"))
 async def cmd_admin(message: Message):
@@ -234,71 +209,149 @@ async def cmd_admin(message: Message):
         return
     await message.answer("🔧 <b>Admin panel</b>", reply_markup=admin_menu_kb(), parse_mode="HTML")
 
-# ── TIL ──────────────────────────────────────────────────────
+# ── TIL ───────────────────────────────────────────────────────
 
 @dp.callback_query(F.data == "lang_uz")
 async def lang_uz(callback: CallbackQuery):
-    await callback.message.edit_text(t("uz","start"), reply_markup=main_menu("uz"), parse_mode="HTML")
+    await callback.message.edit_text(
+        "✈️ <b>ОМАД ТУР</b> — Aviakassa\n\nXush kelibsiz! Bo'limni tanlang 👇",
+        reply_markup=main_menu("uz"), parse_mode="HTML"
+    )
 
 @dp.callback_query(F.data == "lang_ru")
 async def lang_ru(callback: CallbackQuery):
-    await callback.message.edit_text(t("ru","start"), reply_markup=main_menu("ru"), parse_mode="HTML")
-
-# ── HOME ─────────────────────────────────────────────────────
+    await callback.message.edit_text(
+        "✈️ <b>ОМАД ТУР</b> — Авиакасса\n\nДобро пожаловать! Выберите раздел 👇",
+        reply_markup=main_menu("ru"), parse_mode="HTML"
+    )
 
 @dp.callback_query(F.data.startswith("home_"))
 async def go_home(callback: CallbackQuery):
     lang = callback.data.split("_")[1]
-    await callback.message.edit_text(t(lang,"start"), reply_markup=main_menu(lang), parse_mode="HTML")
+    if lang == "uz":
+        text = "✈️ <b>ОМАД ТУР</b> — Aviakassa\n\nXush kelibsiz! Bo'limni tanlang 👇"
+    else:
+        text = "✈️ <b>ОМАД ТУР</b> — Авиакасса\n\nДобро пожаловать! Выберите раздел 👇"
+    await callback.message.edit_text(text, reply_markup=main_menu(lang), parse_mode="HTML")
 
-# ── VIZA ─────────────────────────────────────────────────────
+# ── VIZA ──────────────────────────────────────────────────────
 
 @dp.callback_query(F.data.startswith("visa_"))
 async def visa_section(callback: CallbackQuery):
     lang = callback.data.split("_")[1]
-    text_uz = (
-        "🛂 <b>Viza bo'limi</b>\n\n"
-        "O'zbekiston fuqarolari uchun viza xizmatlari:\n\n"
-        "📋 Viza javobi — barcode orqali tekshirish\n"
-        "🏛 Konsulstvo guruhi — rasmiy ma'lumotlar\n"
-        "📝 Anketa to'ldirish — onlayn ariza"
-    )
-    text_ru = (
-        "🛂 <b>Визовый раздел</b>\n\n"
-        "Визовые услуги для граждан Узбекистана:\n\n"
-        "📋 Ответ по визе — проверка по штрихкоду\n"
-        "🏛 Группа консульства — официальная информация\n"
-        "📝 Заполнить анкету — онлайн заявка"
-    )
-    text = text_uz if lang == "uz" else text_ru
+    if lang == "uz":
+        text = "🛂 <b>Viza bo'limi</b>\n\nKerakli xizmatni tanlang 👇"
+    else:
+        text = "🛂 <b>Визовый раздел</b>\n\nВыберите нужную услугу 👇"
     await callback.message.edit_text(text, reply_markup=visa_menu(lang), parse_mode="HTML")
 
-# ── AVIAKASSA ────────────────────────────────────────────────
+@dp.callback_query(F.data.startswith("turkmen_"))
+async def turkmen_section(callback: CallbackQuery):
+    lang = callback.data.split("_")[1]
+    if lang == "uz":
+        text = (
+            "🇹🇲 <b>Turkmaniston fuqarolari uchun O'zbekiston vizasi</b>\n\n"
+            "📋 <b>Kerakli hujjatlar:</b>\n"
+            "• Pasport (6 oydan ko'p amal qilishi kerak)\n"
+            "• 2 ta 3x4 rasm\n"
+            "• To'ldirилган anketa\n"
+            "• Taklif xati yoki mehmonxona bron\n"
+            "• Viza to'lovi\n\n"
+            "📞 Batafsil ma'lumot uchun bizga murojaat qiling:\n"
+            "👇 Quyidagi tugmani bosing"
+        )
+    else:
+        text = (
+            "🇹🇲 <b>Виза Узбекистана для граждан Туркменистана</b>\n\n"
+            "📋 <b>Необходимые документы:</b>\n"
+            "• Паспорт (действителен более 6 месяцев)\n"
+            "• 2 фото 3x4\n"
+            "• Заполненная анкета\n"
+            "• Приглашение или бронь отеля\n"
+            "• Консульский сбор\n\n"
+            "📞 Для подробной информации обратитесь к нам:\n"
+            "👇 Нажмите кнопку ниже"
+        )
+    back_text = "⬅️ Ortga" if lang == "uz" else "⬅️ Назад"
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📞 Bog'lanish / Связаться", url="https://t.me/OMAD_TOUR9094")],
+        [InlineKeyboardButton(text=back_text, callback_data=f"visa_{lang}")],
+    ])
+    await callback.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+
+# ── AVIAKASSA ─────────────────────────────────────────────────
 
 @dp.callback_query(F.data.startswith("aviation_"))
 async def aviation_section(callback: CallbackQuery):
     lang = callback.data.split("_")[1]
-    text_uz = (
-        "✈️ <b>Aviakassa — ОМАД ТУР</b>\n\n"
-        "Санкт-Петербург dan O'zbekistonga\n"
-        "arzon aviabiletlar!\n\n"
-        "Biz bilan bog'laning:"
-    )
-    text_ru = (
-        "✈️ <b>Авиакасса — ОМАД ТУР</b>\n\n"
-        "Авиабилеты из Санкт-Петербурга\n"
-        "в Узбекистан по низким ценам!\n\n"
-        "Свяжитесь с нами:"
-    )
-    text = text_uz if lang == "uz" else text_ru
+    if lang == "uz":
+        text = (
+            "✈️ <b>Aviakassa — ОМАД ТУР</b>\n\n"
+            "Санкт-Петербург dan O'zbekistonga\n"
+            "arzon aviabiletlar!\n\n"
+            "Biz bilan bog'laning 👇"
+        )
+    else:
+        text = (
+            "✈️ <b>Авиакасса — ОМАД ТУР</b>\n\n"
+            "Авиабилеты из Санкт-Петербурга\n"
+            "в Узбекистан по низким ценам!\n\n"
+            "Свяжитесь с нами 👇"
+        )
     await callback.message.edit_text(text, reply_markup=aviation_menu(lang), parse_mode="HTML")
 
-# ── NARXLAR ──────────────────────────────────────────────────
+# ── TEZKOR ALOQA ──────────────────────────────────────────────
+
+@dp.callback_query(F.data.startswith("contact_"))
+async def contact_section(callback: CallbackQuery):
+    lang = callback.data.split("_")[1]
+    if lang == "uz":
+        text = (
+            "📞 <b>Tezkor aloqa</b>\n\n"
+            "Qo'ng'iroq qiling — doim yordam beramiz!\n\n"
+            "📱 +7 981 193 90 94\n"
+            "📱 +7 921 402 74 89\n"
+            "📱 +7 937 949 90 94"
+        )
+    else:
+        text = (
+            "📞 <b>Быстрая связь</b>\n\n"
+            "Звоните — всегда готовы помочь!\n\n"
+            "📱 +7 981 193 90 94\n"
+            "📱 +7 921 402 74 89\n"
+            "📱 +7 937 949 90 94"
+        )
+    await callback.message.edit_text(text, reply_markup=contact_menu(lang), parse_mode="HTML")
+
+# ── MANZIL ────────────────────────────────────────────────────
+
+@dp.callback_query(F.data.startswith("address_"))
+async def address_section(callback: CallbackQuery):
+    lang = callback.data.split("_")[1]
+    if lang == "uz":
+        text = (
+            "📍 <b>Bizning manzillar</b>\n\n"
+            "🏢 ОМАД ТУР\n\n"
+            "📌 1-офис: просп. Большевиков, 24, корп. 1\n"
+            "📌 2-офис: ул. 4-я Красноармейская, дом 3\n\n"
+            "🕐 Ish vaqti: 09:00 — 21:00 (har kuni)"
+        )
+    else:
+        text = (
+            "📍 <b>Наши адреса</b>\n\n"
+            "🏢 ОМАД ТУР\n\n"
+            "📌 Офис 1: просп. Большевиков, 24, корп. 1\n"
+            "📌 Офис 2: ул. 4-я Красноармейская, дом 3\n\n"
+            "🕐 Режим работы: 09:00 — 21:00 (ежедневно)"
+        )
+    await callback.message.edit_text(text, reply_markup=address_menu(lang), parse_mode="HTML")
+
+# ── NARXLAR ───────────────────────────────────────────────────
 
 @dp.callback_query(F.data.startswith("prices_"))
 async def show_prices(callback: CallbackQuery):
     lang = callback.data.split("_")[1]
-    title = "✈️ <b>Yo'nalishni tanlang:</b>" if lang=="uz" else "✈️ <b>Выберите направление:</b>"
+    title = "✈️ <b>Yo'nalishni tanlang:</b>" if lang == "uz" else "✈️ <b>Выберите направление:</b>"
     await callback.message.edit_text(title, reply_markup=prices_keyboard(lang), parse_mode="HTML")
 
 @dp.callback_query(F.data.startswith("dir_"))
@@ -321,6 +374,10 @@ async def show_direction(callback: CallbackQuery):
             f"📅 Narxlar har kuni o'zgarishi mumkin\n\n"
             f"Bilet buyurtma qilish uchun 👇"
         )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📲 Buyurtma qilish", url="https://t.me/OMAD_TOUR9094")],
+            [InlineKeyboardButton(text="⬅️ Ortga", callback_data="prices_uz")],
+        ])
     else:
         text = (
             f"✈️ <b>{direction}</b>\n\n"
@@ -329,64 +386,28 @@ async def show_direction(callback: CallbackQuery):
             f"📅 Цены могут меняться ежедневно\n\n"
             f"Для заказа билета 👇"
         )
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=t(lang,"order"), url="https://t.me/OMAD_TOUR9094")],
-        [InlineKeyboardButton(text=t(lang,"back"), callback_data=f"prices_{lang}")],
-    ])
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📲 Заказать билет", url="https://t.me/OMAD_TOUR9094")],
+            [InlineKeyboardButton(text="⬅️ Назад", callback_data="prices_ru")],
+        ])
     await callback.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
 
-# ── TEZKOR ALOQA ─────────────────────────────────────────────
-
-@dp.callback_query(F.data.startswith("contact_"))
-async def contact_section(callback: CallbackQuery):
-    lang = callback.data.split("_")[1]
-    text_uz = (
-        "📞 <b>Tezkor aloqa</b>\n\n"
-        "Qo'ng'iroq qiling — doim yordam beramiz!\n\n"
-        "📱 +7 981 193 90 94\n"
-        "📱 +7 921 402 74 89"
-    )
-    text_ru = (
-        "📞 <b>Быстрая связь</b>\n\n"
-        "Звоните — всегда готовы помочь!\n\n"
-        "📱 +7 981 193 90 94\n"
-        "📱 +7 921 402 74 89"
-    )
-    text = text_uz if lang == "uz" else text_ru
-    await callback.message.edit_text(text, reply_markup=contact_menu(lang), parse_mode="HTML")
-
-# ── MANZIL ───────────────────────────────────────────────────
-
-@dp.callback_query(F.data.startswith("address_"))
-async def address_section(callback: CallbackQuery):
-    lang = callback.data.split("_")[1]
-    text_uz = (
-        "📍 <b>Bizning manzil</b>\n\n"
-        "🏢 ОМАД ТУР\n"
-        "просп. Большевиков, 24, корп. 1\n"
-        "Санкт-Петербург\n\n"
-        "🕐 Ish vaqti: 09:00 — 21:00 (har kuni)"
-    )
-    text_ru = (
-        "📍 <b>Наш адрес</b>\n\n"
-        "🏢 ОМАД ТУР\n"
-        "просп. Большевиков, 24, корп. 1\n"
-        "Санкт-Петербург\n\n"
-        "🕐 Режим работы: 09:00 — 21:00 (ежедневно)"
-    )
-    text = text_uz if lang == "uz" else text_ru
-    await callback.message.edit_text(text, reply_markup=address_menu(lang), parse_mode="HTML")
-
-# ── SAVOL ────────────────────────────────────────────────────
+# ── SAVOL ─────────────────────────────────────────────────────
 
 @dp.callback_query(F.data.startswith("question_"))
 async def question_section(callback: CallbackQuery, state: FSMContext):
     lang = callback.data.split("_")[1]
     await state.update_data(lang=lang)
+    if lang == "uz":
+        text = "✉️ Savolingizni yozing\n(matn, rasm yoki fayl yuborishingiz mumkin):"
+        back_text = "⬅️ Ortga"
+    else:
+        text = "✉️ Напишите ваш вопрос\n(можно отправить текст, фото или файл):"
+        back_text = "⬅️ Назад"
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=t(lang,"back"), callback_data=f"home_{lang}")]
+        [InlineKeyboardButton(text=back_text, callback_data=f"home_{lang}")]
     ])
-    await callback.message.edit_text(t(lang,"question_send"), reply_markup=kb, parse_mode="HTML")
+    await callback.message.edit_text(text, reply_markup=kb)
     await state.set_state(States.waiting_question)
 
 @dp.message(States.waiting_question)
@@ -394,37 +415,46 @@ async def receive_question(message: Message, state: FSMContext):
     data = await state.get_data()
     lang = data.get("lang", "uz")
     user = message.from_user
-    username = f"@{user.username}" if user.username else "yo'q"
+    username = f"@{user.username}" if user.username else "—"
 
-    # Admin ga xabar
-    admin_text = (
+    header = (
         f"📨 <b>Yangi savol</b>\n\n"
         f"👤 Ism: {user.full_name}\n"
         f"📱 Telegram: {username}\n"
-        f"🆔 ID: <code>{user.id}</code>\n\n"
-        f"💬 Savol:"
+        f"🆔 ID: <code>{user.id}</code>"
     )
     reply_kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="💬 Javob berish", callback_data=f"reply_{user.id}")]
     ])
+    await bot.send_message(ADMIN_ID, header, reply_markup=reply_kb, parse_mode="HTML")
 
-    await bot.send_message(ADMIN_ID, admin_text, reply_markup=reply_kb, parse_mode="HTML")
-
-    # Savolni adminga forward qilish
+    # Xabarni adminga forward qilish (asl ko'rinishda)
     if message.text:
-        await bot.send_message(ADMIN_ID, f"📝 {message.text}")
+        await bot.send_message(ADMIN_ID, f"💬 <b>Savol:</b>\n{message.text}", parse_mode="HTML")
     elif message.photo:
-        await bot.send_photo(ADMIN_ID, message.photo[-1].file_id, caption=message.caption or "")
+        caption = f"🖼 <b>Rasm bilan savol:</b>\n{message.caption or ''}"
+        await bot.send_photo(ADMIN_ID, message.photo[-1].file_id, caption=caption, parse_mode="HTML")
     elif message.document:
-        await bot.send_document(ADMIN_ID, message.document.file_id, caption=message.caption or "")
+        caption = f"📄 <b>Fayl bilan savol:</b>\n{message.caption or ''}"
+        await bot.send_document(ADMIN_ID, message.document.file_id, caption=caption, parse_mode="HTML")
     elif message.video:
-        await bot.send_video(ADMIN_ID, message.video.file_id, caption=message.caption or "")
+        caption = f"🎥 <b>Video bilan savol:</b>\n{message.caption or ''}"
+        await bot.send_video(ADMIN_ID, message.video.file_id, caption=caption, parse_mode="HTML")
+    elif message.voice:
+        await bot.send_voice(ADMIN_ID, message.voice.file_id)
+        await bot.send_message(ADMIN_ID, "🎤 <b>Ovozli xabar</b>", parse_mode="HTML")
+    elif message.sticker:
+        await bot.send_sticker(ADMIN_ID, message.sticker.file_id)
 
     # Foydalanuvchiga tasdiqlash
-    await message.answer(t(lang, "question_sent"), reply_markup=main_menu(lang), parse_mode="HTML")
+    if lang == "uz":
+        confirm = "✅ Murojaatingiz qabul qilindi!\nIltimos javobni kuting. 🙏"
+    else:
+        confirm = "✅ Ваш запрос принят!\nПожалуйста, ожидайте ответа. 🙏"
+    await message.answer(confirm, reply_markup=main_menu(lang))
     await state.clear()
 
-# ── ADMIN JAVOB BERISH ───────────────────────────────────────
+# ── ADMIN JAVOB ───────────────────────────────────────────────
 
 @dp.callback_query(F.data.startswith("reply_"))
 async def reply_to_user(callback: CallbackQuery, state: FSMContext):
@@ -432,7 +462,7 @@ async def reply_to_user(callback: CallbackQuery, state: FSMContext):
         return
     user_id = int(callback.data.split("_")[1])
     await state.update_data(reply_to=user_id)
-    await callback.message.answer("✏️ Javobingizni yozing:")
+    await callback.message.answer("✏️ Javobingizni yozing (matn, rasm, video):")
     await state.set_state(States.waiting_reply)
 
 @dp.message(States.waiting_reply)
@@ -442,14 +472,23 @@ async def send_reply(message: Message, state: FSMContext):
     data = await state.get_data()
     user_id = data.get("reply_to")
     try:
-        reply_text = f"📬 <b>ОМАД ТУР javob berdi:</b>\n\n{message.text}"
-        await bot.send_message(user_id, reply_text, parse_mode="HTML")
-        await message.answer("✅ Javob yuborildi!")
+        if message.text:
+            await bot.send_message(user_id, f"📬 <b>ОМАД ТУР dan javob:</b>\n\n{message.text}", parse_mode="HTML")
+        elif message.photo:
+            caption = f"📬 <b>ОМАД ТУР dan javob:</b>\n{message.caption or ''}"
+            await bot.send_photo(user_id, message.photo[-1].file_id, caption=caption, parse_mode="HTML")
+        elif message.video:
+            caption = f"📬 <b>ОМАД ТУР dan javob:</b>\n{message.caption or ''}"
+            await bot.send_video(user_id, message.video.file_id, caption=caption, parse_mode="HTML")
+        elif message.document:
+            caption = f"📬 <b>ОМАД ТУР dan javob:</b>\n{message.caption or ''}"
+            await bot.send_document(user_id, message.document.file_id, caption=caption, parse_mode="HTML")
+        await message.answer("✅ Javob foydalanuvchiga yuborildi!")
     except Exception as e:
         await message.answer(f"❌ Xato: {e}")
     await state.clear()
 
-# ── ADMIN PANEL ──────────────────────────────────────────────
+# ── ADMIN PANEL ───────────────────────────────────────────────
 
 @dp.callback_query(F.data == "adm_back")
 async def adm_back(callback: CallbackQuery):
@@ -468,11 +507,11 @@ async def adm_stats(callback: CallbackQuery):
         f"📊 <b>Statistika</b>\n\n"
         f"👥 Jami foydalanuvchilar: <b>{total}</b>\n"
         f"🔢 Jami tashriflar: <b>{total_visits}</b>\n\n"
-        f"<b>So'nggi 10 foydalanuvchi:</b>\n"
+        f"<b>So'nggi foydalanuvchilar:</b>\n\n"
     )
-    for i, (uid, u) in enumerate(list(users.items())[-10:]):
-        uname = f"@{u['username']}" if u.get('username') else "—"
-        text += f"{i+1}. {u['full_name']} {uname} ({u['count']} marta)\n"
+    for i, (uid, u) in enumerate(list(users.items())[-15:]):
+        uname = f"@{u['username']}" if u.get("username") else "—"
+        text += f"{i+1}. {u['full_name']} {uname}\n"
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="⬅️ Ortga", callback_data="adm_back")]
     ])
@@ -482,7 +521,10 @@ async def adm_stats(callback: CallbackQuery):
 async def adm_broadcast(callback: CallbackQuery, state: FSMContext):
     if callback.from_user.id != ADMIN_ID:
         return
-    await callback.message.answer("📢 Foydalanuvchilarga yuboriladigan xabarni yozing\n(matn, rasm yoki video):")
+    await callback.message.answer(
+        "📢 Foydalanuvchilarga yuboriladigan xabarni yozing\n"
+        "(matn, rasm, video yoki fayl):"
+    )
     await state.set_state(States.waiting_broadcast)
 
 @dp.message(States.waiting_broadcast)
@@ -505,7 +547,10 @@ async def send_broadcast(message: Message, state: FSMContext):
             success += 1
         except:
             fail += 1
-    await message.answer(f"✅ Yuborildi: {success}\n❌ Xato: {fail}", reply_markup=admin_menu_kb())
+    await message.answer(
+        f"✅ Yuborildi: <b>{success}</b> ta\n❌ Xato: <b>{fail}</b> ta",
+        reply_markup=admin_menu_kb(), parse_mode="HTML"
+    )
     await state.clear()
 
 @dp.callback_query(F.data == "adm_prices")
@@ -528,7 +573,10 @@ async def adm_list(callback: CallbackQuery):
 async def adm_add(callback: CallbackQuery, state: FSMContext):
     if callback.from_user.id != ADMIN_ID:
         return
-    await callback.message.answer("➕ Yangi yo'nalish nomini yozing:\n<i>Масalan: Санкт-Петербург → Навои</i>", parse_mode="HTML")
+    await callback.message.answer(
+        "➕ Yangi yo'nalish nomini yozing:\n<i>Masalan: Санкт-Петербург → Навои</i>",
+        parse_mode="HTML"
+    )
     await state.set_state(States.admin_add_direction)
 
 @dp.message(States.admin_add_direction)
@@ -536,7 +584,10 @@ async def adm_get_direction(message: Message, state: FSMContext):
     if message.from_user.id != ADMIN_ID:
         return
     await state.update_data(direction=message.text)
-    await message.answer(f"✅ Yo'nalish: <b>{message.text}</b>\n\nNarxni kiriting (sborsiz):", parse_mode="HTML")
+    await message.answer(
+        f"✅ Yo'nalish: <b>{message.text}</b>\n\nNarxni kiriting (sborsiz):",
+        parse_mode="HTML"
+    )
     await state.set_state(States.admin_add_price)
 
 @dp.message(States.admin_add_price)
@@ -563,7 +614,7 @@ async def adm_edit(callback: CallbackQuery, state: FSMContext):
     if callback.from_user.id != ADMIN_ID:
         return
     prices = load_prices()
-    text = "✏️ Qaysi yo'nalishni o'zgartirish? Raqamini yozing:\n\n"
+    text = "✏️ Qaysi yo'nalishni o'zgartirish?\nRaqamini yozing:\n\n"
     for i, (d, p) in enumerate(prices.items()):
         text += f"{i+1}. {d} — {p:,} ₽\n"
     await callback.message.answer(text)
@@ -581,7 +632,10 @@ async def adm_edit_select(message: Message, state: FSMContext):
             await message.answer("❌ Noto'g'ri raqam!")
             return
         await state.update_data(direction=directions[idx])
-        await message.answer(f"✏️ <b>{directions[idx]}</b>\n\nYangi narxni kiriting:", parse_mode="HTML")
+        await message.answer(
+            f"✏️ <b>{directions[idx]}</b>\n\nYangi narxni kiriting:",
+            parse_mode="HTML"
+        )
         await state.set_state(States.admin_edit_price)
     except ValueError:
         await message.answer("❌ Faqat raqam kiriting!")
@@ -598,7 +652,7 @@ async def adm_edit_price(message: Message, state: FSMContext):
         prices[direction] = price
         save_prices(prices)
         await message.answer(
-            f"✅ Yangilandi!\n{direction}\n💰 {price:,} ₽ → {price+SBOR:,} ₽",
+            f"✅ Yangilandi!\n📍 {direction}\n💰 {price:,} ₽ → {price+SBOR:,} ₽",
             reply_markup=admin_prices_kb(), parse_mode="HTML"
         )
         await state.clear()
@@ -610,7 +664,7 @@ async def adm_delete(callback: CallbackQuery, state: FSMContext):
     if callback.from_user.id != ADMIN_ID:
         return
     prices = load_prices()
-    text = "🗑 Qaysi yo'nalishni o'chirish? Raqamini yozing:\n\n"
+    text = "🗑 Qaysi yo'nalishni o'chirish?\nRaqamini yozing:\n\n"
     for i, (d, p) in enumerate(prices.items()):
         text += f"{i+1}. {d} — {p:,} ₽\n"
     await callback.message.answer(text)
@@ -630,12 +684,15 @@ async def adm_delete_select(message: Message, state: FSMContext):
         direction = directions[idx]
         del prices[direction]
         save_prices(prices)
-        await message.answer(f"✅ O'chirildi: {direction}", reply_markup=admin_prices_kb())
+        await message.answer(
+            f"✅ O'chirildi: {direction}",
+            reply_markup=admin_prices_kb()
+        )
         await state.clear()
     except ValueError:
         await message.answer("❌ Faqat raqam kiriting!")
 
-# ── ISHGA TUSHIRISH ──────────────────────────────────────────
+# ── MAIN ──────────────────────────────────────────────────────
 
 async def main():
     await dp.start_polling(bot)
