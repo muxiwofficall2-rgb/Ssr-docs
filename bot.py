@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY"
 ADMIN_ID = 7359558983
-SBOR = 500
+SBOR = 1000
 
 DATA_FILE = "prices.json"
 USERS_FILE = "users.json"
