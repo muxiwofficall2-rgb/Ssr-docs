@@ -166,13 +166,7 @@ async def visa_section(cb: CallbackQuery):
     if uz:
         text = (
             "🛂 <b>Viza bo'limi</b>\n\n"
-            "Biz O'zbekiston vizasi bo'yicha to'liq yordam ko'rsatamiz:\n\n"
-            "📋 <b>Viza javobi</b> — barcode orqali viza holatingizni tekshiring\n\n"
-            "🏛 <b>O'zb Konsulstvo guruhi</b> — Sankt-Peterburgdagi "
-            "O'zbekiston Elchixonasining rasmiy guruhi. "
-            "Viza, hujjatlar va konsullik xizmatlari haqida rasmiy ma'lumotlar\n\n"
-            "📝 <b>Anketa to'ldirish</b> — viza uchun anketa to'ldirishda "
-            "mutaxassislarimiz yordam beradi\n\n"
+
             "🇹🇲 <b>Turkmaniston fuqarolari uchun O'zbekiston vizasi</b>\n\n"
             "Biz Turkmaniston fuqarolari uchun O'zbekiston vizasini "
             "rasmiylashtirish bo'yicha to'liq yordam ko'rsatamiz.\n\n"
@@ -194,13 +188,7 @@ async def visa_section(cb: CallbackQuery):
     else:
         text = (
             "🛂 <b>Визовый отдел</b>\n\n"
-            "Оказываем полную помощь по визам в Узбекистан:\n\n"
-            "📋 <b>Ответ по визе</b> — проверьте статус вашей визы по штрихкоду\n\n"
-            "🏛 <b>Группа Консульства Узб</b> — официальная группа "
-            "Консульства Узбекистана в Санкт-Петербурге. "
-            "Официальная информация по визам, документам и консульским услугам\n\n"
-            "📝 <b>Заполнить анкету</b> — наши специалисты помогут "
-            "правильно заполнить анкету на визу\n\n"
+            
             "🇹🇲 <b>Виза Узбекистана для граждан Туркменистана</b>\n\n"
             "Оказываем полную помощь гражданам Туркменистана "
             "в оформлении визы в Узбекистан.\n\n"
