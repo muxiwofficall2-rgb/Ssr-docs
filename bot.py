@@ -14,7 +14,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = "8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY"
+BOT_TOKEN = "8949050831:AAErsm__lRlfeqUsTgjOBCE0ATID9xee6XY"
 ADMIN_ID  = 7359558983
 SBOR      = 500
 
