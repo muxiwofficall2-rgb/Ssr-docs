@@ -1,3 +1,4 @@
+cat > /home/claude/bot_v4.py << 'ENDOFFILE'
 import asyncio
 import logging
 import json
@@ -7,29 +8,24 @@ from aiogram.types import (
     Message, CallbackQuery,
     InlineKeyboardMarkup, InlineKeyboardButton,
     ReplyKeyboardMarkup, KeyboardButton,
-    ReplyKeyboardRemove, ChatMemberMember,
-    ChatMemberAdministrator, ChatMemberOwner
+    ReplyKeyboardRemove
 )
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.exceptions import TelegramBadRequest
 
 logging.basicConfig(level=logging.INFO)
 
-# ═══════════════════════════════════════════════════════════════
-#  SOZLAMALAR
-# ═══════════════════════════════════════════════════════════════
-BOT_TOKEN   = "8949050831:AAErsm__lRlfeqUsTgjOBCE0ATID9xee6XY"
-ADMIN_ID    = 7359558983
-SBOR        = 500
-GROUP_LINK  = "https://t.me/+OW_pzYSHjIA5NmQy"
-GROUP_ID    = "-1001490963768"  # Guruh ID (tekshirish uchun)
+BOT_TOKEN  = "8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY"
+ADMIN_ID   = 7359558983
+SBOR       = 500
+GROUP_LINK = "https://t.me/+OW_pzYSHjIA5NmQy"
+GROUP_ID   = -1001490963768  # int, minus bilan
 
-PRICES_F    = "prices.json"
-USERS_F     = "users.json"
-CONTENT_F   = "content.json"
+PRICES_F   = "prices.json"
+USERS_F    = "users.json"
+CONTENT_F  = "content.json"
 
 # ═══════════════════════════════════════════════════════════════
 #  DEFAULT KONTENT
@@ -207,7 +203,7 @@ DEFAULT_PRICES = {
 }
 
 # ═══════════════════════════════════════════════════════════════
-#  FAYL OPERATSIYALARI
+#  FAYLLAR
 # ═══════════════════════════════════════════════════════════════
 def load_content():
     if os.path.exists(CONTENT_F):
@@ -225,8 +221,9 @@ def load_prices():
     if os.path.exists(PRICES_F):
         with open(PRICES_F, "r", encoding="utf-8") as f:
             return json.load(f)
-    save_prices(dict(DEFAULT_PRICES))
-    return dict(DEFAULT_PRICES)
+    p = dict(DEFAULT_PRICES)
+    save_prices(p)
+    return p
 
 def save_prices(data):
     with open(PRICES_F, "w", encoding="utf-8") as f:
@@ -237,24 +234,6 @@ def load_users():
         with open(USERS_F, "r", encoding="utf-8") as f:
             return json.load(f)
     return {}
-
-def save_user(uid, username, full_name, phone=""):
-    users = load_users()
-    key = str(uid)
-    if key not in users:
-        users[key] = {
-            "username": username or "",
-            "full_name": full_name,
-            "phone": phone,
-            "visits": 1
-        }
-        # Admin ga yangi foydalanuvchi haqida xabar
-        return users, True
-    else:
-        users[key]["visits"] += 1
-        if phone:
-            users[key]["phone"] = phone
-        return users, False
 
 def write_users(users):
     with open(USERS_F, "w", encoding="utf-8") as f:
@@ -282,28 +261,30 @@ class S(StatesGroup):
     delete_select = State()
 
 # ═══════════════════════════════════════════════════════════════
-#  GURUH TEKSHIRISH
+#  GURUH TEKSHIRISH — TO'G'RI USUL
 # ═══════════════════════════════════════════════════════════════
-async def check_subscription(user_id: int) -> bool:
+async def is_member(user_id: int) -> bool:
     try:
         member = await bot.get_chat_member(chat_id=GROUP_ID, user_id=user_id)
-        return isinstance(member, (ChatMemberMember, ChatMemberAdministrator, ChatMemberOwner))
-    except:
-        return False
+        status = member.status
+        return status in ("member", "administrator", "creator", "restricted")
+    except Exception as e:
+        logging.warning(f"Guruh tekshirish xatosi: {e}")
+        # Agar xato bo'lsa — o'tkazib yuboramiz
+        return True
 
 # ═══════════════════════════════════════════════════════════════
 #  KLAVIATURALAR
 # ═══════════════════════════════════════════════════════════════
-def kb_subscribe(lang):
-    uz = lang == "uz"
+def kb_subscribe():
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
-            text="📢 Guruhga qo'shilish" if uz else "📢 Вступить в группу",
+            text="📢 Guruhga qo'shilish / Вступить в группу",
             url=GROUP_LINK
         )],
         [InlineKeyboardButton(
-            text="✅ Tekshirish" if uz else "✅ Проверить",
-            callback_data=f"check_sub_{lang}"
+            text="✅ A'zo bo'ldim / Я вступил",
+            callback_data="check_sub"
         )],
     ])
 
@@ -311,16 +292,34 @@ def kb_main(lang):
     uz = lang == "uz"
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🛂 Viza bo'limi" if uz else "🛂 Визовый отдел", callback_data=f"sec_visa_{lang}"),
-            InlineKeyboardButton(text="✈️ Aviakassa"    if uz else "✈️ Авиакасса",     callback_data=f"sec_avia_{lang}"),
+            InlineKeyboardButton(
+                text="🛂 Viza bo'limi" if uz else "🛂 Визовый отдел",
+                callback_data=f"sec_visa_{lang}"
+            ),
+            InlineKeyboardButton(
+                text="✈️ Aviakassa" if uz else "✈️ Авиакасса",
+                callback_data=f"sec_avia_{lang}"
+            ),
         ],
         [
-            InlineKeyboardButton(text="📞 Tezkor aloqa" if uz else "📞 Быстрая связь", callback_data=f"sec_contact_{lang}"),
-            InlineKeyboardButton(text="📍 Manzil"        if uz else "📍 Адрес",         callback_data=f"sec_address_{lang}"),
+            InlineKeyboardButton(
+                text="📞 Tezkor aloqa" if uz else "📞 Быстрая связь",
+                callback_data=f"sec_contact_{lang}"
+            ),
+            InlineKeyboardButton(
+                text="📍 Manzil" if uz else "📍 Адрес",
+                callback_data=f"sec_address_{lang}"
+            ),
         ],
         [
-            InlineKeyboardButton(text="❓ Savol yuborish" if uz else "❓ Задать вопрос", callback_data=f"question_{lang}"),
-            InlineKeyboardButton(text="🇷🇺 Русский" if uz else "🇺🇿 O'zbek", callback_data="lang_ru" if uz else "lang_uz"),
+            InlineKeyboardButton(
+                text="❓ Savol yuborish" if uz else "❓ Задать вопрос",
+                callback_data=f"question_{lang}"
+            ),
+            InlineKeyboardButton(
+                text="🇷🇺 Русский" if uz else "🇺🇿 O'zbek",
+                callback_data="lang_ru" if uz else "lang_uz"
+            ),
         ],
     ])
 
@@ -333,7 +332,6 @@ def kb_section(section, lang):
     content = load_content()
     buttons = content.get(section, {}).get(lang, {}).get("buttons", [])
     rows = []
-    # Tugmalarni 2 ta yonma-yon qilib joylash
     pair = []
     for btn in buttons:
         pair.append(InlineKeyboardButton(text=btn["text"], url=btn["url"]))
@@ -342,7 +340,6 @@ def kb_section(section, lang):
             pair = []
     if pair:
         rows.append(pair)
-    # Ortga tugmasi
     rows.append([InlineKeyboardButton(
         text="⬅️ Ortga" if lang == "uz" else "⬅️ Назад",
         callback_data=f"home_{lang}"
@@ -373,12 +370,12 @@ def kb_cms_main():
 def kb_cms_section(section):
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🇺🇿 UZ matn",  callback_data=f"cms_text_{section}_uz"),
-            InlineKeyboardButton(text="🇷🇺 RU matn",  callback_data=f"cms_text_{section}_ru"),
+            InlineKeyboardButton(text="🇺🇿 UZ matn",      callback_data=f"cms_text_{section}_uz"),
+            InlineKeyboardButton(text="🇷🇺 RU matn",      callback_data=f"cms_text_{section}_ru"),
         ],
         [
-            InlineKeyboardButton(text="🇺🇿 UZ rasm",  callback_data=f"cms_photo_{section}_uz"),
-            InlineKeyboardButton(text="🇷🇺 RU rasm",  callback_data=f"cms_photo_{section}_ru"),
+            InlineKeyboardButton(text="🇺🇿 UZ rasm",      callback_data=f"cms_photo_{section}_uz"),
+            InlineKeyboardButton(text="🇷🇺 RU rasm",      callback_data=f"cms_photo_{section}_ru"),
         ],
         [
             InlineKeyboardButton(text="🇺🇿 Tugma qo'sh",  callback_data=f"cms_btnadd_{section}_uz"),
@@ -426,8 +423,8 @@ async def send_section(target, section, lang):
             else:
                 await target.answer_photo(photo=photo, caption=text, reply_markup=kb, parse_mode="HTML")
             return
-        except:
-            pass
+        except Exception as e:
+            logging.warning(f"Rasm yuborishda xato: {e}")
 
     if hasattr(target, "message"):
         try:
@@ -440,27 +437,48 @@ async def send_section(target, section, lang):
 # ═══════════════════════════════════════════════════════════════
 #  START
 # ═══════════════════════════════════════════════════════════════
+async def show_main_menu(msg: Message, user):
+    users = load_users()
+    if str(user.id) not in users:
+        kb = ReplyKeyboardMarkup(
+            keyboard=[[KeyboardButton(
+                text="📱 Raqamni ulashish / Поделиться номером",
+                request_contact=True
+            )]],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+        await msg.answer(
+            "👋 <b>Xush kelibsiz!</b>\n\n"
+            "Davom etish uchun telefon raqamingizni ulashing:\n\n"
+            "👋 <b>Добро пожаловать!</b>\n\n"
+            "Для продолжения поделитесь номером телефона:",
+            reply_markup=kb,
+            parse_mode="HTML"
+        )
+        return False
+    await msg.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+    return True
+
 @dp.message(Command("start"))
 async def cmd_start(msg: Message, state: FSMContext):
-    user  = msg.from_user
-    users = load_users()
+    await state.clear()
+    user = msg.from_user
 
-    # Guruh obunasini tekshirish
-    is_subscribed = await check_subscription(user.id)
-
-    if not is_subscribed:
+    subscribed = await is_member(user.id)
+    if not subscribed:
         await msg.answer(
-            "📢 <b>ОМАД ТУР</b> guruhiga a'zo bo'ling!\n\n"
+            "📢 <b>Guruhimizga a'zo bo'ling!</b>\n\n"
             "Yangi biletlar narxi va aksiyalar bilan tanishib chiqing.\n\n"
             "━━━━━━━━━━━━━━━\n\n"
-            "📢 Вступите в группу <b>ОМАД ТУР</b>!\n\n"
-            "Узнайте актуальные цены на билеты и акции.",
-            reply_markup=kb_subscribe("uz"),
+            "📢 <b>Вступите в нашу группу!</b>\n\n"
+            "Узнайте актуальные цены на билеты и специальные акции.",
+            reply_markup=kb_subscribe(),
             parse_mode="HTML"
         )
         return
 
-    # Telefon raqam so'rash (yangi foydalanuvchi)
+    users = load_users()
     if str(user.id) not in users:
         kb = ReplyKeyboardMarkup(
             keyboard=[[KeyboardButton(
@@ -484,56 +502,16 @@ async def cmd_start(msg: Message, state: FSMContext):
     await msg.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
 
 # ═══════════════════════════════════════════════════════════════
-#  TELEFON RAQAM QABUL QILISH
+#  OBUNA TEKSHIRISH TUGMASI
 # ═══════════════════════════════════════════════════════════════
-@dp.message(S.phone)
-async def get_phone(msg: Message, state: FSMContext):
-    user = msg.from_user
-    phone = ""
-
-    if msg.contact:
-        phone = msg.contact.phone_number
-    else:
-        await msg.answer("📱 Iltimos tugmani bosing!", parse_mode="HTML")
-        return
-
-    users, is_new = save_user(user.id, user.username, user.full_name, phone)
-    write_users(users)
-
-    # Admin ga yangi foydalanuvchi xabari
-    if is_new:
-        uname = f"@{user.username}" if user.username else "—"
-        await bot.send_message(
-            ADMIN_ID,
-            f"🆕 <b>Yangi foydalanuvchi!</b>\n\n"
-            f"👤 Ism: <b>{user.full_name}</b>\n"
-            f"📱 Username: {uname}\n"
-            f"📞 Tel: <b>{phone}</b>\n"
-            f"🆔 ID: <code>{user.id}</code>",
-            parse_mode="HTML"
-        )
-
-    await msg.answer(
-        "✅ Rahmat!\n\n",
-        reply_markup=ReplyKeyboardRemove()
-    )
-    await asyncio.sleep(0.5)
-    await msg.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
-    await state.clear()
-
-# ═══════════════════════════════════════════════════════════════
-#  GURUH OBUNA TEKSHIRISH
-# ═══════════════════════════════════════════════════════════════
-@dp.callback_query(F.data.startswith("check_sub_"))
+@dp.callback_query(F.data == "check_sub")
 async def check_sub(cb: CallbackQuery, state: FSMContext):
-    lang = cb.data.split("_")[2]
     user = cb.from_user
-    is_subscribed = await check_subscription(user.id)
+    subscribed = await is_member(user.id)
 
-    if not is_subscribed:
-        uz = lang == "uz"
+    if not subscribed:
         await cb.answer(
-            "❌ Siz guruhga a'zo emassiz!" if uz else "❌ Вы не вступили в группу!",
+            "❌ Siz hali guruhga a'zo emassiz!\n❌ Вы ещё не вступили в группу!",
             show_alert=True
         )
         return
@@ -549,9 +527,9 @@ async def check_sub(cb: CallbackQuery, state: FSMContext):
             one_time_keyboard=True
         )
         await cb.message.answer(
-            "✅ Ajoyib! Guruhga a'zo bo'ldingiz!\n\n"
+            "✅ <b>Ajoyib! Guruhga a'zo bo'ldingiz!</b>\n\n"
             "Davom etish uchun telefon raqamingizni ulashing:\n\n"
-            "✅ Отлично! Вы вступили в группу!\n\n"
+            "✅ <b>Отлично! Вы вступили в группу!</b>\n\n"
             "Для продолжения поделитесь номером телефона:",
             reply_markup=kb,
             parse_mode="HTML"
@@ -559,12 +537,58 @@ async def check_sub(cb: CallbackQuery, state: FSMContext):
         await state.set_state(S.phone)
     else:
         try:
-            await cb.message.edit_text(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+            await cb.message.edit_text(
+                txt_home("uz"),
+                reply_markup=kb_main("uz"),
+                parse_mode="HTML"
+            )
         except:
-            await cb.message.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+            await cb.message.answer(
+                txt_home("uz"),
+                reply_markup=kb_main("uz"),
+                parse_mode="HTML"
+            )
 
 # ═══════════════════════════════════════════════════════════════
-#  ADMIN COMMAND
+#  TELEFON RAQAM
+# ═══════════════════════════════════════════════════════════════
+@dp.message(S.phone)
+async def get_phone(msg: Message, state: FSMContext):
+    user = msg.from_user
+    if not msg.contact:
+        await msg.answer("📱 Iltimos tugmani bosing! / Пожалуйста, нажмите кнопку!")
+        return
+
+    phone = msg.contact.phone_number
+    users = load_users()
+    is_new = str(user.id) not in users
+    users[str(user.id)] = {
+        "username":  user.username or "",
+        "full_name": user.full_name,
+        "phone":     phone,
+        "visits":    1
+    }
+    write_users(users)
+
+    if is_new:
+        uname = f"@{user.username}" if user.username else "—"
+        await bot.send_message(
+            ADMIN_ID,
+            f"🆕 <b>Yangi foydalanuvchi!</b>\n\n"
+            f"👤 Ism: <b>{user.full_name}</b>\n"
+            f"📱 Username: {uname}\n"
+            f"📞 Tel: <b>{phone}</b>\n"
+            f"🆔 ID: <code>{user.id}</code>",
+            parse_mode="HTML"
+        )
+
+    await msg.answer("✅ Rahmat!", reply_markup=ReplyKeyboardRemove())
+    await asyncio.sleep(0.3)
+    await msg.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+    await state.clear()
+
+# ═══════════════════════════════════════════════════════════════
+#  ADMIN
 # ═══════════════════════════════════════════════════════════════
 @dp.message(Command("admin"))
 async def cmd_admin(msg: Message):
@@ -627,7 +651,10 @@ async def question_section(cb: CallbackQuery, state: FSMContext):
         "Ответим как можно скорее! 🙏"
     )
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="⬅️ Ortga" if uz else "⬅️ Назад", callback_data=f"home_{lang}")]
+        [InlineKeyboardButton(
+            text="⬅️ Ortga" if uz else "⬅️ Назад",
+            callback_data=f"home_{lang}"
+        )]
     ])
     try:
         await cb.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
@@ -641,8 +668,6 @@ async def receive_question(msg: Message, state: FSMContext):
     lang  = data.get("lang", "uz")
     user  = msg.from_user
     uname = f"@{user.username}" if user.username else "—"
-
-    # Foydalanuvchi ma'lumotlari
     users = load_users()
     phone = users.get(str(user.id), {}).get("phone", "—")
 
@@ -686,7 +711,7 @@ async def start_reply(cb: CallbackQuery, state: FSMContext):
         return
     uid = int(cb.data.split("_")[1])
     await state.update_data(reply_to=uid)
-    await cb.message.answer("✏️ Javobingizni yozing (matn, rasm, video, fayl yoki ovoz):")
+    await cb.message.answer("✏️ Javobingizni yozing:")
     await state.set_state(S.reply)
 
 @dp.message(S.reply)
@@ -730,7 +755,7 @@ async def adm_stats(cb: CallbackQuery):
         return
     users  = load_users()
     total  = len(users)
-    visits = sum(u["visits"] for u in users.values())
+    visits = sum(u.get("visits", 1) for u in users.values())
     lines  = [
         f"📊 <b>Statistika</b>\n",
         f"👥 Foydalanuvchilar: <b>{total}</b>",
@@ -848,7 +873,8 @@ async def cms_text_start(cb: CallbackQuery, state: FSMContext):
     await state.update_data(cms_section=section, cms_lang=lang)
     await cb.message.answer(
         f"✏️ <b>Yangi matnni yozing</b>\n\n"
-        f"<b>Hozirgi matn:</b>\n{cur[:200]}...",
+        f"HTML: &lt;b&gt;qalin&lt;/b&gt;, &lt;i&gt;kursiv&lt;/i&gt;\n\n"
+        f"<b>Hozirgi matn:</b>\n{cur[:300]}",
         parse_mode="HTML"
     )
     await state.set_state(S.cms_text)
@@ -883,8 +909,7 @@ async def cms_photo_start(cb: CallbackQuery, state: FSMContext):
     lang    = parts[3]
     await state.update_data(cms_section=section, cms_lang=lang)
     await cb.message.answer(
-        "🖼 Yangi rasmni yuboring.\n"
-        "O'chirish uchun: <code>o'chir</code> yozing",
+        "🖼 Rasmni yuboring yoki o'chirish uchun <code>o'chir</code> yozing",
         parse_mode="HTML"
     )
     await state.set_state(S.cms_photo)
@@ -939,7 +964,7 @@ async def cms_btn_text(msg: Message, state: FSMContext):
         return
     await state.update_data(cms_btn_text=msg.text)
     await msg.answer(
-        f"✅ Nom: <b>{msg.text}</b>\n\nURL manzilini yozing:\n<i>https://t.me/...</i>",
+        f"✅ Nom: <b>{msg.text}</b>\n\nURL manzilini yozing:",
         parse_mode="HTML"
     )
     await state.set_state(S.cms_btn_url)
@@ -987,8 +1012,7 @@ async def cms_btndel_start(cb: CallbackQuery):
     rows.append([InlineKeyboardButton(text="⬅️ Ortga", callback_data=f"cms_sec_{section}")])
     await cb.message.edit_text(
         "🗑 Qaysi tugmani o'chirish?",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=rows),
-        parse_mode="HTML"
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=rows)
     )
 
 @dp.callback_query(F.data.startswith("cms_btnrm_"))
@@ -1035,7 +1059,10 @@ async def adm_list(cb: CallbackQuery):
 async def adm_add(cb: CallbackQuery, state: FSMContext):
     if cb.from_user.id != ADMIN_ID:
         return
-    await cb.message.answer("➕ Yo'nalish nomini yozing:\n<i>Санкт-Петербург → Навои</i>", parse_mode="HTML")
+    await cb.message.answer(
+        "➕ Yo'nalish nomini yozing:\n<i>Масalan: Санкт-Петербург → Навои</i>",
+        parse_mode="HTML"
+    )
     await state.set_state(S.add_dir)
 
 @dp.message(S.add_dir)
@@ -1149,3 +1176,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+ENDOFFILE
+echo "DONE — $(wc -l < /home/claude/bot_v4.py) qator"
