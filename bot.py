@@ -25,7 +25,7 @@ BOT_TOKEN   = "8949050831:AAErsm__lRlfeqUsTgjOBCE0ATID9xee6XY"
 ADMIN_ID    = 7359558983
 SBOR        = 500
 GROUP_LINK  = "https://t.me/+OW_pzYSHjIA5NmQy"
-GROUP_ID    = "-1002835946306"  # Guruh ID (tekshirish uchun)
+GROUP_ID    = "-1001490963768"  # Guruh ID (tekshirish uchun)
 
 PRICES_F    = "prices.json"
 USERS_F     = "users.json"
