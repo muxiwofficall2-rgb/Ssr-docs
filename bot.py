@@ -5,22 +5,31 @@ import os
 from aiogram import Bot, Dispatcher, F
 from aiogram.types import (
     Message, CallbackQuery,
-    InlineKeyboardMarkup, InlineKeyboardButton
+    InlineKeyboardMarkup, InlineKeyboardButton,
+    ReplyKeyboardMarkup, KeyboardButton,
+    ReplyKeyboardRemove, ChatMemberMember,
+    ChatMemberAdministrator, ChatMemberOwner
 )
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.exceptions import TelegramBadRequest
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = "8949050831:AAErsm__lRlfeqUsTgjOBCE0ATID9xee6XY"
-ADMIN_ID  = 7359558983
-SBOR      = 500
+# ═══════════════════════════════════════════════════════════════
+#  SOZLAMALAR
+# ═══════════════════════════════════════════════════════════════
+BOT_TOKEN   = "8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY"
+ADMIN_ID    = 7359558983
+SBOR        = 500
+GROUP_LINK  = "https://t.me/+OW_pzYSHjIA5NmQy"
+GROUP_ID    = "-1002835946306"  # Guruh ID (tekshirish uchun)
 
-PRICES_F  = "prices.json"
-USERS_F   = "users.json"
-CONTENT_F = "content.json"
+PRICES_F    = "prices.json"
+USERS_F     = "users.json"
+CONTENT_F   = "content.json"
 
 # ═══════════════════════════════════════════════════════════════
 #  DEFAULT KONTENT
@@ -35,7 +44,7 @@ DEFAULT_CONTENT = {
                 "📋 Viza javobi — barcode orqali tekshiring\n"
                 "🏛 Konsulstvo guruhi — rasmiy ma'lumotlar\n"
                 "📝 Anketa to'ldirish — mutaxassislar yordami\n\n"
-                "🇹🇲 Turkmaniston fuqarolari uchun O'zbekiston vizasi\n"
+                "🇹🇲 Turkmaniston fuqarolari uchun O'zbekiston viza anketasi\n"
                 "To'liq yordam ko'rsatamiz.\n\n"
                 "👇 Kerakli tugmani bosing:"
             ),
@@ -50,11 +59,11 @@ DEFAULT_CONTENT = {
             "photo": "",
             "text": (
                 "🛂 <b>Визовый отдел</b>\n\n"
-                "Оказываем полную помощь по визам в Узбекистан:\n\n"
-                "📋 Ответ по визе — проверка по штрихкоду\n"
+                "Мы оказываем полную помощь по визам в Узбекистан:\n\n"
+                "📋 Ответ по визе — проверка через штрихкод\n"
                 "🏛 Группа консульства — официальная информация\n"
-                "📝 Заполнить анкету — помощь специалистов\n\n"
-                "🇹🇲 Виза Узб для граждан Туркменистана\n"
+                "📝 Заполнение анкеты — помощь специалистов\n\n"
+                "🇹🇲 Для граждан Туркменистана — анкета на визу в Узбекистан\n"
                 "Оказываем полную помощь.\n\n"
                 "👇 Нажмите нужную кнопку:"
             ),
@@ -76,6 +85,9 @@ DEFAULT_CONTENT = {
                 "🛫 Barcha yo'nalishlar\n"
                 "💼 Bagaj bilan va bagesiz\n"
                 "✅ Rasmiy aviakassa\n\n"
+                "🕐 Ish vaqti:\n"
+                "Dushanba — Shanba: 09:00 — 19:00\n"
+                "Yakshanba: Dam olish kuni\n\n"
                 "Biz bilan bog'laning 👇"
             ),
             "buttons": [
@@ -94,6 +106,9 @@ DEFAULT_CONTENT = {
                 "🛫 Все направления\n"
                 "💼 С багажом и без\n"
                 "✅ Официальная авиакасса\n\n"
+                "🕐 Режим работы:\n"
+                "Понедельник — Суббота: 09:00 — 19:00\n"
+                "Воскресенье: Выходной\n\n"
                 "Свяжитесь с нами 👇"
             ),
             "buttons": [
@@ -112,7 +127,10 @@ DEFAULT_CONTENT = {
                 "Istalgan vaqt qo'ng'iroq qiling!\n\n"
                 "📱 +7 981 193 90 94\n"
                 "📱 +7 937 949 90 94\n"
-                "📱 +7 921 402 74 89"
+                "📱 +7 921 402 74 89\n\n"
+                "🕐 Ish vaqti:\n"
+                "Dushanba — Shanba: 09:00 — 19:00\n"
+                "Yakshanba: Dam olish kuni"
             ),
             "buttons": []
         },
@@ -123,7 +141,10 @@ DEFAULT_CONTENT = {
                 "Звоните в любое время!\n\n"
                 "📱 +7 981 193 90 94\n"
                 "📱 +7 937 949 90 94\n"
-                "📱 +7 921 402 74 89"
+                "📱 +7 921 402 74 89\n\n"
+                "🕐 Режим работы:\n"
+                "Понедельник — Суббота: 09:00 — 19:00\n"
+                "Воскресенье: Выходной"
             ),
             "buttons": []
         }
@@ -140,7 +161,9 @@ DEFAULT_CONTENT = {
                 "Домофон: 22Б\n\n"
                 "📌 <b>2-ofis:</b>\n"
                 "просп. Большевиков, 24, корп. 1\n\n"
-                "🕐 Ish vaqti: 09:00 — 21:00 (har kuni)"
+                "🕐 Ish vaqti:\n"
+                "Dushanba — Shanba: 09:00 — 19:00\n"
+                "Yakshanba: Dam olish kuni"
             ),
             "buttons": [
                 {"text": "🗺 1-ofis — 4-я Красноармейская", "url": "https://yandex.ru/maps/-/CLaRUCPW"},
@@ -158,7 +181,9 @@ DEFAULT_CONTENT = {
                 "Домофон: 22Б\n\n"
                 "📌 <b>Офис 2:</b>\n"
                 "просп. Большевиков, 24, корп. 1\n\n"
-                "🕐 Режим работы: 09:00 — 21:00 (ежедневно)"
+                "🕐 Режим работы:\n"
+                "Понедельник — Суббота: 09:00 — 19:00\n"
+                "Воскресенье: Выходной"
             ),
             "buttons": [
                 {"text": "🗺 Офис 1 — 4-я Красноармейская", "url": "https://yandex.ru/maps/-/CLaRUCPW"},
@@ -213,13 +238,25 @@ def load_users():
             return json.load(f)
     return {}
 
-def register_user(uid, username, full_name):
+def save_user(uid, username, full_name, phone=""):
     users = load_users()
     key = str(uid)
     if key not in users:
-        users[key] = {"username": username or "", "full_name": full_name, "visits": 1}
+        users[key] = {
+            "username": username or "",
+            "full_name": full_name,
+            "phone": phone,
+            "visits": 1
+        }
+        # Admin ga yangi foydalanuvchi haqida xabar
+        return users, True
     else:
         users[key]["visits"] += 1
+        if phone:
+            users[key]["phone"] = phone
+        return users, False
+
+def write_users(users):
     with open(USERS_F, "w", encoding="utf-8") as f:
         json.dump(users, f, ensure_ascii=False, indent=2)
 
@@ -230,6 +267,7 @@ bot = Bot(token=BOT_TOKEN)
 dp  = Dispatcher(storage=MemoryStorage())
 
 class S(StatesGroup):
+    phone         = State()
     question      = State()
     reply         = State()
     broadcast     = State()
@@ -244,8 +282,31 @@ class S(StatesGroup):
     delete_select = State()
 
 # ═══════════════════════════════════════════════════════════════
+#  GURUH TEKSHIRISH
+# ═══════════════════════════════════════════════════════════════
+async def check_subscription(user_id: int) -> bool:
+    try:
+        member = await bot.get_chat_member(chat_id=GROUP_ID, user_id=user_id)
+        return isinstance(member, (ChatMemberMember, ChatMemberAdministrator, ChatMemberOwner))
+    except:
+        return False
+
+# ═══════════════════════════════════════════════════════════════
 #  KLAVIATURALAR
 # ═══════════════════════════════════════════════════════════════
+def kb_subscribe(lang):
+    uz = lang == "uz"
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(
+            text="📢 Guruhga qo'shilish" if uz else "📢 Вступить в группу",
+            url=GROUP_LINK
+        )],
+        [InlineKeyboardButton(
+            text="✅ Tekshirish" if uz else "✅ Проверить",
+            callback_data=f"check_sub_{lang}"
+        )],
+    ])
+
 def kb_main(lang):
     uz = lang == "uz"
     return InlineKeyboardMarkup(inline_keyboard=[
@@ -257,8 +318,10 @@ def kb_main(lang):
             InlineKeyboardButton(text="📞 Tezkor aloqa" if uz else "📞 Быстрая связь", callback_data=f"sec_contact_{lang}"),
             InlineKeyboardButton(text="📍 Manzil"        if uz else "📍 Адрес",         callback_data=f"sec_address_{lang}"),
         ],
-        [InlineKeyboardButton(text="❓ Savol yuborish" if uz else "❓ Задать вопрос", callback_data=f"question_{lang}")],
-        [InlineKeyboardButton(text="🇷🇺 Русский" if uz else "🇺🇿 O'zbek", callback_data="lang_ru" if uz else "lang_uz")],
+        [
+            InlineKeyboardButton(text="❓ Savol yuborish" if uz else "❓ Задать вопрос", callback_data=f"question_{lang}"),
+            InlineKeyboardButton(text="🇷🇺 Русский" if uz else "🇺🇿 O'zbek", callback_data="lang_ru" if uz else "lang_uz"),
+        ],
     ])
 
 def txt_home(lang):
@@ -270,13 +333,16 @@ def kb_section(section, lang):
     content = load_content()
     buttons = content.get(section, {}).get(lang, {}).get("buttons", [])
     rows = []
+    # Tugmalarni 2 ta yonma-yon qilib joylash
+    pair = []
     for btn in buttons:
-        rows.append([InlineKeyboardButton(text=btn["text"], url=btn["url"])])
-    if section == "avia":
-        rows.append([InlineKeyboardButton(
-            text="💰 Narxlarni ko'rish" if lang == "uz" else "💰 Посмотреть цены",
-            callback_data=f"prices_{lang}"
-        )])
+        pair.append(InlineKeyboardButton(text=btn["text"], url=btn["url"]))
+        if len(pair) == 2:
+            rows.append(pair)
+            pair = []
+    if pair:
+        rows.append(pair)
+    # Ortga tugmasi
     rows.append([InlineKeyboardButton(
         text="⬅️ Ortga" if lang == "uz" else "⬅️ Назад",
         callback_data=f"home_{lang}"
@@ -315,12 +381,12 @@ def kb_cms_section(section):
             InlineKeyboardButton(text="🇷🇺 RU rasm",  callback_data=f"cms_photo_{section}_ru"),
         ],
         [
-            InlineKeyboardButton(text="🇺🇿 UZ tugma qo'sh",  callback_data=f"cms_btnadd_{section}_uz"),
-            InlineKeyboardButton(text="🇷🇺 RU tugma qo'sh",  callback_data=f"cms_btnadd_{section}_ru"),
+            InlineKeyboardButton(text="🇺🇿 Tugma qo'sh",  callback_data=f"cms_btnadd_{section}_uz"),
+            InlineKeyboardButton(text="🇷🇺 Tugma qo'sh",  callback_data=f"cms_btnadd_{section}_ru"),
         ],
         [
-            InlineKeyboardButton(text="🇺🇿 UZ tugma o'chir", callback_data=f"cms_btndel_{section}_uz"),
-            InlineKeyboardButton(text="🇷🇺 RU tugma o'chir", callback_data=f"cms_btndel_{section}_ru"),
+            InlineKeyboardButton(text="🇺🇿 Tugma o'chir", callback_data=f"cms_btndel_{section}_uz"),
+            InlineKeyboardButton(text="🇷🇺 Tugma o'chir", callback_data=f"cms_btndel_{section}_ru"),
         ],
         [
             InlineKeyboardButton(text="🇺🇿 Ko'rish", callback_data=f"preview_{section}_uz"),
@@ -343,7 +409,7 @@ def kb_adm_prices():
     ])
 
 # ═══════════════════════════════════════════════════════════════
-#  SECTION YUBORISH (rasm yoki matn)
+#  SECTION YUBORISH
 # ═══════════════════════════════════════════════════════════════
 async def send_section(target, section, lang):
     content = load_content()
@@ -372,13 +438,134 @@ async def send_section(target, section, lang):
         await target.answer(text, reply_markup=kb, parse_mode="HTML")
 
 # ═══════════════════════════════════════════════════════════════
-#  START / ADMIN
+#  START
 # ═══════════════════════════════════════════════════════════════
 @dp.message(Command("start"))
-async def cmd_start(msg: Message):
-    register_user(msg.from_user.id, msg.from_user.username, msg.from_user.full_name)
+async def cmd_start(msg: Message, state: FSMContext):
+    user  = msg.from_user
+    users = load_users()
+
+    # Guruh obunasini tekshirish
+    is_subscribed = await check_subscription(user.id)
+
+    if not is_subscribed:
+        await msg.answer(
+            "📢 <b>ОМАД ТУР</b> guruhiga a'zo bo'ling!\n\n"
+            "Yangi biletlar narxi va aksiyalar bilan tanishib chiqing.\n\n"
+            "━━━━━━━━━━━━━━━\n\n"
+            "📢 Вступите в группу <b>ОМАД ТУР</b>!\n\n"
+            "Узнайте актуальные цены на билеты и акции.",
+            reply_markup=kb_subscribe("uz"),
+            parse_mode="HTML"
+        )
+        return
+
+    # Telefon raqam so'rash (yangi foydalanuvchi)
+    if str(user.id) not in users:
+        kb = ReplyKeyboardMarkup(
+            keyboard=[[KeyboardButton(
+                text="📱 Raqamni ulashish / Поделиться номером",
+                request_contact=True
+            )]],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+        await msg.answer(
+            "👋 <b>Xush kelibsiz!</b>\n\n"
+            "Davom etish uchun telefon raqamingizni ulashing:\n\n"
+            "👋 <b>Добро пожаловать!</b>\n\n"
+            "Для продолжения поделитесь номером телефона:",
+            reply_markup=kb,
+            parse_mode="HTML"
+        )
+        await state.set_state(S.phone)
+        return
+
     await msg.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
 
+# ═══════════════════════════════════════════════════════════════
+#  TELEFON RAQAM QABUL QILISH
+# ═══════════════════════════════════════════════════════════════
+@dp.message(S.phone)
+async def get_phone(msg: Message, state: FSMContext):
+    user = msg.from_user
+    phone = ""
+
+    if msg.contact:
+        phone = msg.contact.phone_number
+    else:
+        await msg.answer("📱 Iltimos tugmani bosing!", parse_mode="HTML")
+        return
+
+    users, is_new = save_user(user.id, user.username, user.full_name, phone)
+    write_users(users)
+
+    # Admin ga yangi foydalanuvchi xabari
+    if is_new:
+        uname = f"@{user.username}" if user.username else "—"
+        await bot.send_message(
+            ADMIN_ID,
+            f"🆕 <b>Yangi foydalanuvchi!</b>\n\n"
+            f"👤 Ism: <b>{user.full_name}</b>\n"
+            f"📱 Username: {uname}\n"
+            f"📞 Tel: <b>{phone}</b>\n"
+            f"🆔 ID: <code>{user.id}</code>",
+            parse_mode="HTML"
+        )
+
+    await msg.answer(
+        "✅ Rahmat!\n\n",
+        reply_markup=ReplyKeyboardRemove()
+    )
+    await asyncio.sleep(0.5)
+    await msg.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+    await state.clear()
+
+# ═══════════════════════════════════════════════════════════════
+#  GURUH OBUNA TEKSHIRISH
+# ═══════════════════════════════════════════════════════════════
+@dp.callback_query(F.data.startswith("check_sub_"))
+async def check_sub(cb: CallbackQuery, state: FSMContext):
+    lang = cb.data.split("_")[2]
+    user = cb.from_user
+    is_subscribed = await check_subscription(user.id)
+
+    if not is_subscribed:
+        uz = lang == "uz"
+        await cb.answer(
+            "❌ Siz guruhga a'zo emassiz!" if uz else "❌ Вы не вступили в группу!",
+            show_alert=True
+        )
+        return
+
+    users = load_users()
+    if str(user.id) not in users:
+        kb = ReplyKeyboardMarkup(
+            keyboard=[[KeyboardButton(
+                text="📱 Raqamni ulashish / Поделиться номером",
+                request_contact=True
+            )]],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+        await cb.message.answer(
+            "✅ Ajoyib! Guruhga a'zo bo'ldingiz!\n\n"
+            "Davom etish uchun telefon raqamingizni ulashing:\n\n"
+            "✅ Отлично! Вы вступили в группу!\n\n"
+            "Для продолжения поделитесь номером телефона:",
+            reply_markup=kb,
+            parse_mode="HTML"
+        )
+        await state.set_state(S.phone)
+    else:
+        try:
+            await cb.message.edit_text(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+        except:
+            await cb.message.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+
+# ═══════════════════════════════════════════════════════════════
+#  ADMIN COMMAND
+# ═══════════════════════════════════════════════════════════════
 @dp.message(Command("admin"))
 async def cmd_admin(msg: Message):
     if msg.from_user.id != ADMIN_ID:
@@ -390,11 +577,17 @@ async def cmd_admin(msg: Message):
 # ═══════════════════════════════════════════════════════════════
 @dp.callback_query(F.data == "lang_uz")
 async def lang_uz(cb: CallbackQuery):
-    await cb.message.edit_text(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+    try:
+        await cb.message.edit_text(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
+    except:
+        await cb.message.answer(txt_home("uz"), reply_markup=kb_main("uz"), parse_mode="HTML")
 
 @dp.callback_query(F.data == "lang_ru")
 async def lang_ru(cb: CallbackQuery):
-    await cb.message.edit_text(txt_home("ru"), reply_markup=kb_main("ru"), parse_mode="HTML")
+    try:
+        await cb.message.edit_text(txt_home("ru"), reply_markup=kb_main("ru"), parse_mode="HTML")
+    except:
+        await cb.message.answer(txt_home("ru"), reply_markup=kb_main("ru"), parse_mode="HTML")
 
 @dp.callback_query(F.data.startswith("home_"))
 async def go_home(cb: CallbackQuery):
@@ -413,61 +606,6 @@ async def show_section(cb: CallbackQuery):
     section = parts[1]
     lang    = parts[2]
     await send_section(cb, section, lang)
-
-# ═══════════════════════════════════════════════════════════════
-#  NARXLAR
-# ═══════════════════════════════════════════════════════════════
-@dp.callback_query(F.data.startswith("prices_"))
-async def prices_section(cb: CallbackQuery):
-    lang   = cb.data.split("_")[1]
-    prices = load_prices()
-    rows   = []
-    for i, d in enumerate(prices):
-        rows.append([InlineKeyboardButton(text=f"✈️ {d}", callback_data=f"dir_{lang}_{i}")])
-    rows.append([InlineKeyboardButton(
-        text="⬅️ Ortga" if lang == "uz" else "⬅️ Назад",
-        callback_data=f"sec_avia_{lang}"
-    )])
-    title = "✈️ <b>Yo'nalishni tanlang:</b>" if lang == "uz" else "✈️ <b>Выберите направление:</b>"
-    await cb.message.edit_text(title, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows), parse_mode="HTML")
-
-@dp.callback_query(F.data.startswith("dir_"))
-async def price_detail(cb: CallbackQuery):
-    parts  = cb.data.split("_")
-    lang   = parts[1]
-    idx    = int(parts[2])
-    prices = load_prices()
-    dirs   = list(prices.keys())
-    if idx >= len(dirs):
-        await cb.answer("Topilmadi!")
-        return
-    d     = dirs[idx]
-    final = prices[d] + SBOR
-    if lang == "uz":
-        text = (
-            f"✈️ <b>{d}</b>\n\n"
-            f"💰 Narx: <b>{final:,} ₽</b>\n\n"
-            f"📌 Narxga bagaj va xizmat to'lovlari kiradi\n"
-            f"📅 Narxlar har kuni o'zgarishi mumkin\n\n"
-            f"Bilet buyurtma qilish uchun 👇"
-        )
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="📲 Buyurtma qilish", url="https://t.me/OMAD_TOUR9094")],
-            [InlineKeyboardButton(text="⬅️ Ortga", callback_data="prices_uz")],
-        ])
-    else:
-        text = (
-            f"✈️ <b>{d}</b>\n\n"
-            f"💰 Цена: <b>{final:,} ₽</b>\n\n"
-            f"📌 В цену включён багаж и сборы\n"
-            f"📅 Цены могут меняться ежедневно\n\n"
-            f"Для заказа 👇"
-        )
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="📲 Заказать билет", url="https://t.me/OMAD_TOUR9094")],
-            [InlineKeyboardButton(text="⬅️ Назад", callback_data="prices_ru")],
-        ])
-    await cb.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
 
 # ═══════════════════════════════════════════════════════════════
 #  SAVOL
@@ -504,10 +642,15 @@ async def receive_question(msg: Message, state: FSMContext):
     user  = msg.from_user
     uname = f"@{user.username}" if user.username else "—"
 
+    # Foydalanuvchi ma'lumotlari
+    users = load_users()
+    phone = users.get(str(user.id), {}).get("phone", "—")
+
     header = (
         f"📨 <b>Yangi savol!</b>\n\n"
         f"👤 {user.full_name}\n"
         f"📱 {uname}\n"
+        f"📞 {phone}\n"
         f"🆔 <code>{user.id}</code>"
     )
     reply_kb = InlineKeyboardMarkup(inline_keyboard=[
@@ -534,6 +677,9 @@ async def receive_question(msg: Message, state: FSMContext):
     await msg.answer(confirm, reply_markup=kb_main(lang), parse_mode="HTML")
     await state.clear()
 
+# ═══════════════════════════════════════════════════════════════
+#  ADMIN JAVOB
+# ═══════════════════════════════════════════════════════════════
 @dp.callback_query(F.data.startswith("reply_"))
 async def start_reply(cb: CallbackQuery, state: FSMContext):
     if cb.from_user.id != ADMIN_ID:
@@ -578,393 +724,6 @@ async def adm_main(cb: CallbackQuery):
     except:
         await cb.message.answer("🔧 <b>Admin panel</b>", reply_markup=kb_admin(), parse_mode="HTML")
 
-# ═══════════════════════════════════════════════════════════════
-#  CMS — KONTENT
-# ═══════════════════════════════════════════════════════════════
-@dp.callback_query(F.data == "cms_main")
-async def cms_main(cb: CallbackQuery):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    await cb.message.edit_text(
-        "✏️ <b>Kontent boshqaruvi</b>\n\nQaysi bo'limni tahrirlash?",
-        reply_markup=kb_cms_main(), parse_mode="HTML"
-    )
-
-SECTION_NAMES = {
-    "visa": "🛂 Viza", "avia": "✈️ Aviakassa",
-    "contact": "📞 Aloqa", "address": "📍 Manzil"
-}
-
-@dp.callback_query(F.data.startswith("cms_sec_"))
-async def cms_sec(cb: CallbackQuery):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    section = cb.data.replace("cms_sec_", "")
-    name    = SECTION_NAMES.get(section, section)
-    content = load_content()
-    uz_btns = len(content.get(section, {}).get("uz", {}).get("buttons", []))
-    ru_btns = len(content.get(section, {}).get("ru", {}).get("buttons", []))
-    uz_photo = "✅" if content.get(section, {}).get("uz", {}).get("photo") else "❌"
-    ru_photo = "✅" if content.get(section, {}).get("ru", {}).get("photo") else "❌"
-
-    info = (
-        f"✏️ <b>{name}</b>\n\n"
-        f"🇺🇿 Rasm: {uz_photo} | Tugmalar: {uz_btns} ta\n"
-        f"🇷🇺 Rasm: {ru_photo} | Tugmalar: {ru_btns} ta\n\n"
-        f"Nimani o'zgartirish?"
-    )
-    try:
-        await cb.message.edit_text(info, reply_markup=kb_cms_section(section), parse_mode="HTML")
-    except:
-        await cb.message.answer(info, reply_markup=kb_cms_section(section), parse_mode="HTML")
-
-# ─── PREVIEW ─────────────────────────────────────────────────
-
-@dp.callback_query(F.data.startswith("preview_"))
-async def preview_section(cb: CallbackQuery):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    parts   = cb.data.split("_")
-    section = parts[1]
-    lang    = parts[2]
-    await cb.message.answer("👁 <b>Ko'rinish:</b>", parse_mode="HTML")
-    await send_section(cb.message, section, lang)
-
-# ─── MATN ────────────────────────────────────────────────────
-
-@dp.callback_query(F.data.startswith("cms_text_"))
-async def cms_text_start(cb: CallbackQuery, state: FSMContext):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    parts   = cb.data.split("_")
-    section = parts[2]
-    lang    = parts[3]
-    content = load_content()
-    cur     = content.get(section, {}).get(lang, {}).get("text", "")
-    await state.update_data(cms_section=section, cms_lang=lang)
-    await cb.message.answer(
-        f"✏️ <b>Yangi matnni yozing</b>\n\n"
-        f"HTML teglar ishlatishingiz mumkin:\n"
-        f"<code>&lt;b&gt;qalin&lt;/b&gt;</code>\n"
-        f"<code>&lt;i&gt;kursiv&lt;/i&gt;</code>\n\n"
-        f"<b>Hozirgi matn:</b>\n{cur[:300]}...",
-        parse_mode="HTML"
-    )
-    await state.set_state(S.cms_text)
-
-@dp.message(S.cms_text)
-async def cms_text_save(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    data    = await state.get_data()
-    section = data["cms_section"]
-    lang    = data["cms_lang"]
-    content = load_content()
-    content[section][lang]["text"] = msg.text
-    save_content(content)
-    await msg.answer(
-        "✅ <b>Matn saqlandi!</b>\n\nFoydalanuvchilar darhol yangi matnni ko'radi.",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="👁 Ko'rish",      callback_data=f"preview_{section}_{lang}")],
-            [InlineKeyboardButton(text="✏️ Bo'lim",       callback_data=f"cms_sec_{section}")],
-            [InlineKeyboardButton(text="⬅️ Admin panel",  callback_data="adm_main")],
-        ]),
-        parse_mode="HTML"
-    )
-    await state.clear()
-
-# ─── RASM ────────────────────────────────────────────────────
-
-@dp.callback_query(F.data.startswith("cms_photo_"))
-async def cms_photo_start(cb: CallbackQuery, state: FSMContext):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    parts   = cb.data.split("_")
-    section = parts[2]
-    lang    = parts[3]
-    await state.update_data(cms_section=section, cms_lang=lang)
-    await cb.message.answer(
-        "🖼 <b>Rasm yuborish</b>\n\n"
-        "Yangi rasmni yuboring.\n"
-        "Rasm bo'limda matn ustida ko'rinadi.\n\n"
-        "Rasmni o'chirish uchun: <code>o'chir</code> yozing",
-        parse_mode="HTML"
-    )
-    await state.set_state(S.cms_photo)
-
-@dp.message(S.cms_photo)
-async def cms_photo_save(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    data    = await state.get_data()
-    section = data["cms_section"]
-    lang    = data["cms_lang"]
-    content = load_content()
-
-    if msg.text and msg.text.strip().lower() in ["o'chir", "ochir", "удалить", "delete"]:
-        content[section][lang]["photo"] = ""
-        save_content(content)
-        await msg.answer("✅ Rasm o'chirildi!", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="⬅️ Bo'lim", callback_data=f"cms_sec_{section}")]
-        ]))
-    elif msg.photo:
-        file_id = msg.photo[-1].file_id
-        content[section][lang]["photo"] = file_id
-        save_content(content)
-        await msg.answer(
-            "✅ <b>Rasm saqlandi!</b>\n\nFoydalanuvchilar darhol ko'radi.",
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text="👁 Ko'rish",     callback_data=f"preview_{section}_{lang}")],
-                [InlineKeyboardButton(text="✏️ Bo'lim",      callback_data=f"cms_sec_{section}")],
-                [InlineKeyboardButton(text="⬅️ Admin panel", callback_data="adm_main")],
-            ]),
-            parse_mode="HTML"
-        )
-    else:
-        await msg.answer("❌ Rasm yuboring yoki 'o'chir' yozing!")
-        return
-    await state.clear()
-
-# ─── TUGMA QO'SHISH ──────────────────────────────────────────
-
-@dp.callback_query(F.data.startswith("cms_btnadd_"))
-async def cms_btnadd_start(cb: CallbackQuery, state: FSMContext):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    parts   = cb.data.split("_")
-    section = parts[2]
-    lang    = parts[3]
-    await state.update_data(cms_section=section, cms_lang=lang)
-    await cb.message.answer(
-        "➕ <b>Yangi tugma qo'shish</b>\n\n"
-        "Tugma nomini yozing:\n"
-        "<i>Masalan: 📞 Bog'lanish</i>",
-        parse_mode="HTML"
-    )
-    await state.set_state(S.cms_btn_text)
-
-@dp.message(S.cms_btn_text)
-async def cms_btn_text(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    await state.update_data(cms_btn_text=msg.text)
-    await msg.answer(
-        f"✅ Nom: <b>{msg.text}</b>\n\n"
-        f"Tugma URL manzilini yozing:\n"
-        f"<i>Masalan: https://t.me/OMAD_TOUR9094</i>",
-        parse_mode="HTML"
-    )
-    await state.set_state(S.cms_btn_url)
-
-@dp.message(S.cms_btn_url)
-async def cms_btn_url_save(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    data    = await state.get_data()
-    section = data["cms_section"]
-    lang    = data["cms_lang"]
-    btn_txt = data["cms_btn_text"]
-    url     = msg.text.strip()
-    content = load_content()
-    content[section][lang]["buttons"].append({"text": btn_txt, "url": url})
-    save_content(content)
-    await msg.answer(
-        f"✅ <b>Tugma qo'shildi!</b>\n\n"
-        f"📌 Nom: {btn_txt}\n"
-        f"🔗 URL: {url}",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="➕ Yana qo'shish", callback_data=f"cms_btnadd_{section}_{lang}")],
-            [InlineKeyboardButton(text="👁 Ko'rish",       callback_data=f"preview_{section}_{lang}")],
-            [InlineKeyboardButton(text="⬅️ Bo'lim",        callback_data=f"cms_sec_{section}")],
-        ]),
-        parse_mode="HTML"
-    )
-    await state.clear()
-
-# ─── TUGMA O'CHIRISH ─────────────────────────────────────────
-
-@dp.callback_query(F.data.startswith("cms_btndel_"))
-async def cms_btndel_start(cb: CallbackQuery):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    parts   = cb.data.split("_")
-    section = parts[2]
-    lang    = parts[3]
-    content = load_content()
-    buttons = content.get(section, {}).get(lang, {}).get("buttons", [])
-    if not buttons:
-        await cb.answer("Bu bo'limda tugma yo'q!", show_alert=True)
-        return
-    rows = []
-    for i, btn in enumerate(buttons):
-        rows.append([InlineKeyboardButton(
-            text=f"🗑 {btn['text']}",
-            callback_data=f"cms_btnrm_{section}_{lang}_{i}"
-        )])
-    rows.append([InlineKeyboardButton(text="⬅️ Ortga", callback_data=f"cms_sec_{section}")])
-    await cb.message.edit_text(
-        "🗑 <b>Qaysi tugmani o'chirish?</b>",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=rows),
-        parse_mode="HTML"
-    )
-
-@dp.callback_query(F.data.startswith("cms_btnrm_"))
-async def cms_btn_remove(cb: CallbackQuery):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    parts   = cb.data.split("_")
-    section = parts[2]
-    lang    = parts[3]
-    idx     = int(parts[4])
-    content = load_content()
-    buttons = content[section][lang]["buttons"]
-    if 0 <= idx < len(buttons):
-        removed = buttons.pop(idx)
-        save_content(content)
-        await cb.message.edit_text(
-            f"✅ O'chirildi: <b>{removed['text']}</b>",
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text="✏️ Bo'lim",      callback_data=f"cms_sec_{section}")],
-                [InlineKeyboardButton(text="⬅️ Admin panel", callback_data="adm_main")],
-            ]),
-            parse_mode="HTML"
-        )
-
-# ═══════════════════════════════════════════════════════════════
-#  ADMIN — NARXLAR
-# ═══════════════════════════════════════════════════════════════
-@dp.callback_query(F.data == "adm_prices")
-async def adm_prices(cb: CallbackQuery):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    await cb.message.edit_text("💰 <b>Narxlar</b>", reply_markup=kb_adm_prices(), parse_mode="HTML")
-
-@dp.callback_query(F.data == "adm_list")
-async def adm_list(cb: CallbackQuery):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    prices = load_prices()
-    lines  = ["📋 <b>Narxlar:</b>\n"]
-    for i, (d, p) in enumerate(prices.items(), 1):
-        lines.append(f"{i}. {d}\n   💰 {p:,} ₽ → mijoz: {p+SBOR:,} ₽\n")
-    await cb.message.edit_text("\n".join(lines), reply_markup=kb_adm_prices(), parse_mode="HTML")
-
-@dp.callback_query(F.data == "adm_add")
-async def adm_add(cb: CallbackQuery, state: FSMContext):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    await cb.message.answer(
-        "➕ Yo'nalish nomini yozing:\n<i>Масalan: Санкт-Петербург → Навои</i>",
-        parse_mode="HTML"
-    )
-    await state.set_state(S.add_dir)
-
-@dp.message(S.add_dir)
-async def adm_add_dir(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    await state.update_data(direction=msg.text)
-    await msg.answer(f"✅ <b>{msg.text}</b>\n\nNarxni kiriting (sborsiz):", parse_mode="HTML")
-    await state.set_state(S.add_price)
-
-@dp.message(S.add_price)
-async def adm_add_price(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    try:
-        price = int(msg.text.replace(" ", "").replace(",", ""))
-        data  = await state.get_data()
-        d     = data["direction"]
-        p     = load_prices()
-        p[d]  = price
-        save_prices(p)
-        await msg.answer(
-            f"✅ Saqlandi!\n📍 {d}\n💰 {price:,} ₽ → mijoz: {price+SBOR:,} ₽",
-            reply_markup=kb_adm_prices(), parse_mode="HTML"
-        )
-        await state.clear()
-    except ValueError:
-        await msg.answer("❌ Faqat raqam! Masalan: 18500")
-
-@dp.callback_query(F.data == "adm_edit")
-async def adm_edit(cb: CallbackQuery, state: FSMContext):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    prices = load_prices()
-    lines  = ["✏️ Qaysi raqam? Yozing:\n"]
-    for i, (d, p) in enumerate(prices.items(), 1):
-        lines.append(f"{i}. {d} — {p:,} ₽")
-    await cb.message.answer("\n".join(lines))
-    await state.set_state(S.edit_select)
-
-@dp.message(S.edit_select)
-async def adm_edit_sel(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    try:
-        idx  = int(msg.text.strip()) - 1
-        dirs = list(load_prices().keys())
-        if not (0 <= idx < len(dirs)):
-            await msg.answer("❌ Noto'g'ri raqam!")
-            return
-        await state.update_data(direction=dirs[idx])
-        await msg.answer(f"✏️ <b>{dirs[idx]}</b>\n\nYangi narx (sborsiz):", parse_mode="HTML")
-        await state.set_state(S.edit_price)
-    except ValueError:
-        await msg.answer("❌ Raqam kiriting!")
-
-@dp.message(S.edit_price)
-async def adm_edit_price(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    try:
-        price = int(msg.text.replace(" ", "").replace(",", ""))
-        data  = await state.get_data()
-        d     = data["direction"]
-        p     = load_prices()
-        p[d]  = price
-        save_prices(p)
-        await msg.answer(
-            f"✅ {d}\n💰 {price:,} ₽ → {price+SBOR:,} ₽",
-            reply_markup=kb_adm_prices(), parse_mode="HTML"
-        )
-        await state.clear()
-    except ValueError:
-        await msg.answer("❌ Raqam kiriting!")
-
-@dp.callback_query(F.data == "adm_delete")
-async def adm_delete(cb: CallbackQuery, state: FSMContext):
-    if cb.from_user.id != ADMIN_ID:
-        return
-    prices = load_prices()
-    lines  = ["🗑 Qaysi raqam? Yozing:\n"]
-    for i, (d, p) in enumerate(prices.items(), 1):
-        lines.append(f"{i}. {d} — {p:,} ₽")
-    await cb.message.answer("\n".join(lines))
-    await state.set_state(S.delete_select)
-
-@dp.message(S.delete_select)
-async def adm_del_sel(msg: Message, state: FSMContext):
-    if msg.from_user.id != ADMIN_ID:
-        return
-    try:
-        idx  = int(msg.text.strip()) - 1
-        p    = load_prices()
-        dirs = list(p.keys())
-        if not (0 <= idx < len(dirs)):
-            await msg.answer("❌ Noto'g'ri raqam!")
-            return
-        d = dirs[idx]
-        del p[d]
-        save_prices(p)
-        await msg.answer(f"✅ O'chirildi: {d}", reply_markup=kb_adm_prices())
-        await state.clear()
-    except ValueError:
-        await msg.answer("❌ Raqam kiriting!")
-
-# ═══════════════════════════════════════════════════════════════
-#  ADMIN — STATISTIKA
-# ═══════════════════════════════════════════════════════════════
 @dp.callback_query(F.data == "adm_stats")
 async def adm_stats(cb: CallbackQuery):
     if cb.from_user.id != ADMIN_ID:
@@ -978,9 +737,10 @@ async def adm_stats(cb: CallbackQuery):
         f"🔢 Jami tashriflar: <b>{visits}</b>\n",
         "<b>So'nggi 20:</b>"
     ]
-    for i, (_, u) in enumerate(list(users.items())[-20:], 1):
+    for i, (uid, u) in enumerate(list(users.items())[-20:], 1):
         uname = f"@{u['username']}" if u.get("username") else "—"
-        lines.append(f"{i}. {u['full_name']} {uname} — {u['visits']}x")
+        phone = u.get("phone", "—")
+        lines.append(f"{i}. {u['full_name']} | {uname} | {phone}")
     await cb.message.edit_text(
         "\n".join(lines),
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -989,9 +749,6 @@ async def adm_stats(cb: CallbackQuery):
         parse_mode="HTML"
     )
 
-# ═══════════════════════════════════════════════════════════════
-#  ADMIN — REKLAMA
-# ═══════════════════════════════════════════════════════════════
 @dp.callback_query(F.data == "adm_broadcast")
 async def adm_broadcast(cb: CallbackQuery, state: FSMContext):
     if cb.from_user.id != ADMIN_ID:
@@ -1029,6 +786,360 @@ async def do_broadcast(msg: Message, state: FSMContext):
         reply_markup=kb_admin(), parse_mode="HTML"
     )
     await state.clear()
+
+# ═══════════════════════════════════════════════════════════════
+#  CMS
+# ═══════════════════════════════════════════════════════════════
+SECTION_NAMES = {
+    "visa": "🛂 Viza", "avia": "✈️ Aviakassa",
+    "contact": "📞 Aloqa", "address": "📍 Manzil"
+}
+
+@dp.callback_query(F.data == "cms_main")
+async def cms_main(cb: CallbackQuery):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    await cb.message.edit_text(
+        "✏️ <b>Kontent boshqaruvi</b>\n\nQaysi bo'limni tahrirlash?",
+        reply_markup=kb_cms_main(), parse_mode="HTML"
+    )
+
+@dp.callback_query(F.data.startswith("cms_sec_"))
+async def cms_sec(cb: CallbackQuery):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    section = cb.data.replace("cms_sec_", "")
+    name    = SECTION_NAMES.get(section, section)
+    content = load_content()
+    uz_btns  = len(content.get(section, {}).get("uz", {}).get("buttons", []))
+    ru_btns  = len(content.get(section, {}).get("ru", {}).get("buttons", []))
+    uz_photo = "✅" if content.get(section, {}).get("uz", {}).get("photo") else "❌"
+    ru_photo = "✅" if content.get(section, {}).get("ru", {}).get("photo") else "❌"
+    info = (
+        f"✏️ <b>{name}</b>\n\n"
+        f"🇺🇿 Rasm: {uz_photo} | Tugmalar: {uz_btns} ta\n"
+        f"🇷🇺 Rasm: {ru_photo} | Tugmalar: {ru_btns} ta\n\n"
+        f"Nimani o'zgartirish?"
+    )
+    try:
+        await cb.message.edit_text(info, reply_markup=kb_cms_section(section), parse_mode="HTML")
+    except:
+        await cb.message.answer(info, reply_markup=kb_cms_section(section), parse_mode="HTML")
+
+@dp.callback_query(F.data.startswith("preview_"))
+async def preview_section(cb: CallbackQuery):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    parts   = cb.data.split("_")
+    section = parts[1]
+    lang    = parts[2]
+    await cb.message.answer("👁 <b>Ko'rinish:</b>", parse_mode="HTML")
+    await send_section(cb.message, section, lang)
+
+@dp.callback_query(F.data.startswith("cms_text_"))
+async def cms_text_start(cb: CallbackQuery, state: FSMContext):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    parts   = cb.data.split("_")
+    section = parts[2]
+    lang    = parts[3]
+    content = load_content()
+    cur     = content.get(section, {}).get(lang, {}).get("text", "")
+    await state.update_data(cms_section=section, cms_lang=lang)
+    await cb.message.answer(
+        f"✏️ <b>Yangi matnni yozing</b>\n\n"
+        f"<b>Hozirgi matn:</b>\n{cur[:200]}...",
+        parse_mode="HTML"
+    )
+    await state.set_state(S.cms_text)
+
+@dp.message(S.cms_text)
+async def cms_text_save(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    data    = await state.get_data()
+    section = data["cms_section"]
+    lang    = data["cms_lang"]
+    content = load_content()
+    content[section][lang]["text"] = msg.text
+    save_content(content)
+    await msg.answer(
+        "✅ <b>Matn saqlandi!</b>",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="👁 Ko'rish",     callback_data=f"preview_{section}_{lang}")],
+            [InlineKeyboardButton(text="✏️ Bo'lim",      callback_data=f"cms_sec_{section}")],
+            [InlineKeyboardButton(text="⬅️ Admin panel", callback_data="adm_main")],
+        ]),
+        parse_mode="HTML"
+    )
+    await state.clear()
+
+@dp.callback_query(F.data.startswith("cms_photo_"))
+async def cms_photo_start(cb: CallbackQuery, state: FSMContext):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    parts   = cb.data.split("_")
+    section = parts[2]
+    lang    = parts[3]
+    await state.update_data(cms_section=section, cms_lang=lang)
+    await cb.message.answer(
+        "🖼 Yangi rasmni yuboring.\n"
+        "O'chirish uchun: <code>o'chir</code> yozing",
+        parse_mode="HTML"
+    )
+    await state.set_state(S.cms_photo)
+
+@dp.message(S.cms_photo)
+async def cms_photo_save(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    data    = await state.get_data()
+    section = data["cms_section"]
+    lang    = data["cms_lang"]
+    content = load_content()
+    if msg.text and msg.text.strip().lower() in ["o'chir", "ochir", "удалить"]:
+        content[section][lang]["photo"] = ""
+        save_content(content)
+        await msg.answer("✅ Rasm o'chirildi!", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="⬅️ Bo'lim", callback_data=f"cms_sec_{section}")]
+        ]))
+    elif msg.photo:
+        content[section][lang]["photo"] = msg.photo[-1].file_id
+        save_content(content)
+        await msg.answer(
+            "✅ <b>Rasm saqlandi!</b>",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="👁 Ko'rish",     callback_data=f"preview_{section}_{lang}")],
+                [InlineKeyboardButton(text="⬅️ Admin panel", callback_data="adm_main")],
+            ]),
+            parse_mode="HTML"
+        )
+    else:
+        await msg.answer("❌ Rasm yuboring!")
+        return
+    await state.clear()
+
+@dp.callback_query(F.data.startswith("cms_btnadd_"))
+async def cms_btnadd_start(cb: CallbackQuery, state: FSMContext):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    parts   = cb.data.split("_")
+    section = parts[2]
+    lang    = parts[3]
+    await state.update_data(cms_section=section, cms_lang=lang)
+    await cb.message.answer(
+        "➕ Tugma nomini yozing:\n<i>Masalan: 📞 Bog'lanish</i>",
+        parse_mode="HTML"
+    )
+    await state.set_state(S.cms_btn_text)
+
+@dp.message(S.cms_btn_text)
+async def cms_btn_text(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    await state.update_data(cms_btn_text=msg.text)
+    await msg.answer(
+        f"✅ Nom: <b>{msg.text}</b>\n\nURL manzilini yozing:\n<i>https://t.me/...</i>",
+        parse_mode="HTML"
+    )
+    await state.set_state(S.cms_btn_url)
+
+@dp.message(S.cms_btn_url)
+async def cms_btn_url_save(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    data    = await state.get_data()
+    section = data["cms_section"]
+    lang    = data["cms_lang"]
+    btn_txt = data["cms_btn_text"]
+    url     = msg.text.strip()
+    content = load_content()
+    content[section][lang]["buttons"].append({"text": btn_txt, "url": url})
+    save_content(content)
+    await msg.answer(
+        f"✅ Tugma qo'shildi!\n📌 {btn_txt}\n🔗 {url}",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="➕ Yana",        callback_data=f"cms_btnadd_{section}_{lang}")],
+            [InlineKeyboardButton(text="⬅️ Admin panel", callback_data="adm_main")],
+        ]),
+        parse_mode="HTML"
+    )
+    await state.clear()
+
+@dp.callback_query(F.data.startswith("cms_btndel_"))
+async def cms_btndel_start(cb: CallbackQuery):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    parts   = cb.data.split("_")
+    section = parts[2]
+    lang    = parts[3]
+    content = load_content()
+    buttons = content.get(section, {}).get(lang, {}).get("buttons", [])
+    if not buttons:
+        await cb.answer("Tugma yo'q!", show_alert=True)
+        return
+    rows = []
+    for i, btn in enumerate(buttons):
+        rows.append([InlineKeyboardButton(
+            text=f"🗑 {btn['text']}",
+            callback_data=f"cms_btnrm_{section}_{lang}_{i}"
+        )])
+    rows.append([InlineKeyboardButton(text="⬅️ Ortga", callback_data=f"cms_sec_{section}")])
+    await cb.message.edit_text(
+        "🗑 Qaysi tugmani o'chirish?",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=rows),
+        parse_mode="HTML"
+    )
+
+@dp.callback_query(F.data.startswith("cms_btnrm_"))
+async def cms_btn_remove(cb: CallbackQuery):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    parts   = cb.data.split("_")
+    section = parts[2]
+    lang    = parts[3]
+    idx     = int(parts[4])
+    content = load_content()
+    buttons = content[section][lang]["buttons"]
+    if 0 <= idx < len(buttons):
+        removed = buttons.pop(idx)
+        save_content(content)
+        await cb.message.edit_text(
+            f"✅ O'chirildi: <b>{removed['text']}</b>",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="⬅️ Admin panel", callback_data="adm_main")]
+            ]),
+            parse_mode="HTML"
+        )
+
+# ═══════════════════════════════════════════════════════════════
+#  NARXLAR
+# ═══════════════════════════════════════════════════════════════
+@dp.callback_query(F.data == "adm_prices")
+async def adm_prices(cb: CallbackQuery):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    await cb.message.edit_text("💰 <b>Narxlar</b>", reply_markup=kb_adm_prices(), parse_mode="HTML")
+
+@dp.callback_query(F.data == "adm_list")
+async def adm_list(cb: CallbackQuery):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    prices = load_prices()
+    lines  = ["📋 <b>Narxlar:</b>\n"]
+    for i, (d, p) in enumerate(prices.items(), 1):
+        lines.append(f"{i}. {d}\n   💰 {p:,} ₽ → {p+SBOR:,} ₽\n")
+    await cb.message.edit_text("\n".join(lines), reply_markup=kb_adm_prices(), parse_mode="HTML")
+
+@dp.callback_query(F.data == "adm_add")
+async def adm_add(cb: CallbackQuery, state: FSMContext):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    await cb.message.answer("➕ Yo'nalish nomini yozing:\n<i>Санкт-Петербург → Навои</i>", parse_mode="HTML")
+    await state.set_state(S.add_dir)
+
+@dp.message(S.add_dir)
+async def adm_add_dir(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    await state.update_data(direction=msg.text)
+    await msg.answer(f"✅ <b>{msg.text}</b>\n\nNarxni kiriting (sborsiz):", parse_mode="HTML")
+    await state.set_state(S.add_price)
+
+@dp.message(S.add_price)
+async def adm_add_price(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    try:
+        price = int(msg.text.replace(" ", "").replace(",", ""))
+        data  = await state.get_data()
+        d     = data["direction"]
+        p     = load_prices()
+        p[d]  = price
+        save_prices(p)
+        await msg.answer(
+            f"✅ {d}\n💰 {price:,} ₽ → {price+SBOR:,} ₽",
+            reply_markup=kb_adm_prices(), parse_mode="HTML"
+        )
+        await state.clear()
+    except ValueError:
+        await msg.answer("❌ Faqat raqam!")
+
+@dp.callback_query(F.data == "adm_edit")
+async def adm_edit(cb: CallbackQuery, state: FSMContext):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    prices = load_prices()
+    lines  = ["✏️ Raqamini yozing:\n"]
+    for i, (d, p) in enumerate(prices.items(), 1):
+        lines.append(f"{i}. {d} — {p:,} ₽")
+    await cb.message.answer("\n".join(lines))
+    await state.set_state(S.edit_select)
+
+@dp.message(S.edit_select)
+async def adm_edit_sel(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    try:
+        idx  = int(msg.text.strip()) - 1
+        dirs = list(load_prices().keys())
+        if not (0 <= idx < len(dirs)):
+            await msg.answer("❌ Noto'g'ri!")
+            return
+        await state.update_data(direction=dirs[idx])
+        await msg.answer(f"✏️ <b>{dirs[idx]}</b>\n\nYangi narx:", parse_mode="HTML")
+        await state.set_state(S.edit_price)
+    except ValueError:
+        await msg.answer("❌ Raqam kiriting!")
+
+@dp.message(S.edit_price)
+async def adm_edit_price(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    try:
+        price = int(msg.text.replace(" ", "").replace(",", ""))
+        data  = await state.get_data()
+        d     = data["direction"]
+        p     = load_prices()
+        p[d]  = price
+        save_prices(p)
+        await msg.answer(
+            f"✅ {d}\n💰 {price:,} ₽ → {price+SBOR:,} ₽",
+            reply_markup=kb_adm_prices(), parse_mode="HTML"
+        )
+        await state.clear()
+    except ValueError:
+        await msg.answer("❌ Raqam kiriting!")
+
+@dp.callback_query(F.data == "adm_delete")
+async def adm_delete(cb: CallbackQuery, state: FSMContext):
+    if cb.from_user.id != ADMIN_ID:
+        return
+    prices = load_prices()
+    lines  = ["🗑 Raqamini yozing:\n"]
+    for i, (d, p) in enumerate(prices.items(), 1):
+        lines.append(f"{i}. {d} — {p:,} ₽")
+    await cb.message.answer("\n".join(lines))
+    await state.set_state(S.delete_select)
+
+@dp.message(S.delete_select)
+async def adm_del_sel(msg: Message, state: FSMContext):
+    if msg.from_user.id != ADMIN_ID:
+        return
+    try:
+        idx  = int(msg.text.strip()) - 1
+        p    = load_prices()
+        dirs = list(p.keys())
+        if not (0 <= idx < len(dirs)):
+            await msg.answer("❌ Noto'g'ri!")
+            return
+        d = dirs[idx]
+        del p[d]
+        save_prices(p)
+        await msg.answer(f"✅ O'chirildi: {d}", reply_markup=kb_adm_prices())
+        await state.clear()
+    except ValueError:
+        await msg.answer("❌ Raqam kiriting!")
 
 # ═══════════════════════════════════════════════════════════════
 #  MAIN
