@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 # ═══════════════════════════════════════════════════════════════
 #  SOZLAMALAR
 # ═══════════════════════════════════════════════════════════════
-BOT_TOKEN   = "8949050831:AAHqp6G4hmoiAfYvf095_KN3GjTvIdFtWwY"
+BOT_TOKEN   = "8949050831:AAErsm__lRlfeqUsTgjOBCE0ATID9xee6XY"
 ADMIN_ID    = 7359558983
 SBOR        = 500
 GROUP_LINK  = "https://t.me/+OW_pzYSHjIA5NmQy"
