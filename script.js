@@ -1,25 +1,18 @@
 /* =========================================
-   ECONOMIC TEST
-   MAIN JAVASCRIPT
-========================================= */
-
-
-/* =========================================
-   SETTINGS
+   ECONOMICS TEST SYSTEM
 ========================================= */
 
 const QUESTIONS_PER_TEST = 10;
 
+const TOTAL_QUESTIONS = 1000;
 
-/* =========================================
-   STORAGE
-========================================= */
+const TOTAL_TESTS = 100;
 
 const STORAGE_KEY = "economicTestUser";
 
 
 /* =========================================
-   GLOBAL STATE
+   STATE
 ========================================= */
 
 let userData = null;
@@ -41,17 +34,30 @@ let answerSelected = false;
    DOM
 ========================================= */
 
-const loginPage = document.getElementById("loginPage");
-const homePage = document.getElementById("homePage");
-const testPage = document.getElementById("testPage");
-const resultPage = document.getElementById("resultPage");
+const loginPage =
+    document.getElementById("loginPage");
 
-const phoneInput = document.getElementById("phoneInput");
-const phoneError = document.getElementById("phoneError");
+const homePage =
+    document.getElementById("homePage");
 
-const loginButton = document.getElementById("loginButton");
+const testPage =
+    document.getElementById("testPage");
 
-const logoutButton = document.getElementById("logoutButton");
+const resultPage =
+    document.getElementById("resultPage");
+
+
+const phoneInput =
+    document.getElementById("phoneInput");
+
+const phoneError =
+    document.getElementById("phoneError");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const logoutButton =
+    document.getElementById("logoutButton");
 
 const continueButton =
     document.getElementById("continueButton");
@@ -73,57 +79,74 @@ const resultHomeButton =
    START
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    loadUser();
+        loadUser();
 
-    phoneInput.addEventListener(
-        "input",
-        formatPhone
-    );
 
-    loginButton.addEventListener(
-        "click",
-        login
-    );
+        phoneInput.addEventListener(
+            "input",
+            formatPhone
+        );
 
-    continueButton.addEventListener(
-        "click",
-        startTest
-    );
 
-    logoutButton.addEventListener(
-        "click",
-        logout
-    );
+        loginButton.addEventListener(
+            "click",
+            login
+        );
 
-    backHomeButton.addEventListener(
-        "click",
-        () => {
-            showPage(homePage);
-            updateHome();
-        }
-    );
 
-    nextButton.addEventListener(
-        "click",
-        nextQuestion
-    );
+        continueButton.addEventListener(
+            "click",
+            startTest
+        );
 
-    nextTestButton.addEventListener(
-        "click",
-        nextTest
-    );
 
-    resultHomeButton.addEventListener(
-        "click",
-        () => {
-            showPage(homePage);
-            updateHome();
-        }
-    );
+        logoutButton.addEventListener(
+            "click",
+            logout
+        );
 
-});
+
+        backHomeButton.addEventListener(
+            "click",
+            () => {
+
+                showPage(homePage);
+
+                updateHome();
+
+            }
+        );
+
+
+        nextButton.addEventListener(
+            "click",
+            nextQuestion
+        );
+
+
+        nextTestButton.addEventListener(
+            "click",
+            nextTest
+        );
+
+
+        resultHomeButton.addEventListener(
+            "click",
+            () => {
+
+                showPage(homePage);
+
+                updateHome();
+
+            }
+        );
+
+    }
+);
 
 
 /* =========================================
@@ -133,37 +156,50 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadUser() {
 
     const saved =
-        localStorage.getItem(STORAGE_KEY);
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
 
     if (!saved) {
 
         showPage(loginPage);
 
         return;
+
     }
+
 
     try {
 
-        userData = JSON.parse(saved);
+        userData =
+            JSON.parse(saved);
+
 
         if (!userData.phone) {
 
             showPage(loginPage);
 
             return;
+
         }
+
 
         showPage(homePage);
 
         updateHome();
 
+
     } catch (error) {
 
         console.error(error);
 
-        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(
+            STORAGE_KEY
+        );
 
         showPage(loginPage);
+
     }
 
 }
@@ -175,27 +211,44 @@ function loadUser() {
 
 function login() {
 
-    const phone =
-        normalizePhone(phoneInput.value);
+    const digits =
+        phoneInput.value.replace(
+            /\D/g,
+            ""
+        );
+
 
     phoneError.textContent = "";
 
-    if (phone.length < 10) {
+
+    if (digits.length !== 10) {
 
         phoneError.textContent =
-            "Введите корректный номер телефона.";
+            "Введите 10 цифр номера телефона.";
 
         return;
+
     }
+
+
+    const phone =
+        "+7 " +
+        digits.substring(0, 3) +
+        " " +
+        digits.substring(3, 6) +
+        " " +
+        digits.substring(6, 8) +
+        " " +
+        digits.substring(8, 10);
 
 
     userData = {
 
         phone: phone,
 
-        currentQuestion: 0,
-
         currentTest: 1,
+
+        currentQuestion: 0,
 
         totalCorrect: 0,
 
@@ -212,6 +265,7 @@ function login() {
 
     saveUser();
 
+
     showPage(homePage);
 
     updateHome();
@@ -225,76 +279,63 @@ function login() {
 
 function formatPhone(event) {
 
-    let value =
-        event.target.value.replace(/\D/g, "");
+    let digits =
+        event.target.value.replace(
+            /\D/g,
+            ""
+        );
 
-    if (value.startsWith("8")) {
 
-        value = "7" + value.substring(1);
-    }
-
-    if (value.startsWith("7")) {
-
-        value = value.substring(1);
-    }
-
-    value = value.substring(0, 10);
+    digits =
+        digits.substring(0, 10);
 
 
     let formatted = "";
 
-    if (value.length > 0) {
 
-        formatted += value.substring(0, 3);
+    if (digits.length > 0) {
+
+        formatted =
+            digits.substring(0, 3);
+
     }
 
-    if (value.length >= 4) {
 
-        formatted += " " +
-            value.substring(3, 6);
+    if (digits.length >= 4) {
+
+        formatted +=
+            " " +
+            digits.substring(3, 6);
+
     }
 
-    if (value.length >= 7) {
 
-        formatted += " " +
-            value.substring(6, 8);
+    if (digits.length >= 7) {
+
+        formatted +=
+            " " +
+            digits.substring(6, 8);
+
     }
 
-    if (value.length >= 9) {
 
-        formatted += " " +
-            value.substring(8, 10);
+    if (digits.length >= 9) {
+
+        formatted +=
+            " " +
+            digits.substring(8, 10);
+
     }
 
-    event.target.value = formatted;
 
-}
-
-
-function normalizePhone(value) {
-
-    let digits =
-        value.replace(/\D/g, "");
-
-    if (digits.startsWith("8")) {
-
-        digits =
-            "7" + digits.substring(1);
-    }
-
-    if (!digits.startsWith("7")) {
-
-        digits =
-            "7" + digits;
-    }
-
-    return "+" + digits;
+    event.target.value =
+        formatted;
 
 }
 
 
 /* =========================================
-   SAVE USER
+   SAVE
 ========================================= */
 
 function saveUser() {
@@ -308,20 +349,26 @@ function saveUser() {
 
 
 /* =========================================
-   SHOW PAGE
+   PAGE
 ========================================= */
 
 function showPage(page) {
 
     document
         .querySelectorAll(".page")
-        .forEach(item => {
+        .forEach(
+            pageElement => {
 
-            item.classList.remove("active");
+                pageElement.classList.remove(
+                    "active"
+                );
 
-        });
+            }
+        );
+
 
     page.classList.add("active");
+
 
     window.scrollTo({
         top: 0,
@@ -346,20 +393,12 @@ function updateHome() {
         userData.phone;
 
 
-    const totalTests =
-        Math.ceil(
-            questions.length /
-            QUESTIONS_PER_TEST
-        );
-
-
-    const completed =
-        userData.completedTests;
-
-
     const percent =
         Math.round(
-            (completed / totalTests) * 100
+            (
+                userData.completedTests /
+                TOTAL_TESTS
+            ) * 100
         );
 
 
@@ -378,13 +417,13 @@ function updateHome() {
     document.getElementById(
         "completedTests"
     ).textContent =
-        completed;
+        userData.completedTests;
 
 
     document.getElementById(
         "totalTests"
     ).textContent =
-        totalTests;
+        TOTAL_TESTS;
 
 
     document.getElementById(
@@ -396,7 +435,7 @@ function updateHome() {
     document.getElementById(
         "totalQuestions"
     ).textContent =
-        questions.length;
+        TOTAL_QUESTIONS;
 
 
     document.getElementById(
@@ -414,20 +453,14 @@ function updateHome() {
     document.getElementById(
         "currentTestTitle"
     ).textContent =
-        "Тест №" + userData.currentTest;
-
-
-    const questionInTest =
-        userData.currentQuestion + 1;
+        "N" +
+        userData.currentTest;
 
 
     document.getElementById(
         "currentTestQuestion"
     ).textContent =
-        "Вопрос " +
-        questionInTest +
-        " из " +
-        QUESTIONS_PER_TEST;
+        "10 вопросов";
 
 }
 
@@ -441,8 +474,10 @@ function startTest() {
     currentTestNumber =
         userData.currentTest;
 
+
     currentQuestionIndex =
         userData.currentQuestion;
+
 
     currentScore = 0;
 
@@ -452,6 +487,7 @@ function startTest() {
 
     answerSelected = false;
 
+
     showPage(testPage);
 
     renderQuestion();
@@ -460,16 +496,16 @@ function startTest() {
 
 
 /* =========================================
-   GET CURRENT QUESTION
+   GET QUESTION
 ========================================= */
 
 function getCurrentQuestion() {
 
     const globalIndex =
         (
-            currentTestNumber - 1
-        ) *
-            QUESTIONS_PER_TEST +
+            (currentTestNumber - 1) *
+            QUESTIONS_PER_TEST
+        ) +
         currentQuestionIndex;
 
 
@@ -479,7 +515,7 @@ function getCurrentQuestion() {
 
 
 /* =========================================
-   RENDER QUESTION
+   RENDER
 ========================================= */
 
 function renderQuestion() {
@@ -493,6 +529,7 @@ function renderQuestion() {
         finishTest();
 
         return;
+
     }
 
 
@@ -506,7 +543,8 @@ function renderQuestion() {
     document.getElementById(
         "testNumber"
     ).textContent =
-        "Тест №" + currentTestNumber;
+        "N" +
+        currentTestNumber;
 
 
     document.getElementById(
@@ -514,8 +552,7 @@ function renderQuestion() {
     ).textContent =
         "Вопрос " +
         questionNumber +
-        " из " +
-        QUESTIONS_PER_TEST;
+        " из 10";
 
 
     document.getElementById(
@@ -592,11 +629,15 @@ function renderQuestion() {
 
             button.addEventListener(
                 "click",
-                () => selectAnswer(
-                    button,
-                    letter,
-                    question.correct
-                )
+                () => {
+
+                    selectAnswer(
+                        button,
+                        letter,
+                        question.correct
+                    );
+
+                }
             );
 
 
@@ -616,13 +657,12 @@ function renderQuestion() {
 
 
     if (
-        questionNumber ===
-        QUESTIONS_PER_TEST
+        questionNumber === 10
     ) {
 
         nextButton.innerHTML =
             `
-            Завершить тест
+            Завершить N${currentTestNumber}
             <span>✓</span>
             `;
 
@@ -633,13 +673,14 @@ function renderQuestion() {
             Следующий вопрос
             <span>→</span>
             `;
+
     }
 
 }
 
 
 /* =========================================
-   SELECT ANSWER
+   ANSWER
 ========================================= */
 
 function selectAnswer(
@@ -650,16 +691,17 @@ function selectAnswer(
 
     if (answerSelected) return;
 
+
     answerSelected = true;
 
 
-    const allButtons =
+    const buttons =
         document.querySelectorAll(
             ".answer-button"
         );
 
 
-    allButtons.forEach(
+    buttons.forEach(
         button => {
 
             button.classList.add(
@@ -679,6 +721,7 @@ function selectAnswer(
             "correct"
         );
 
+
         currentCorrect++;
 
         currentScore++;
@@ -690,10 +733,11 @@ function selectAnswer(
             "wrong"
         );
 
+
         currentWrong++;
 
 
-        allButtons.forEach(
+        buttons.forEach(
             button => {
 
                 if (
@@ -748,13 +792,13 @@ function nextQuestion() {
 
 
     if (
-        currentQuestionIndex >=
-        QUESTIONS_PER_TEST
+        currentQuestionIndex >= 10
     ) {
 
         finishTest();
 
         return;
+
     }
 
 
@@ -769,10 +813,6 @@ function nextQuestion() {
 
 function finishTest() {
 
-    const testScore =
-        currentScore;
-
-
     userData.totalCorrect +=
         currentCorrect;
 
@@ -782,28 +822,36 @@ function finishTest() {
 
 
     userData.completedQuestions +=
-        QUESTIONS_PER_TEST;
+        10;
 
 
-    userData.completedTests++;
+    userData.completedTests =
+        currentTestNumber;
 
 
     userData.lastScore =
-        testScore;
+        currentScore;
 
 
-    userData.currentQuestion = 0;
+    userData.currentQuestion =
+        0;
 
 
     saveUser();
 
 
     document.getElementById(
+        "resultTestNumber"
+    ).textContent =
+        "N" +
+        currentTestNumber;
+
+
+    document.getElementById(
         "resultScore"
     ).textContent =
         currentScore +
-        "/" +
-        QUESTIONS_PER_TEST;
+        "/10";
 
 
     document.getElementById(
@@ -819,12 +867,7 @@ function finishTest() {
 
 
     const percent =
-        Math.round(
-            (
-                currentScore /
-                QUESTIONS_PER_TEST
-            ) * 100
-        );
+        currentScore * 10;
 
 
     document.querySelector(
@@ -833,32 +876,36 @@ function finishTest() {
         percent + "%";
 
 
-    const totalTests =
-        Math.ceil(
-            questions.length /
-            QUESTIONS_PER_TEST
-        );
-
-
     if (
-        userData.completedTests >=
-        totalTests
+        currentTestNumber <
+        TOTAL_TESTS
     ) {
 
-        nextTestButton.textContent =
-            "Все тесты завершены ✓";
+        const nextNumber =
+            currentTestNumber + 1;
 
-        nextTestButton.disabled = true;
+
+        nextTestButton.innerHTML =
+            `
+            Перейти к N${nextNumber}
+            <span>→</span>
+            `;
+
+
+        nextTestButton.disabled =
+            false;
+
 
     } else {
 
         nextTestButton.innerHTML =
             `
-            Перейти к следующему тесту
-            <span>→</span>
+            Все тесты завершены ✓
             `;
 
-        nextTestButton.disabled = false;
+
+        nextTestButton.disabled =
+            true;
 
     }
 
@@ -874,33 +921,21 @@ function finishTest() {
 
 function nextTest() {
 
-    const totalTests =
-        Math.ceil(
-            questions.length /
-            QUESTIONS_PER_TEST
-        );
-
-
     if (
-        userData.currentTest >=
-        totalTests
+        currentTestNumber >=
+        TOTAL_TESTS
     ) {
 
         return;
+
     }
 
 
-    userData.currentTest++;
+    currentTestNumber++;
 
-    userData.currentQuestion = 0;
-
-    saveUser();
-
-
-    currentTestNumber =
-        userData.currentTest;
 
     currentQuestionIndex = 0;
+
 
     currentScore = 0;
 
@@ -909,7 +944,19 @@ function nextTest() {
     currentWrong = 0;
 
 
+    userData.currentTest =
+        currentTestNumber;
+
+
+    userData.currentQuestion =
+        0;
+
+
+    saveUser();
+
+
     showPage(testPage);
+
 
     renderQuestion();
 
@@ -932,17 +979,17 @@ function logout() {
 
 
     /*
-       ВАЖНО:
-       Мы НЕ удаляем прогресс.
-
-       Поэтому при повторном входе
-       на этом же устройстве данные
-       останутся.
+       Прогресс НЕ удаляется.
+       Поэтому после повторного входа
+       пользователь продолжит с текущего N.
     */
+
 
     userData = null;
 
+
     phoneInput.value = "";
+
 
     showPage(loginPage);
 
