@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="Онлайн тестирование по экономике">
+
+    <title>Экономический анализ — Онлайн тест</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         LOGIN PAGE
+    ========================== -->
+
+    <div id="loginPage" class="page active">
+
+        <div class="login-container">
+
+            <div class="brand-logo">
+                <div class="logo-icon">ЭА</div>
+            </div>
+
+            <h1>Экономический анализ</h1>
+
+            <p class="subtitle">
+                Онлайн-тестирование
+            </p>
+
+            <div class="login-card">
+
+                <h2>Добро пожаловать!</h2>
+
+                <p class="login-description">
+                    Введите номер телефона, чтобы сохранить ваш прогресс.
+                </p>
+
+                <div class="input-wrapper">
+
+                    <span class="input-prefix">+</span>
+
+                    <input
+                        type="tel"
+                        id="phoneInput"
+                        placeholder="7 999 123 45 67"
+                        maxlength="16"
+                        autocomplete="tel"
+                    >
+
+                </div>
+
+                <div id="phoneError" class="error-message"></div>
+
+                <button id="loginButton" class="primary-button">
+                    Войти и начать
+                    <span>→</span>
+                </button>
+
+                <p class="save-info">
+                    🔒 Ваш прогресс будет сохранён автоматически
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         HOME PAGE
+    ========================== -->
+
+    <div id="homePage" class="page">
+
+        <header class="top-header">
+
+            <div class="header-logo">
+                <div class="small-logo">ЭА</div>
+                <span>Экономический анализ</span>
+            </div>
+
+            <button id="logoutButton" class="logout-button">
+                Выйти
+            </button>
+
+        </header>
+
+
+        <main class="main-content">
+
+            <div class="welcome-block">
+
+                <p class="hello-text">
+                    Добро пожаловать!
+                </p>
+
+                <h1 id="userPhoneDisplay">
+                    +7
+                </h1>
+
+                <p>
+                    Продолжайте обучение с того места,
+                    где остановились.
+                </p>
+
+            </div>
+
+
+            <!-- Progress -->
+
+            <div class="progress-card">
+
+                <div class="progress-top">
+
+                    <div>
+                        <span class="card-label">
+                            Ваш прогресс
+                        </span>
+
+                        <strong id="progressPercent">
+                            0%
+                        </strong>
+                    </div>
+
+                    <div class="progress-number">
+                        <span id="completedTests">0</span>
+                        /
+                        <span id="totalTests">100</span>
+                        тестов
+                    </div>
+
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        id="progressBar"
+                        class="progress-fill"
+                    ></div>
+
+                </div>
+
+                <div class="progress-bottom">
+
+                    <span>
+                        Пройдено вопросов:
+                        <b id="completedQuestions">0</b>
+                    </span>
+
+                    <span>
+                        Всего:
+                        <b id="totalQuestions">1000</b>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Current test -->
+
+            <div class="current-test-card">
+
+                <div class="test-icon">
+                    📚
+                </div>
+
+                <div class="test-info">
+
+                    <span class="card-label">
+                        Текущий тест
+                    </span>
+
+                    <h2 id="currentTestTitle">
+                        Тест №1
+                    </h2>
+
+                    <p id="currentTestQuestion">
+                        Вопрос 1 из 10
+                    </p>
+
+                </div>
+
+                <button
+                    id="continueButton"
+                    class="continue-button"
+                >
+                    Продолжить
+                    <span>→</span>
+                </button>
+
+            </div>
+
+
+            <!-- Statistics -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+                        <span>Правильных</span>
+                        <strong id="correctTotal">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        ×
+                    </div>
+
+                    <div>
+                        <span>Неправильных</span>
+                        <strong id="wrongTotal">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+         TEST PAGE
+    ========================== -->
+
+    <div id="testPage" class="page">
+
+        <header class="test-header">
+
+            <button
+                id="backHomeButton"
+                class="back-button"
+            >
+                ←
+            </button>
+
+            <div class="test-header-info">
+
+                <span id="testNumber">
+                    Тест №1
+                </span>
+
+                <strong id="questionCounter">
+                    Вопрос 1 из 10
+                </strong>
+
+            </div>
+
+            <div class="score-display">
+                <span>Баллы</span>
+                <strong id="currentScore">
+                    0
+                </strong>
+            </div>
+
+        </header>
+
+
+        <main class="test-container">
+
+            <!-- Test progress -->
+
+            <div class="question-progress">
+
+                <div class="question-progress-bar">
+
+                    <div
+                        id="questionProgressFill"
+                        class="question-progress-fill"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Question -->
+
+            <div class="question-card">
+
+                <div class="question-number">
+                    ВОПРОС <span id="questionNumber">1</span>
+                </div>
+
+                <h1 id="questionText">
+                    Загрузка вопроса...
+                </h1>
+
+            </div>
+
+
+            <!-- Answers -->
+
+            <div
+                id="answersContainer"
+                class="answers-container"
+            >
+            </div>
+
+
+            <!-- Next button -->
+
+            <button
+                id="nextButton"
+                class="next-button disabled"
+                disabled
+            >
+                Следующий вопрос
+                <span>→</span>
+            </button>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+         RESULT PAGE
+    ========================== -->
+
+    <div id="resultPage" class="page">
+
+        <main class="result-container">
+
+            <div class="result-icon">
+                🏆
+            </div>
+
+            <p class="result-label">
+                ТЕСТ ЗАВЕРШЁН
+            </p>
+
+            <h1>
+                Отличная работа!
+            </h1>
+
+            <p class="result-description">
+                Результат вашего тестирования
+            </p>
+
+
+            <div class="result-score-card">
+
+                <span>
+                    Ваш результат
+                </span>
+
+                <strong id="resultScore">
+                    0/10
+                </strong>
+
+                <div class="result-percent">
+                    0%
+                </div>
+
+            </div>
+
+
+            <div class="result-stats">
+
+                <div class="result-stat correct-stat">
+
+                    <span class="result-stat-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <span>Правильных ответов</span>
+                        <strong id="resultCorrect">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="result-stat wrong-stat">
+
+                    <span class="result-stat-icon">
+                        ×
+                    </span>
+
+                    <div>
+                        <span>Неправильных ответов</span>
+                        <strong id="resultWrong">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="nextTestButton"
+                class="primary-button result-button"
+            >
+                Перейти к следующему тесту
+                <span>→</span>
+            </button>
+
+
+            <button
+                id="resultHomeButton"
+                class="secondary-button"
+            >
+                Вернуться на главную
+            </button>
+
+        </main>
+
+    </div>
+
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
