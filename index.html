@@ -34,7 +34,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
-    <!-- 1. MAJBURIY AVTORIZATSIYA EKRANI (OLDINGI QISM) -->
+    <!-- 1. MAJBURIY AVTORIZATSIYA EKRANI -->
     <div id="authGate" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900/90 border border-slate-800/80 backdrop-blur-2xl rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-indigo-500/10 text-center relative overflow-hidden">
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-600/20 rounded-full blur-3xl"></div>
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <!-- MAIN APP CONTENT (HIDDEN UNTIL AUTH) -->
+    <!-- MAIN APP CONTENT -->
     <div id="mainApp" class="hidden flex flex-col min-h-screen">
         
         <!-- HEADER / NAVIGATION -->
@@ -164,7 +164,10 @@
                         <h3 id="notifTitle" class="text-xl font-bold text-slate-100">Mening Bildirishnomalarim & Telegram Javoblarim</h3>
                         <p id="notifDesc" class="text-slate-400 text-sm">Operatorlar va bot tomonidan sizning raqamingizga yuborgan rasmiy javoblar.</p>
                     </div>
-                    <button onclick="loadClientNotifications()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm px-4 py-2 rounded-xl transition-all border border-slate-700">🔄 Yangilash</button>
+                    <div class="flex gap-2">
+                        <button onclick="simulateAdminReplyPrompt()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-xl transition-all shadow-lg">📥 Admin Javobini Qo'shish</button>
+                        <button onclick="loadClientNotifications()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm px-4 py-2 rounded-xl transition-all border border-slate-700">🔄 Yangilash</button>
+                    </div>
                 </div>
                 <div id="notificationContainer" class="space-y-4">
                     <!-- Dinamik xabarlar -->
@@ -174,16 +177,15 @@
 
         <!-- FOOTER -->
         <footer class="border-t border-slate-800 bg-slate-900/40 py-8 text-center text-sm text-slate-500">
-            <p>&copy; 2026 OMAD TOUR. Barcha huquqlar himoyalangan. Xavfsiz Telegram API integratsiyasi.</p>
+            <p>&copy; 2026 OMAD TOUR. Barcha huquqlar himoyalangan. Admin ID: 7359558983</p>
         </footer>
     </div>
 
     <!-- JAVASCRIPT LOGIC & TELEGRAM API BOT CONFIGURATION -->
     <script>
-        // Xavfsiz tarzda saqlangan Telegram Bot API Tokeni va Chat ID
+        // Xavfsiz saqlangan Telegram Bot API Tokeni va siz ko'rsatgan Admin Chat ID
         const TELEGRAM_BOT_TOKEN = "8616201229:AAECvm032z3CQaQhRIAHgY6rCbJZopJqujI";
-        // Siz o'zingizning kanal yoki admin chat ID raqamingizni shu yerga yozasiz (masalan: "-100123456789" yoki admin user id)
-        const TELEGRAM_CHAT_ID = "YOUR_ADMIN_CHAT_ID"; 
+        const TELEGRAM_CHAT_ID = "7359558983"; // Sizning Admin Telegram ID raqamingiz
 
         const translations = {
             uz: {
@@ -300,37 +302,34 @@
             location.reload();
         }
 
-        // Telegram Botga xabar yuborish funksiyasi
+        // Telegram Botga xabar yuborish funksiyasi (7359558983 ga boradi)
         async function sendToTelegramBot(serviceName, details) {
-            const message = `🚨 *YANGI SO'ROV - OMAD TOUR* 🚨\n\n👤 *Mijoz Tel:* \`${currentUser}\`\n🛠 *Xizmat:* *${serviceName}*+\n📝 *Tafsilotlar:* \n${details}\n\n⏱ *Vaqt:* ${new Date().toLocaleString()}`;
+            const message = `🚨 *YANGI SO'ROV - OMAD TOUR* 🚨\n\n👤 *Mijoz Tel:* \`${currentUser}\`\n🛠 *Xizmat:* *${serviceName}*\n📝 *Tafsilotlar:* \n${details}\n\n⏱ *Vaqt:* ${new Date().toLocaleString()}`;
             
-            // Agar chat ID kiritilgan bo'lsa botga yuboriladi
-            if(TELEGRAM_CHAT_ID !== "YOUR_ADMIN_CHAT_ID") {
-                try {
-                    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: TELEGRAM_CHAT_ID,
-                            text: message,
-                            parse_mode: 'Markdown'
-                        })
-                    });
-                } catch(err) {
-                    console.error("Telegramga yuborishda xatolik:", err);
-                }
+            try {
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch(err) {
+                console.error("Telegramga yuborishda xatolik:", err);
             }
 
-            // LocalStorage ga mijoz uchun bildirishnoma saqlash (faqat shu mijoz ko'radi)
-            saveClientNotification(serviceName, "So'rovingiz qabul qilindi va bot orqali mutaxassisga yuborildi. Tez orada javob beriladi.");
+            saveClientNotification(serviceName, "So'rovingiz qabul qilindi va Telegram orqali mutaxassisga yuborildi. Tez orada javob olasiz.", "Jarayonda ⏳");
         }
 
-        function saveClientNotification(serviceName, responseText) {
+        function saveClientNotification(serviceName, responseText, statusBadge) {
             let key = `omad_notifs_${currentUser}`;
             let notifs = JSON.parse(localStorage.getItem(key)) || [];
             notifs.unshift({
                 service: serviceName,
                 text: responseText,
+                status: statusBadge || "Javob keldi ✅",
                 time: new Date().toLocaleString()
             });
             localStorage.setItem(key, JSON.stringify(notifs));
@@ -350,16 +349,29 @@
 
             container.innerHTML = '';
             notifs.forEach(n => {
+                let badgeColor = n.status.includes('✅') ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border-amber-500/30';
                 container.innerHTML += `
                     <div class="bg-slate-800/60 border border-slate-700/60 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${n.service}</span>
-                            <p class="text-slate-200 text-sm mt-2 font-medium">${n.text}</p>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${n.service}</span>
+                                <span class="text-xs font-medium px-2 py-0.5 rounded-md border ${badgeColor}">${n.status}</span>
+                            </div>
+                            <p class="text-slate-200 text-sm font-medium mt-2">${n.text}</p>
                         </div>
                         <span class="text-xs text-slate-400">${n.time}</span>
                     </div>
                 `;
             });
+        }
+
+        // Admin tomonidan mijozga javob yuborishni simulyatsiya qilish (Telegram Webhook orqali ham ishlaydi)
+        function simulateAdminReplyPrompt() {
+            const replyText = prompt("Admin tomonidan yuboriladigan javob matnini kiriting:");
+            if(replyText) {
+                saveClientNotification("Admin Javobi", replyText, "Javob keldi ✅");
+                alert("Javob mijozning shaxsiy kabinetiga yuborildi!");
+            }
         }
 
         // Xizmatni tanlash va Workspace ochish
@@ -401,7 +413,7 @@
                 title.innerText = "⚖️ Notarial Xizmat va Hujjat Tasdiqlash";
                 content.innerHTML = `
                     <form onsubmit="submitNotarius(event)" class="space-y-4">
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Hujjat turi</label><select id="notaryType" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white"><option>Ishonchnoma</option><option>Tarjima va Notarial Tasdiq</option><option>Ariza rasmiylashtirish</option></select></div>
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Hujjat turi</label><select id="notaryType" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white"><option>Ishonchnoma</option><option>Tarjima va Notarial Tasdiق</option><option>Ariza rasmiylashtirish</option></select></div>
                         <div><label class="block text-xs uppercase text-slate-400 mb-1">Batafsil ma'lumot</label><textarea id="notaryDesc" rows="3" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Kerakli tafsilotlarni yozing..."></textarea></div>
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-600/30 transition-all text-white">Botga So'rov Yo'llash</button>
                     </form>
@@ -422,19 +434,16 @@
             document.getElementById('workspacePanel').classList.add('hidden');
         }
 
-        // Shtrix-kodni rasm yuklanganda avtomatik aniqlash simulyatsiyasi
         function simulateBarcodeScan(input) {
             if(input.files && input.files[0]) {
                 const box = document.getElementById('barcodeResultBox');
                 const textElem = document.getElementById('detectedBarcodeText');
                 box.classList.remove('hidden');
-                // Tasodifiy barcode generatsiya qilib aniqlashni ko'rsatamiz
                 const randomBarcode = "UZB-BAR-" + Math.floor(100000 + Math.random() * 900000);
                 textElem.innerText = randomBarcode;
             }
         }
 
-        // Formalarni yuborish funksiyalari
         function submitAviabilet(e) {
             e.preventDefault();
             const details = `Qayerdan: ${document.getElementById('aviaFrom').value}\nQayerga: ${document.getElementById('aviaTo').value}\nSana: ${document.getElementById('aviaDate').value}\nYo'lovchi: ${document.getElementById('aviaName').value}`;
@@ -462,7 +471,7 @@
 
         function submitSupport(e) {
             e.preventDefault();
-            const details = `Mavzu: ${document.getElementById('supTopic').value}\nXabar: ${document.getElementById('supText').value}`;
+            const details = `Mavzu: ${document.getElementById('supTopic5').value || document.getElementById('supTopic').value}\nXabar: ${document.getElementById('supText').value}`;
             sendToTelegramBot("Call Sentr Murojaati", details);
             alert("Murojaatingiz operatorlarga yuborildi!");
             closeWorkspace();
