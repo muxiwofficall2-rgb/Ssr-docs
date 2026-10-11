@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omad Tour - Professional Service Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        accent: '#a855f7',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo & Brand -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round5" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-400 bg-clip-text text-transparent">OMAD TOUR</span>
+                    <span class="block text-xs font-medium text-indigo-400 tracking-wider">GLOBAL SERVICE</span>
+                </div>
+            </div>
+
+            <!-- Controls (Language & User Profile) -->
+            <div class="flex items-center gap-4">
+                <!-- Language Selector -->
+                <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-800 border border-slate-700 text-sm rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500 transition-all cursor-pointer">
+                    <option value="uz">O'zbekcha</option>
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                    <option value="tk">Türkmençe</option>
+                </select>
+
+                <!-- Auth Button / Status -->
+                <div id="authContainer">
+                    <button onclick="openAuthModal()" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <span id="navLoginText">Kirish</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN HERO & SERVICES -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <!-- Hero Section -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h1 id="heroTitle" class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-white via-indigo-200 to-purple-400 bg-clip-text text-transparent">
+                Professional Xizmatlar Markaziga Xush Kelibsiz
+            </h1>
+            <p id="heroDesc" class="text-slate-400 text-lg leading-relaxed">
+                Aviabiletlar bron qilish, viza tekshirish, notarial yordam va tezkor call-sentr xizmatlaridan bir joyda foydalaning.
+            </p>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <!-- 1. Aviabilet -->
+            <div onclick="selectService('aviabilet')" class="group relative bg-slate-900/80 border border-slate-800/80 hover:border-indigo-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 cursor-pointer overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                </div>
+                <h3 id="srv1Title" class="text-xl font-bold mb-2 text-slate-100">Aviabilet</h3>
+                <p id="srv1Desc" class="text-slate-400 text-sm leading-relaxed">Dunyoning istalgan nuqtasiga eng arzon aviabiletlar bron qilish.</p>
+            </div>
+
+            <!-- 2. Uzviza Javobi -->
+            <div onclick="selectService('viza')" class="group relative bg-slate-900/80 border border-slate-800/80 hover:border-purple-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 cursor-pointer overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h3 id="srv2Title" class="text-xl font-bold mb-2 text-slate-100">Uzb Vizasi Javobi</h3>
+                <p id="srv2Desc" class="text-slate-400 text-sm leading-relaxed">O‘zbekiston vizasi chiqish holatini onlayn va tezkor tekshirish.</p>
+            </div>
+
+            <!-- 3. Notarial Xizmat -->
+            <div onclick="selectService('notarius')" class="group relative bg-slate-900/80 border border-slate-800/80 hover:border-emerald-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 cursor-pointer overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <h3 id="srv3Title" class="text-xl font-bold mb-2 text-slate-100">Notarial Xizmat</h3>
+                <p id="srv3Desc" class="text-slate-400 text-sm leading-relaxed">Hujjatlarni tarjima qilish, tasdiqlash va notarius konsultatsiyasi.</p>
+            </div>
+
+            <!-- 4. Call Sentr & Yordam -->
+            <div onclick="selectService('support')" class="group relative bg-slate-900/80 border border-slate-800/80 hover:border-amber-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-amber-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <h3 id="srv4Title" class="text-xl font-bold mb-2 text-slate-100">Call Sentr & Yordam</h3>
+                <p id="srv4Desc" class="text-slate-400 text-sm leading-relaxed">24/7 operatorlar yordami va shoshilinch murojaat qoldirish.</p>
+            </div>
+        </div>
+
+        <!-- DYNAMIC WORKSPACE PANEL -->
+        <div id="workspacePanel" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 mb-16 hidden shadow-2xl">
+            <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4">
+                <h2 id="workspaceTitle" class="text-2xl font-bold text-indigo-400">Xizmatni tanlang</h2>
+                <button onclick="closeWorkspace()" class="text-slate-400 hover:text-white text-sm bg-slate-800 px-3 py-1.5 rounded-xl transition-all">✕ Yopish</button>
+            </div>
+            <div id="workspaceContent">
+                <!-- Dinamik forma contenti shu yerga yuklanadi -->
+            </div>
+        </div>
+
+        <!-- SYNCHRONIZED CLIENT DATABASE / LOGISTICS LEADERBOARD -->
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-3xl p-6 sm:p-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h3 id="dbTitle" class="text-xl font-bold text-slate-100">Sinxronlangan Mijozlar Bazasi & Logistika</h3>
+                    <p id="dbDesc" class="text-slate-400 text-sm">Real vaqt rejimida ro‘yxatdan o‘tgan va murojaat yo‘llagan mijozlar oqimi.</p>
+                </div>
+                <button onclick="loadClientsDatabase()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm px-4 py-2 rounded-xl transition-all border border-slate-700">🔄 Yangilash</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-800/60 uppercase text-xs text-slate-400 tracking-wider">
+                        <tr>
+                            <th class="p-4 rounded-l-xl">Mijoz (Tel)</th>
+                            <th class="p-4">Tanlangan Xizmat</th>
+                            <th class="p-4">Murojaat Vaqti</th>
+                            <th class="p-4 rounded-r-xl">Holati (Status)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientsTableBody" class="divide-y divide-slate-800/50">
+                        <!-- Dinamik ma'lumotlar -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800 bg-slate-900/40 py-8 text-center text-sm text-slate-500">
+        <p>&copy; 2026 OMAD TOUR. Barcha huquqlar himoyalangan. Ilg'or texnologiyalar asosida.</p>
+    </footer>
+
+    <!-- AUTHENTICATION MODAL -->
+    <div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-2 text-slate-100">Telefon raqam orqali kirish</h3>
+            <p id="modalDesc" class="text-slate-400 text-sm mb-6">Tizimda ro'yxatdan o'tish va sinxronlash uchun telefon raqamingizni kiriting.</p>
+            
+            <form onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label id="phoneLabel" class="block text-xs font-semibold uppercase text-slate-400 mb-2">Telefon raqam</label>
+                    <input type="tel" id="phoneNumberInput" required placeholder="+998 90 123 45 67" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-all">
+                </div>
+                <button type="submit" id="modalSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-indigo-600/30 transition-all">Tasdiqlash & Kirish</button>
+            </form>
+            <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white">✕</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & MULTILINGUAL SYSTEM -->
+    <script>
+        // Tarjimalar bazasi (UZ, RU, EN, TK)
+        const translations = {
+            uz: {
+                navLoginText: "Kirish",
+                heroTitle: "Professional Xizmatlar Markaziga Xush Kelibsiz",
+                heroDesc: "Aviabiletlar bron qilish, viza tekshirish, notarial yordam va tezkor call-sentr xizmatlaridan bir joyda foydalaning.",
+                srv1Title: "Aviabilet", srv1Desc: "Dunyoning istalgan nuqtasiga eng arzon aviabiletlar bron qilish.",
+                srv2Title: "Uzb Vizasi Javobi", srv2Desc: "O‘zbekiston vizasi chiqish holatini onlayn va tezkor tekshirish.",
+                srv3Title: "Notarial Xizmat", srv3Desc: "Hujjatlarni tarjima qilish, tasdiqlash va notarius konsultatsiyasi.",
+                srv4Title: "Call Sentr & Yordam", srv4Desc: "24/7 operatorlar yordami va shoshilinch murojaat qoldirish.",
+                dbTitle: "Sinxronlangan Mijozlar Bazasi & Logistika",
+                dbDesc: "Real vaqt rejimida ro‘yxatdan o‘tgan va murojaat yo‘llagan mijozlar oqimi.",
+                modalTitle: "Telefon raqam orqali kirish",
+                modalDesc: "Tizimda ro'yxatdan o'tish va sinxronlash uchun telefon raqamingizni kiriting.",
+                phoneLabel: "Telefon raqam",
+                modalSubmitBtn: "Tasdiqlash & Kirish"
+            },
+            ru: {
+                navLoginText: "Войти",
+                heroTitle: "Добро пожаловать в Центр Профессиональных Услуг",
+                heroDesc: "Бронирование авиабилетов, проверка виз, нотариальная помощь и оперативная служба поддержки в одном месте.",
+                srv1Title: "Авиабилеты", srv1Desc: "Бронирование недорогих авиабилетов в любую точку мира.",
+                srv2Title: "Ответ по визе Узб", srv2Desc: "Быстрая онлайн проверка статуса визы в Узбекистан.",
+                srv3Title: "Нотариальные услуги", srv3Desc: "Перевод документов, заверение и консультация нотариуса.",
+                srv4Title: "Колл-центр & Помощь", srv4Desc: "Круглосуточная поддержка операторов и экстренные запросы.",
+                dbTitle: "Синхронизированная база клиентов и логистика",
+                dbDesc: "Поток клиентов, зарегистрировавшихся и подавших заявки в реальном времени.",
+                modalTitle: "Вход по номеру телефона",
+                modalDesc: "Введите свой номер телефона для регистрации и синхронизации в системе.",
+                phoneLabel: "Номер телефона",
+                modalSubmitBtn: "Подтвердить и войти"
+            },
+            en: {
+                navLoginText: "Sign In",
+                heroTitle: "Welcome to Professional Services Center",
+                heroDesc: "Book airline tickets, check visa statuses, get notary assistance and 24/7 customer support all in one place.",
+                srv1Title: "Airline Tickets", srv1Desc: "Book affordable flights to anywhere in the world.",
+                srv2Title: "Uzb Visa Status", srv2Desc: "Fast online verification for Uzbekistan visa issuance status.",
+                srv3Title: "Notary Service", srv3Desc: "Document translation, certification, and notary consultation.",
+                srv4Title: "Call Center & Help", srv4Desc: "24/7 operator assistance and emergency inquiry submission.",
+                dbTitle: "Synchronized Client Database & Logistics",
+                dbDesc: "Real-time flow of registered clients and submitted service inquiries.",
+                modalTitle: "Sign in with Phone Number",
+                modalDesc: "Enter your phone number to register and synchronize within the system.",
+                phoneLabel: "Phone Number",
+                modalSubmitBtn: "Confirm & Sign In"
+            },
+            tk: {
+                navLoginText: "Girmek",
+                heroTitle: "Hünärmen Hyzmatlar Merkezi Hoş Geldiňiz",
+                heroDesc: "Awtobilet bron etmek, wiza ýagdaýyny barlamak, noter hyzmaty we 24/7 goldaw bir ýerde.",
+                srv1Title: "Awtobiletler", srv1Desc: "Dünýäniň islendik ýerine iň amatly awtobiletleri bron ediň.",
+                srv2Title: "Özbegistan Wiza Jogaby", srv2Desc: "Özbegistan wizasy çykyş ýagdaýyny çalt onlaýn barlamak.",
+                srv3Title: "Noter Hyzmaty", srv3Desc: "Resminamalary terjime etmek, tassyklamak we maslahat.",
+                srv4Title: "Call-sentr & Ýardam", srv4Desc: "24/7 operator goldawy we gyssagly ýüz tutmalar.",
+                dbTitle: "Sinxronizirlenen Müşderiler Bazasy & Logistika",
+                dbDesc: "Real wagtda registrasiýa geçen we ýüz tutan müşderileriň akymy.",
+                modalTitle: "Telefon belgi arkaly girmek",
+                modalDesc: "Ulgamda bellige almak we sinxronizasiýa etmek üçin telefon belgiňizi giriziň.",
+                phoneLabel: "Telefon belgi",
+                modalSubmitBtn: "Tassasykla we Gir"
+            }
+        };
+
+        let currentLang = 'uz';
+        let currentUser = localStorage.getItem('omad_user') || null;
+
+        // Sahifa yuklanganda holatni tekshirish
+        window.addEventListener('DOMContentLoaded', () => {
+            updateUIContent();
+            loadClientsDatabase();
+            if(currentUser) {
+                document.getElementById('authContainer').innerHTML = `
+                    <div class="flex items-center gap-3 bg-slate-800 px-4 py-2 rounded-xl border border-slate-700">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-sm font-medium text-white">${currentUser}</span>
+                        <button onclick="logout()" class="text-xs text-rose-400 hover:underline ml-2">Chiqish</button>
+                    </div>
+                `;
+            }
+        });
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            updateUIContent();
+        }
+
+        function updateUIContent() {
+            const t = translations[currentLang];
+            document.getElementById('navLoginText').innerText = currentUser ? currentUser : t.navLoginText;
+            document.getElementById('heroTitle').innerText = t.heroTitle;
+            document.getElementById('heroDesc').innerText = t.heroDesc;
+            document.getElementById('srv1Title').innerText = t.srv1Title;
+            document.getElementById('srv1Desc').innerText = t.srv1Desc;
+            document.getElementById('srv2Title').innerText = t.srv2Title;
+            document.getElementById('srv2Desc').innerText = t.srv2Desc;
+            document.getElementById('srv3Title').innerText = t.srv3Title;
+            document.getElementById('srv3Desc').innerText = t.srv3Desc;
+            document.getElementById('srv4Title').innerText = t.srv4Title;
+            document.getElementById('srv4Desc').innerText = t.srv4Desc;
+            document.getElementById('dbTitle').innerText = t.dbTitle;
+            document.getElementById('dbDesc').innerText = t.dbDesc;
+            document.getElementById('modalTitle').innerText = t.modalTitle;
+            document.getElementById('modalDesc').innerText = t.modalDesc;
+            document.getElementById('phoneLabel').innerText = t.phoneLabel;
+            document.getElementById('modalSubmitBtn').innerText = t.modalSubmitBtn;
+        }
+
+        // Modal funksiyalari
+        function openAuthModal() {
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const phone = document.getElementById('phoneNumberInput').value;
+            currentUser = phone;
+            localStorage.setItem('omad_user', phone);
+            
+            // Bazaga foydalanuvchini qo'shish
+            saveToDatabase(phone, "Avtorizatsiya", "Faol");
+
+            closeAuthModal();
+            location.reload();
+        }
+
+        function logout() {
+            localStorage.removeItem('omad_user');
+            location.reload();
+        }
+
+        // Xizmatni tanlash va Workspace ochish
+        function selectService(serviceType) {
+            if(!currentUser) {
+                alert("Iltimos, avval telefon raqamingiz orqali ro'yxatdan o'ting!");
+                openAuthModal();
+                return;
+            }
+
+            const panel = document.getElementById('workspacePanel');
+            const title = document.getElementById('workspaceTitle');
+            const content = document.getElementById('workspaceContent');
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth' });
+
+            if(serviceType === 'aviabilet') {
+                title.innerText = "✈️ Aviabilet Bron Qilish";
+                content.innerHTML = `
+                    <form onsubmit="submitServiceForm(event, 'Aviabilet Broni')" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Qayerdan (Shahar)</label><input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Tashkent / Tashkent"></div>
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Qayerga (Shahar)</label><input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="St. Petersburg"></div>
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Uchish sanasi</label><input type="date" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white"></div>
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Yo'lovchilar soni</label><input type="number" value="1" min="1" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white"></div>
+                        <div class="sm:col-span-2 mt-2"><button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 font-semibold py-3 rounded-xl shadow-lg transition-all text-white">Bron Qilish va Yuborish</button></div>
+                    </form>
+                `;
+            } else if(serviceType === 'viza') {
+                title.innerText = "🔍 O‘zbekiston Vizasi Holatini Tekshirish";
+                content.innerHTML = `
+                    <form onsubmit="submitServiceForm(event, 'Viza Holatini Tekshirish')" class="space-y-4">
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Pasport Seriya va Raqami</label><input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="AA1234567"></div>
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Ariza (Anketa) Raqami</label><input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="OMAD-9982"></div>
+                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 font-semibold py-3 rounded-xl shadow-lg transition-all text-white">Holatni Tekshirish</button>
+                    </form>
+                `;
+            } else if(serviceType === 'notarius') {
+                title.innerText = "⚖️ Notarial Xizmat va Hujjat Tasdiqlash";
+                content.innerHTML = `
+                    <form onsubmit="submitServiceForm(event, 'Notarius Xizmati')" class="space-y-4">
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Hujjat turi</label><select class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white"><option>Ishonchnoma</option><option>Tarjima va tasdiq</option><option>Ariza rasmiylashtirish</option></select></div>
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Qo'shimcha izoh / Tavsif</label><textarea rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Kerakli ma'lumotlarni yozing..."></textarea></div>
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 font-semibold py-3 rounded-xl shadow-lg transition-all text-white">So'rov yuborish</button>
+                    </form>
+                `;
+            } else if(serviceType === 'support') {
+                title.innerText = "📞 Call Sentr va Shoshilinch Yordam";
+                content.innerHTML = `
+                    <form onsubmit="submitServiceForm(event, 'Call-sentr murojaati')" class="space-y-4">
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Murojaat mavzusi</label><input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Masalan: Reys kechikishi bo'yicha"></div>
+                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Xabar matni</label><textarea rows="3" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Operator tez orada siz bilan bog'lanadi..."></textarea></div>
+                        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 font-semibold py-3 rounded-xl shadow-lg transition-all text-white">Operatorga Yo'llash</button>
+                    </form>
+                `;
+            }
+        }
+
+        function closeWorkspace() {
+            document.getElementById('workspacePanel').classList.add('hidden');
+        }
+
+        // Ma'lumotlar bazasi va sinxronizatsiya logikasi (LocalStorage orqali)
+        function saveToDatabase(phone, serviceName, status) {
+            let db = JSON.parse(localStorage.getItem('omad_db')) || [];
+            const newRecord = {
+                phone: phone,
+                service: serviceName,
+                time: new Date().toLocaleString(),
+                status: status
+            };
+            db.unshift(newRecord); // Yangisini boshiga qo'shish
+            localStorage.setItem('omad_db', JSON.stringify(db));
+            loadClientsDatabase();
+        }
+
+        function submitServiceForm(e, serviceName) {
+            e.preventDefault();
+            saveToDatabase(currentUser, serviceName, "Jarayonda ⏳");
+            alert("Muvaffaqiyatli yuborildi! Ma'lumotlaringiz bazaga sinxronlandi.");
+            closeWorkspace();
+        }
+
+        function loadClientsDatabase() {
+            const tbody = document.getElementById('clientsTableBody');
+            let db = JSON.parse(localStorage.getItem('omad_db')) || [];
+            
+            // Agar baza bo'sh bo'lsa standart namunalar qo'shib turamiz
+            if(db.length === 0) {
+                db = [
+                    { phone: "+998 90 111 22 33", service: "Aviabilet Broni", time: "11.10.2026, 04:10", status: "Bajarildi ✅" },
+                    { phone: "+998 93 444 55 66", service: "Viza Holatini Tekshirish", time: "11.10.2026, 03:45", status: "Jarayonda ⏳" }
+                ];
+                localStorage.setItem('omad_db', JSON.stringify(db));
+            }
+
+            tbody.innerHTML = '';
+            db.forEach(item => {
+                let badgeColor = item.status.includes('✅') ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-800/40 transition-colors">
+                        <td class="p-4 font-semibold text-white flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                            ${item.phone}
+                        </td>
+                        <td class="p-4">${item.service}</td>
+                        <td class="p-4 text-slate-400 text-xs">${item.time}</td>
+                        <td class="p-4">
+                            <span class="px-3 py-1 rounded-full text-xs border ${badgeColor}">
+                                ${item.status}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
