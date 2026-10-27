@@ -128,7 +128,7 @@
 
 <div class="container">
   <div id="step1" class="card">
-    <h2>Senga kichkina bir sovgam bor qayta yubor iltimos... 🤫</h2>
+    <h2>Senga kichkina bir sovgam bor iltimos yana qayta junatvor jonim❤️. 🤫</h2>
     <button class="btn-red" onclick="showStep('step2')">Bilishni xohlaysanmi?</button>
   </div>
 
@@ -140,42 +140,45 @@
     </div>
   </div>
 
+  <!-- YIGIT KIYIMI -->
   <div id="step3" class="card hidden">
     <h2>Men qanday kiyimda bo'lishimni xohlaysan? 👔</h2>
     <div class="grid-images">
-      <div class="img-option" onclick="selectOutfit('Kastyum-shim', 'step4')">
+      <div class="img-option" onclick="selectOutfit('Kastyum-shim', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBkly132MAbASmVag-OIN02Ea_Oqoe2Rrpb1orjTqhnA&s=10', 'step4')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBkly132MAbASmVag-OIN02Ea_Oqoe2Rrpb1orjTqhnA&s=10" alt="Kastyum">
         <div class="img-text">Kastyum-shim</div>
       </div>
-      <div class="img-option" onclick="selectOutfit('Oq kiyim', 'step4')">
+      <div class="img-option" onclick="selectOutfit('Oq kiyim', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdR_zAMlOcirPJaspk85FU4A-yL6gX2xToeFXksn6tMQ&s=10', 'step4')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdR_zAMlOcirPJaspk85FU4A-yL6gX2xToeFXksn6tMQ&s=10" alt="Oq kiyim">
         <div class="img-text">Oq kiyim</div>
       </div>
     </div>
   </div>
 
+  <!-- QIZ KIYIMI -->
   <div id="step4" class="card hidden">
     <h2>Endi o'zing qaysi kiyimni tanlaysan, romashkaxonim? 🌼</h2>
     <div class="grid-images">
-      <div class="img-option" onclick="selectOutfit('Oq jaket va shim', 'step_flowers')">
+      <div class="img-option" onclick="selectOutfit('Oq jaket va shim', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQLW-QFng2J38-8OG00G_Vr1ouuKnvj2Mvma-FQT3yqg&s=10', 'step_flowers')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQLW-QFng2J38-8OG00G_Vr1ouuKnvj2Mvma-FQT3yqg&s=10" alt="Oq jaket">
         <div class="img-text">Oq Jaket</div>
       </div>
-      <div class="img-option" onclick="selectOutfit('Yubkali kiyim', 'step_flowers')">
+      <div class="img-option" onclick="selectOutfit('Yubkali kiyim', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa2MApZHOCnnyA3I9uEaOZF2e5mLkbztsX6pFwsypWqg&s=10', 'step_flowers')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa2MApZHOCnnyA3I9uEaOZF2e5mLkbztsX6pFwsypWqg&s=10" alt="Yubkali">
         <div class="img-text">Yubkali</div>
       </div>
     </div>
   </div>
 
+  <!-- GULLAR -->
   <div id="step_flowers" class="card hidden">
-    <h2>senga qaysi gulni sovga qilay ? 🌸🌹</h2>
+    <h2>senga qaysi gulni sovga qilishimni xoxlaysan xotinjon 🌸🌹</h2>
     <div class="grid-images">
-      <div class="img-option" onclick="selectFlower('Romashka gul', 'step5')">
+      <div class="img-option" onclick="selectFlower('Romashka gul', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShS4Xv4EeF6ipkitluaxoZgjKSUFJR0ytHhf_e_RkvwQ&s=10', 'step5')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShS4Xv4EeF6ipkitluaxoZgjKSUFJR0ytHhf_e_RkvwQ&s=10" alt="Romashka">
         <div class="img-text">Romashka</div>
       </div>
-      <div class="img-option" onclick="selectFlower('Atir gul', 'step5')">
+      <div class="img-option" onclick="selectFlower('Atir gul', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnYktD9P8XLDj6hm3JETdobLLmWRfXYNNGYbPWu0sgSw&s=10', 'step5')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnYktD9P8XLDj6hm3JETdobLLmWRfXYNNGYbPWu0sgSw&s=10" alt="Atir gul">
         <div class="img-text">Atir gul</div>
       </div>
@@ -226,7 +229,10 @@
   const CHAT_ID = "7359558983";
   // ==========================================
 
-  let hisOutfit = "", herOutfit = "", chosenFlower = "", chosenDate = "", chosenTime = "";
+  let hisOutfit = "", hisImg = "";
+  let herOutfit = "", herImg = "";
+  let chosenFlower = "", flowerImg = "";
+  let chosenDate = "", chosenTime = "";
 
   function showStep(stepId) {
     document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
@@ -236,14 +242,22 @@
   function showWarning() { document.getElementById('warningModal').classList.add('active'); }
   function closeWarning() { document.getElementById('warningModal').classList.remove('active'); }
 
-  function selectOutfit(outfitName, nextStep) {
-    if(nextStep === 'step4') { hisOutfit = outfitName; } 
-    else { herOutfit = outfitName; }
+  // Kiyim tanlash (Endi rasm URL manzilini ham saqlaydi)
+  function selectOutfit(outfitName, imgUrl, nextStep) {
+    if(nextStep === 'step4') { 
+        hisOutfit = outfitName; 
+        hisImg = imgUrl;
+    } else { 
+        herOutfit = outfitName; 
+        herImg = imgUrl;
+    }
     showStep(nextStep);
   }
 
-  function selectFlower(flowerName, nextStep) {
+  // Gul tanlash (Rasm URL manzilini ham saqlaydi)
+  function selectFlower(flowerName, imgUrl, nextStep) {
     chosenFlower = flowerName;
+    flowerImg = imgUrl;
     showStep(nextStep);
   }
 
@@ -254,35 +268,67 @@
 
   function selectTime(time) {
     chosenTime = time;
-    sendToTelegram(); // Telegramga yuborish funksiyasini chaqiramiz
+    sendToTelegram(); // Telegramga yuborish
     showStep('step7_final'); 
   }
 
-  // TELEGRAMGA YUBORISH FUNKSIYASI
-  function sendToTelegram() {
-    const message = `💖 YANGI JAVOB KELDI! 💖\n\n` +
-                    `👔 Yigitning kiyimi: ${hisOutfit}\n` +
-                    `👗 Qizning kiyimi: ${herOutfit}\n` +
-                    `🌹 Tanlagan guli: ${chosenFlower}\n` +
-                    `📅 Sana: ${chosenDate}\n` +
-                    `⏰ Vaqt: ${chosenTime}\n\n` +
-                    `🕒 Yuborilgan vaqt: ${new Date().toLocaleString()}`;
+  // TELEGRAMGA YUBORISH (MATN VA RASMLAR)
+  async function sendToTelegram() {
+    const textMessage = `💖 YANGI JAVOB KELDI! 💖\n\n` +
+                        `👔 Yigitning kiyimi: ${hisOutfit}\n` +
+                        `👗 Qizning kiyimi: ${herOutfit}\n` +
+                        `🌹 Tanlagan guli: ${chosenFlower}\n` +
+                        `📅 Sana: ${chosenDate}\n` +
+                        `⏰ Vaqt: ${chosenTime}\n\n` +
+                        `🕒 Yuborilgan vaqt: ${new Date().toLocaleString()}`;
 
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-    
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text: message,
-        parse_mode: 'HTML'
-      })
-    })
-    .then(response => {
-        if(!response.ok) console.log("Xabar yuborishda xatolik. Tokenni tekshiring.");
-    })
-    .catch(error => console.log("Xatolik:", error));
+    // 1. Avval matnni yuboramiz
+    await sendTelegramRequest('sendMessage', { chat_id: CHAT_ID, text: textMessage });
+
+    // 2. Keyin rasmlarni ketma-ket yuboramiz
+    await sendPhotoToTelegram(hisImg, `👔 Yigitning tanlovi: ${hisOutfit}`);
+    await sendPhotoToTelegram(herImg, `👗 Qizning tanlovi: ${herOutfit}`);
+    await sendPhotoToTelegram(flowerImg, `🌹 Gul: ${chosenFlower}`);
+  }
+
+  // Telegramga matn yuborish funksiyasi
+  async function sendTelegramRequest(method, payload) {
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/${method}`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return await response.json();
+    } catch (error) {
+      console.error("Telegramga ulanishda xatolik:", error);
+    }
+  }
+
+  // Telegramga rasm yuborish funksiyasi
+  async function sendPhotoToTelegram(photoUrl, caption) {
+    if(!photoUrl) return;
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          photo: photoUrl,
+          caption: caption
+        })
+      });
+      const data = await response.json();
+      if(!data.ok) {
+        console.log("Rasm yuborilmadi, havola matn ko'rinishida yuboriladi.");
+        // Agar Google rasmni bloklasa, havolani o'zini matn qilib yuboramiz
+        await sendTelegramRequest('sendMessage', { chat_id: CHAT_ID, text: `Rasm yuklanmadi. Havola: ${photoUrl}` });
+      }
+    } catch (error) {
+      console.error("Rasm yuborishda xatolik:", error);
+    }
   }
 </script>
 
