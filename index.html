@@ -117,21 +117,20 @@
   .admin-data { text-align: left; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 12px; margin-top: 15px; font-family: monospace; border: 1px solid #333; }
   .admin-data p { margin-bottom: 10px; border-bottom: 1px dashed #333; padding-bottom: 5px; color: #ccc;}
   .admin-data span { color: #00f2fe; font-weight: bold; }
-  .admin-data img { width: 100%; max-height: 150px; object-fit: cover; border-radius: 8px; margin-top: 5px; border: 1px solid #444; }
   .btn-copy { background: #00f2fe; color: #000; margin-top: 20px; width: 100%; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <!-- Yashirin Admin Tugmasi -->
+  <!-- Yashirin Admin Tugmasi (5 marta bosiladi) -->
   <h1 id="secret-trigger">M❤️SH</h1>
   <p>Faqat sen uchun maxsus sovg'a...</p>
 </div>
 
 <div class="container">
 
-  <!-- 1-BOSQICH: Kirish -->
+  <!-- 1-BOSQICH -->
   <div id="step1" class="card">
     <h2>Senga kichkina bir sirim bor... 😉</h2>
     <button class="btn-red" onclick="showStep('step2')">Bilishni xohlaysanmi? (Bos)</button>
@@ -142,39 +141,40 @@
     <h2>Sen bilan romantika qilishni juda xohlayman. Men bilan romantika qilishga rozimisan? 🥺👉👈</h2>
     <div style="display: flex; justify-content: space-between; margin-top: 20px;">
       <button class="btn-yes" onclick="showStep('step3')">Roziman ❤️</button>
-      <button class="btn-no" onclick="showWarning()">Yo'q, rozimasman 💔</button>
+      <!-- Har bosilganda ogohlantirish chiqadi -->
+      <button class="btn-no" onclick="showWarning()">Rozimasman 💔</button>
     </div>
   </div>
 
-  <!-- 3-BOSQICH: Yigitning kiyimi -->
+  <!-- 3-BOSQICH: Yigitning kiyimi (Siz tashlagan rasmlar bilan) -->
   <div id="step3" class="card hidden">
     <h2>Men qanday kiyimda bo'lishimni xohlaysan? 👔</h2>
     <div class="grid-images">
-      <!-- 1-RASM -->
-      <div class="img-option" onclick="selectOutfit('Kastyum-shim (Klassik)', 'kostyum.jpg', 'step4')">
-        <img src="kostyum.jpg" alt="Kastyum shim" onerror="this.src='https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=500&auto=format&fit=crop'">
-        <div class="img-text">Klassik Kastyum</div>
+      <!-- Kastyum silkasi -->
+      <div class="img-option" onclick="selectOutfit('Kastyum-shim', 'kostyum', 'step4')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBkly132MAbASmVag-OIN02Ea_Oqoe2Rrpb1orjTqhnA&s=10" alt="Kastyum shim">
+        <div class="img-text">Kastyum-shim</div>
       </div>
-      <!-- 2-RASM -->
-      <div class="img-option" onclick="selectOutfit('Oq kiyim (Zamonaviy)', 'oq_kiyim.jpg', 'step4')">
-        <img src="oq_kiyim.jpg" alt="Oq kiyim" onerror="this.src='https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=500&auto=format&fit=crop'">
-        <div class="img-text">Oq Kiyim</div>
+      <!-- Oq kiyim silkasi -->
+      <div class="img-option" onclick="selectOutfit('Oq kiyim', 'oq_kiyim', 'step4')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdR_zAMlOcirPJaspk85FU4A-yL6gX2xToeFXksn6tMQ&s=10" alt="Oq kiyim">
+        <div class="img-text">Oq kiyim</div>
       </div>
     </div>
   </div>
 
-  <!-- 4-BOSQICH: Qizning kiyimi -->
+  <!-- 4-BOSQICH: Qizning kiyimi (Siz tashlagan rasmlar bilan) -->
   <div id="step4" class="card hidden">
     <h2>Endi o'zing qaysi kiyimni tanlaysan, romashkaxonim? 🌼👗</h2>
     <div class="grid-images">
-      <!-- 3-RASM -->
-      <div class="img-option" onclick="selectOutfit('Oq jaket va oq shim', 'ayol_oq.jpg', 'step5')">
-        <img src="ayol_oq.jpg" alt="Oq jaket va shim" onerror="this.src='https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=500&auto=format&fit=crop'">
+      <!-- Oq kiyim silkasi (Siz yuborgan aniq link) -->
+      <div class="img-option" onclick="selectOutfit('Oq jaket va shim', 'ayol_oq', 'step5')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQLW-QFng2J38-8OG00G_Vr1ouuKnvj2Mvma-FQT3yqg&s=10" alt="Oq jaket va shim">
         <div class="img-text">Oq Jaket</div>
       </div>
-      <!-- 4-RASM -->
-      <div class="img-option" onclick="selectOutfit('Oq jaket va qora yubka', 'ayol_yubka.jpg', 'step5')">
-        <img src="ayol_yubka.jpg" alt="Oq jaket va yubka" onerror="this.src='https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=500&auto=format&fit=crop'">
+      <!-- 2-variant (Yubkali) -->
+      <div class="img-option" onclick="selectOutfit('Oq jaket va qora yubka', 'ayol_yubka', 'step5')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQLW-QFng2J38-8OG00G_Vr1ouuKnvj2Mvma-FQT3yqg&s=10" alt="Oq jaket va yubka">
         <div class="img-text">Yubkali</div>
       </div>
     </div>
@@ -214,7 +214,7 @@
 </div>
 
 <script>
-  let hisOutfit = "", hisImg = "", herOutfit = "", herImg = "", dateChoice = "", clickCount = 0;
+  let hisOutfit = "", herOutfit = "", dateChoice = "", clickCount = 0;
 
   function showStep(stepId) {
     document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
@@ -222,7 +222,7 @@
     createHearts();
   }
 
-  // Ogohlantirish oynasini ko'rsatish (Har bosganda chiqadi)
+  // Har safar "Rozimasman" bosilganda qizil ogohlantirish chiqadi
   function showWarning() {
     document.getElementById('warningModal').classList.add('active');
   }
@@ -231,9 +231,9 @@
     document.getElementById('warningModal').classList.remove('active');
   }
 
-  function selectOutfit(outfitName, imgUrl, nextStep) {
-    if(nextStep === 'step4') { hisOutfit = outfitName; hisImg = imgUrl; } 
-    else { herOutfit = outfitName; herImg = imgUrl; }
+  function selectOutfit(outfitName, imgKey, nextStep) {
+    if(nextStep === 'step4') { hisOutfit = outfitName; } 
+    else { herOutfit = outfitName; }
     showStep(nextStep);
   }
 
@@ -244,11 +244,11 @@
   }
 
   function saveData() {
-    const data = { yigitKiyimi: hisOutfit, yigitRasmi: hisImg, qizKiyimi: herOutfit, qizRasmi: herImg, sana: dateChoice, vaqt: new Date().toLocaleString() };
+    const data = { yigitKiyimi: hisOutfit, qizKiyimi: herOutfit, sana: dateChoice, vaqt: new Date().toLocaleString() };
     localStorage.setItem('romanticData', JSON.stringify(data));
   }
 
-  // ADMIN LOGIKASI
+  // ADMIN LOGIKASI (M❤️SH ni 5 marta bosish)
   document.getElementById('secret-trigger').addEventListener('click', function() {
     clickCount++;
     if (clickCount >= 5) {
