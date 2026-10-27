@@ -3,74 +3,138 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sen uchun 💖</title>
+<title>Sen uchun maxsus 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  body {
-    min-height: 100vh; background: radial-gradient(circle at top, #2b0a3d, #0b0014 60%, #000);
-    color: #fff; display: flex; flex-direction: column; align-items: center;
-    padding: 20px; overflow-x: hidden;
-  }
-  .header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
-  .header h1 { font-size: 2rem; background: linear-gradient(90deg, #ff9acb, #ffd6e8, #c084fc); -webkit-background-clip: text; color: transparent; cursor: pointer; user-select: none; }
-  .header p { color: #ffe6f2; font-size: 1.2rem; margin-top: 10px; }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
   
-  .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: #fff; display: flex; flex-direction: column; align-items: center;
+    padding: 20px; overflow-x: hidden; position: relative;
+  }
+
+  /* Orqa fonda uchar yuraklar */
+  .heart { position: absolute; bottom: -50px; font-size: 20px; animation: float linear infinite; opacity: 0.6; pointer-events: none; z-index: 1; }
+  @keyframes float { to { transform: translateY(-115vh) rotate(360deg); opacity: 0; } }
+
+  .header { text-align: center; margin-bottom: 25px; margin-top: 10px; z-index: 10; }
+  .header h1 { 
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem; 
+    background: linear-gradient(90deg, #ff9acb, #fff, #ff9acb); 
+    -webkit-background-clip: text; background-clip: text; color: transparent; 
+    cursor: pointer; user-select: none; padding: 10px;
+    text-shadow: 0 0 20px rgba(255, 154, 203, 0.4);
+    transition: 0.3s;
+  }
+  .header h1:active { transform: scale(0.95); }
+  .header p { color: #d1d5db; font-size: 1.1rem; font-weight: 300; margin-top: 5px; letter-spacing: 1px; }
+  
+  .container { width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
   .hidden { display: none !important; }
   
+  /* Shishasimon (Glassmorphism) kartochkalar */
   .card {
-    background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 20px;
-    padding: 25px; width: 100%; text-align: center;
-    box-shadow: 0 0 40px rgba(255, 80, 160, 0.2);
+    background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 24px;
+    padding: 30px 25px; width: 100%; text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 154, 203, 0.1);
+    animation: fadeIn 0.8s ease-out;
   }
-  .card h2 { font-size: 1.4rem; margin-bottom: 20px; color: #ffd6e8; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 25px; color: #fff; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.5);}
 
   button {
-    padding: 14px 28px; border: none; border-radius: 999px;
-    font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+    padding: 16px 30px; border: none; border-radius: 50px;
+    font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s;
+    font-family: 'Poppins', sans-serif; letter-spacing: 0.5px;
   }
-  .btn-red { background: linear-gradient(135deg, #ff4d94, #ff004c); color: white; box-shadow: 0 8px 25px rgba(255, 0, 76, 0.4); }
-  .btn-red:hover { transform: scale(1.05); }
   
-  .btn-yes { background: linear-gradient(135deg, #10b981, #059669); color: white; width: 45%; }
-  .btn-no { background: #4b5563; color: white; width: 45%; }
-
-  .grid-images { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-  .img-option {
-    background: rgba(255,255,255,0.1); border-radius: 15px; padding: 10px;
-    cursor: pointer; transition: 0.3s; border: 2px solid transparent;
+  .btn-red { 
+    background: linear-gradient(45deg, #ff0844 0%, #ffb199 100%); 
+    color: white; box-shadow: 0 10px 25px rgba(255, 8, 68, 0.4); 
+    width: 100%; font-size: 1.3rem; padding: 20px; animation: pulse 2s infinite; 
   }
-  .img-option:hover { border-color: #ff9acb; background: rgba(255,255,255,0.2); transform: translateY(-5px); }
-  .img-option img { width: 100%; border-radius: 10px; height: 200px; object-fit: cover; }
-  .img-option p { margin-top: 10px; font-size: 0.9rem; color: #ffe6f2; font-weight: bold; }
+  .btn-red:hover { transform: scale(1.02) translateY(-2px); box-shadow: 0 15px 30px rgba(255, 8, 68, 0.6); }
+  
+  .btn-yes { background: linear-gradient(135deg, #00b09b, #96c93d); color: white; width: 48%; box-shadow: 0 5px 15px rgba(0, 176, 155, 0.4); }
+  .btn-no { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; width: 48%; backdrop-filter: blur(5px); }
+  .btn-yes:hover, .btn-no:hover { transform: translateY(-3px); }
+
+  /* Rasm tanlash qismi (Kreativ dizayn) */
+  .grid-images { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
+  
+  .img-option {
+    position: relative; border-radius: 20px; overflow: hidden; cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.1); transition: all 0.4s ease;
+    background: #1a1a2e;
+  }
+  .img-option::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 60%);
+    z-index: 2; transition: 0.4s;
+  }
+  .img-option:hover { border-color: #ff9acb; transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 30px rgba(255, 154, 203, 0.2); }
+  .img-option img { width: 100%; height: 250px; object-fit: cover; display: block; transition: 0.4s; z-index: 1; position: relative;}
+  .img-option:hover img { transform: scale(1.1); }
+  
+  .img-text {
+    position: absolute; bottom: 15px; left: 0; width: 100%;
+    text-align: center; z-index: 3; font-weight: 600; font-size: 1rem;
+    color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); transition: 0.4s;
+  }
+  .img-option:hover .img-text { color: #ff9acb; transform: translateY(-5px); }
+
+  /* Ogohlantirish Oynasi (Modal) */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center; z-index: 9999;
+    opacity: 0; pointer-events: none; transition: 0.3s;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+  .modal-box {
+    background: linear-gradient(135deg, #ff0844, #ffb199);
+    padding: 30px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%;
+    box-shadow: 0 20px 50px rgba(255, 8, 68, 0.5);
+    transform: scale(0.8); transition: 0.3s; color: #fff;
+  }
+  .modal-overlay.active .modal-box { transform: scale(1); animation: shake 0.5s; }
+  .modal-box h3 { font-size: 1.5rem; margin-bottom: 15px; font-family: 'Playfair Display', serif; }
+  .modal-box p { font-size: 1.1rem; margin-bottom: 20px; line-height: 1.5; }
+  .modal-box button { background: #fff; color: #ff0844; padding: 12px 25px; width: 100%; font-weight: bold; }
+  
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 8, 68, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 8, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 8, 68, 0); } }
 
   /* Admin Panel */
-  #admin-panel { background: #111; border: 1px solid #ff4d94; }
-  #admin-panel h2 { color: #ff4d94; }
-  .admin-data { text-align: left; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-top: 15px; font-family: monospace; }
-  .admin-data p { margin-bottom: 8px; }
-  .btn-copy { background: #3b82f6; color: white; margin-top: 15px; width: 100%; }
-
-  /* Floating Hearts */
-  .heart { position: absolute; bottom: -50px; font-size: 20px; animation: float linear infinite; opacity: 0.8; pointer-events: none; }
-  @keyframes float { to { transform: translateY(-115vh) rotate(360deg); opacity: 0; } }
+  #admin-panel { background: rgba(10, 10, 10, 0.95); border: 2px solid #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); }
+  #admin-panel h2 { color: #00f2fe; font-family: monospace; letter-spacing: 2px; }
+  .admin-data { text-align: left; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 12px; margin-top: 15px; font-family: monospace; border: 1px solid #333; }
+  .admin-data p { margin-bottom: 10px; border-bottom: 1px dashed #333; padding-bottom: 5px; color: #ccc;}
+  .admin-data span { color: #00f2fe; font-weight: bold; }
+  .admin-data img { width: 100%; max-height: 150px; object-fit: cover; border-radius: 8px; margin-top: 5px; border: 1px solid #444; }
+  .btn-copy { background: #00f2fe; color: #000; margin-top: 20px; width: 100%; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <!-- Admin panelni ochish uchun shu yozuvni 5 marta bosing -->
+  <!-- Yashirin Admin Tugmasi -->
   <h1 id="secret-trigger">M❤️SH</h1>
-  <p>Sevgilim shaxzoda, senga savolim bor...</p>
+  <p>Faqat sen uchun maxsus sovg'a...</p>
 </div>
 
 <div class="container">
 
-  <!-- 1-BOSQICH: Qizil knopka -->
+  <!-- 1-BOSQICH: Kirish -->
   <div id="step1" class="card">
-    <h2>Menga ustimdan bosishing kerak 😉</h2>
-    <button class="btn-red" onclick="showStep('step2')">( ustiga bos )</button>
+    <h2>Senga kichkina bir sirim bor... 😉</h2>
+    <button class="btn-red" onclick="showStep('step2')">Bilishni xohlaysanmi? (Bos)</button>
   </div>
 
   <!-- 2-BOSQICH: Savol -->
@@ -78,7 +142,7 @@
     <h2>Sen bilan romantika qilishni juda xohlayman. Men bilan romantika qilishga rozimisan? 🥺👉👈</h2>
     <div style="display: flex; justify-content: space-between; margin-top: 20px;">
       <button class="btn-yes" onclick="showStep('step3')">Roziman ❤️</button>
-      <button class="btn-no" id="no-btn" onclick="rejectRomantic()">Yo'q, rozimasman 💔</button>
+      <button class="btn-no" onclick="showWarning()">Yo'q, rozimasman 💔</button>
     </div>
   </div>
 
@@ -86,173 +150,153 @@
   <div id="step3" class="card hidden">
     <h2>Men qanday kiyimda bo'lishimni xohlaysan? 👔</h2>
     <div class="grid-images">
-      <div class="img-option" onclick="selectOutfit('Oq kiyim', 'img1.jpg', 'step4')">
-        <!-- 1-RASM LINKINI O'ZINGIZNIKIGA ALMASHTIRING -->
-        <img src="https://images.unsplash.com/photo-1593030103066-0093718efeb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Oq kiyim">
-        <p>Oq kiyim</p>
+      <!-- 1-RASM -->
+      <div class="img-option" onclick="selectOutfit('Kastyum-shim (Klassik)', 'kostyum.jpg', 'step4')">
+        <img src="kostyum.jpg" alt="Kastyum shim" onerror="this.src='https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=500&auto=format&fit=crop'">
+        <div class="img-text">Klassik Kastyum</div>
       </div>
-      <div class="img-option" onclick="selectOutfit('Kostyum-shim', 'img2.jpg', 'step4')">
-        <!-- 2-RASM LINKINI O'ZINGIZNIKIGA ALMASHTIRING -->
-        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Kostyum shim">
-        <p>Kostyum-shim</p>
+      <!-- 2-RASM -->
+      <div class="img-option" onclick="selectOutfit('Oq kiyim (Zamonaviy)', 'oq_kiyim.jpg', 'step4')">
+        <img src="oq_kiyim.jpg" alt="Oq kiyim" onerror="this.src='https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=500&auto=format&fit=crop'">
+        <div class="img-text">Oq Kiyim</div>
       </div>
     </div>
   </div>
 
   <!-- 4-BOSQICH: Qizning kiyimi -->
   <div id="step4" class="card hidden">
-    <h2>Endi sen qanday kiyimda bo'lishni xohlaysan, romashkaxonim? 🌼👗</h2>
+    <h2>Endi o'zing qaysi kiyimni tanlaysan, romashkaxonim? 🌼👗</h2>
     <div class="grid-images">
-      <div class="img-option" onclick="selectOutfit('Oq jaket va qora yubka', 'img3.jpg', 'step5')">
-        <!-- 3-RASM LINKINI O'ZINGIZNIKIGA ALMASHTIRING -->
-        <img src="https://images.unsplash.com/photo-1515347619252-60a6bf4fffce?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Oq jaket va qora yubka">
-        <p>Oq jaket va yubka</p>
+      <!-- 3-RASM -->
+      <div class="img-option" onclick="selectOutfit('Oq jaket va oq shim', 'ayol_oq.jpg', 'step5')">
+        <img src="ayol_oq.jpg" alt="Oq jaket va shim" onerror="this.src='https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=500&auto=format&fit=crop'">
+        <div class="img-text">Oq Jaket</div>
       </div>
-      <div class="img-option" onclick="selectOutfit('Oq kostyum', 'img4.jpg', 'step5')">
-        <!-- 4-RASM LINKINI O'ZINGIZNIKIGA ALMASHTIRING -->
-        <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Oq kostyum">
-        <p>Oq kostyum</p>
+      <!-- 4-RASM -->
+      <div class="img-option" onclick="selectOutfit('Oq jaket va qora yubka', 'ayol_yubka.jpg', 'step5')">
+        <img src="ayol_yubka.jpg" alt="Oq jaket va yubka" onerror="this.src='https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=500&auto=format&fit=crop'">
+        <div class="img-text">Yubkali</div>
       </div>
     </div>
   </div>
 
-  <!-- 5-BOSQICH: Sana tanlash -->
+  <!-- 5-BOSQICH: Sana -->
   <div id="step5" class="card hidden">
     <h2>Qachon uchrashamiz? 📅</h2>
     <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-      <button class="btn-yes" onclick="selectDate('Bugun kechqurun')">Bugun kechqurun 🌙</button>
-      <button class="btn-yes" onclick="selectDate('Ertaga')">Ertaga ☀️</button>
+      <button class="btn-yes" onclick="selectDate('Bugun kechqurun 🌙')">Bugun 🌙</button>
+      <button class="btn-yes" onclick="selectDate('Ertaga ☀️')">Ertaga ☀️</button>
     </div>
   </div>
 
-  <!-- 6-BOSQICH: Yakuniy xabar -->
+  <!-- 6-BOSQICH: Yakun -->
   <div id="step6" class="card hidden">
     <h2>Rahmat, sevgilim! 🥰</h2>
-    <p style="font-size: 1.2rem; margin-top: 15px;">Tez orada ko'rishamiz! Seni juda-juda yaxshi ko'raman ❤️</p>
+    <p style="font-size: 1.2rem; margin-top: 15px; color: #ffd6e8; line-height: 1.6;">Tanloving qabul qilindi. Tez orada ko'rishamiz! <br><br> Seni juda-juda yaxshi ko'raman ❤️</p>
   </div>
 
-  <!-- ADMIN PANEL (Yashirin) -->
+  <!-- ADMIN PANEL -->
   <div id="admin-panel" class="card hidden">
-    <h2>Admin Bo'limi 🔐</h2>
-    <div class="admin-data" id="admin-result">
-      <!-- Natijalar shu yerda chiqadi -->
-    </div>
+    <h2>SYSTEM: ADMIN PANEL 🔐</h2>
+    <div class="admin-data" id="admin-result"></div>
     <button class="btn-copy" onclick="copyResults()">Natijalarni nusxalash 📋</button>
   </div>
 
 </div>
 
-<script>
-  // O'zgaruvchilar
-  let hisOutfit = "";
-  let herOutfit = "";
-  let dateChoice = "";
-  let clickCount = 0;
+<!-- Ogohlantirish Oynasi (Modal) -->
+<div class="modal-overlay" id="warningModal">
+  <div class="modal-box">
+    <h3>🚨 OGOHLANTIRISH 🚨</h3>
+    <p>Rozi bo'lishga majbursan! Mendan qochib qutula olmaysan! 😡❤️</p>
+    <button onclick="closeWarning()">Yaxshi, tushundim...</button>
+  </div>
+</div>
 
-  // Bosqichlarni ko'rsatish
+<script>
+  let hisOutfit = "", hisImg = "", herOutfit = "", herImg = "", dateChoice = "", clickCount = 0;
+
   function showStep(stepId) {
     document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
     document.getElementById(stepId).classList.remove('hidden');
-    createHearts(); // Romantik yuraklar
+    createHearts();
   }
 
-  // "Yo'q" tugmasi bosilganda
-  function rejectRomantic() {
-    alert("OGOHLANTIRISH: Rozi bo'lishga majbursan! 😡❤️");
-    const noBtn = document.getElementById('no-btn');
-    noBtn.innerText = "Hazillashdim, roziman 😅";
-    noBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
-    noBtn.onclick = function() { showStep('step3'); };
+  // Ogohlantirish oynasini ko'rsatish (Har bosganda chiqadi)
+  function showWarning() {
+    document.getElementById('warningModal').classList.add('active');
   }
 
-  // Kiyim tanlash
-  function selectOutfit(outfitName, imgName, nextStep) {
-    if(nextStep === 'step4') {
-      hisOutfit = outfitName + " (" + imgName + ")";
-    } else {
-      herOutfit = outfitName + " (" + imgName + ")";
-    }
+  function closeWarning() {
+    document.getElementById('warningModal').classList.remove('active');
+  }
+
+  function selectOutfit(outfitName, imgUrl, nextStep) {
+    if(nextStep === 'step4') { hisOutfit = outfitName; hisImg = imgUrl; } 
+    else { herOutfit = outfitName; herImg = imgUrl; }
     showStep(nextStep);
   }
 
-  // Sana tanlash
   function selectDate(date) {
     dateChoice = date;
     saveData();
     showStep('step6');
   }
 
-  // Ma'lumotlarni brauzer xotirasiga saqlash
   function saveData() {
-    const data = {
-      yigitKiyimi: hisOutfit,
-      qizKiyimi: herOutfit,
-      sana: dateChoice,
-      vaqt: new Date().toLocaleString()
-    };
+    const data = { yigitKiyimi: hisOutfit, yigitRasmi: hisImg, qizKiyimi: herOutfit, qizRasmi: herImg, sana: dateChoice, vaqt: new Date().toLocaleString() };
     localStorage.setItem('romanticData', JSON.stringify(data));
   }
 
-  // Yashirin Admin panelni ochish (M❤️SH ni 5 marta bosish)
+  // ADMIN LOGIKASI
   document.getElementById('secret-trigger').addEventListener('click', function() {
     clickCount++;
     if (clickCount >= 5) {
       clickCount = 0;
       const password = prompt("Admin parolini kiriting:");
-      if (password === "26270102") {
-        openAdminPanel();
-      } else if (password !== null) {
-        alert("Parol noto'g'ri!");
-      }
+      if (password === "26270102") openAdminPanel();
+      else if (password !== null) alert("Parol noto'g'ri!");
     }
   });
 
-  // Admin panelni ochish va ma'lumotlarni ko'rsatish
   function openAdminPanel() {
     const dataStr = localStorage.getItem('romanticData');
     const adminResult = document.getElementById('admin-result');
-    
     document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
     document.getElementById('admin-panel').classList.remove('hidden');
 
     if (dataStr) {
       const data = JSON.parse(dataStr);
       adminResult.innerHTML = `
-        <p><b>👔 Yigitning kiyimi:</b> ${data.yigitKiyimi}</p>
-        <p><b>👗 Qizning kiyimi:</b> ${data.qizKiyimi}</p>
-        <p><b>📅 Uchrashuv sanasi:</b> ${data.sana}</p>
-        <p><b>⏰ Tanlagan vaqti:</b> ${data.vaqt}</p>
+        <p><b>👔 Yigitning kiyimi:</b> <span>${data.yigitKiyimi}</span></p>
+        <p><b>👗 Qizning kiyimi:</b> <span>${data.qizKiyimi}</span></p>
+        <p><b>📅 Sana:</b> <span>${data.sana}</span></p>
+        <p><b>⏰ Vaqti:</b> ${data.vaqt}</p>
       `;
     } else {
-      adminResult.innerHTML = "<p>Hozircha hech qanday ma'lumot kiritilmagan. Qiz do'stingiz hali savollarga javob bermagan ko'rinadi.</p>";
+      adminResult.innerHTML = "<p>Hozircha ma'lumot yo'q. U hali savollarga javob bermagan.</p>";
     }
   }
 
-  // Natijalarni nusxalash
   function copyResults() {
     const dataStr = localStorage.getItem('romanticData');
     if(dataStr) {
       const data = JSON.parse(dataStr);
-      const text = `M❤️SH dan xabar:\nYigit kiyimi: ${data.yigitKiyimi}\nQiz kiyimi: ${data.qizKiyimi}\nSana: ${data.sana}`;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Natijalar nusxalandi! Endi ularni o'zingizga yuborishingiz mumkin.");
-      });
-    } else {
-      alert("Nusxalash uchun ma'lumot yo'q.");
-    }
+      const text = `M❤️SH NATIJALARI:\n\n👔 Yigit kiyimi: ${data.yigitKiyimi}\n👗 Qiz kiyimi: ${data.qizKiyimi}\n📅 Sana: ${data.sana}\n⏰ Vaqti: ${data.vaqt}`;
+      navigator.clipboard.writeText(text).then(() => alert("Nusxalandi! O'zingizga yuborib oling."));
+    } else alert("Ma'lumot yo'q.");
   }
 
-  // Orqa fonda yuraklar uchrashi
   function createHearts() {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 8; i++) {
       const h = document.createElement('div');
       h.className = 'heart';
-      h.textContent = ['💖','💕','✨','💗','🌹'][Math.floor(Math.random() * 5)];
+      h.textContent = ['💖','💕','✨','💗','🌹','💎'][Math.floor(Math.random() * 6)];
       h.style.left = Math.random() * 100 + 'vw';
-      h.style.animationDuration = (3 + Math.random() * 3) + 's';
+      h.style.animationDuration = (4 + Math.random() * 4) + 's';
       h.style.fontSize = (15 + Math.random() * 25) + 'px';
       document.body.appendChild(h);
-      setTimeout(() => h.remove(), 6000);
+      setTimeout(() => h.remove(), 8000);
     }
   }
 </script>
