@@ -15,7 +15,6 @@
     padding: 20px; overflow-x: hidden; position: relative;
   }
 
-  /* Orqa fondagi nafis porlash effekti */
   .glow-orb {
     position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.5;
     animation: pulseGlow 6s infinite alternate;
@@ -41,7 +40,6 @@
   .container { width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
   .hidden { display: none !important; }
   
-  /* Hashamatli shishasimon kartochkalar */
   .card {
     background: rgba(30, 20, 40, 0.6); backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -71,7 +69,6 @@
   .btn-no { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ccc; width: 48%; }
   .btn-yes:hover, .btn-no:hover { transform: translateY(-3px); }
 
-  /* Rasm tanlash qismi */
   .grid-images { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
   
   .img-option {
@@ -95,12 +92,10 @@
   }
   .img-option:hover .img-text { color: #ff9acb; transform: translateY(-3px); }
 
-  /* Vaqt tugmalari */
   .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
   .time-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,154,203,0.2); color: #fff; width: 100%; padding: 15px; font-size: 1rem; border-radius: 12px; }
   .time-btn:hover { background: rgba(255,154,203,0.1); border-color: #ff9acb; transform: scale(1.02); }
 
-  /* Ogohlantirish */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
@@ -119,15 +114,6 @@
   .modal-box button { background: #ff4d94; color: #fff; padding: 12px; width: 100%; font-weight: bold; border-radius: 10px; }
   
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-
-  /* Admin Panel */
-  #admin-panel { background: #050505; border: 1px solid #00f2fe; box-shadow: 0 0 50px rgba(0, 242, 254, 0.1); }
-  #admin-panel h2 { color: #00f2fe; font-family: monospace; letter-spacing: 2px; }
-  .admin-data { text-align: left; background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; margin-top: 15px; font-family: monospace; border: 1px solid #222; }
-  .admin-data p { margin-bottom: 5px; color: #888; font-size: 0.9rem; }
-  .admin-data span { color: #00f2fe; font-weight: bold; font-size: 1rem; }
-  .admin-img { width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; margin: 10px 0 20px 0; border: 1px solid #333; }
-  .btn-copy { background: #00f2fe; color: #000; margin-top: 20px; width: 100%; font-weight: 800; border-radius: 10px; }
 </style>
 </head>
 <body>
@@ -136,20 +122,16 @@
 <div class="glow-orb orb-2"></div>
 
 <div class="header">
-  <!-- Yashirin Admin Tugmasi (5 marta bosiladi) -->
-  <h1 id="secret-trigger">M❤️SH</h1>
+  <h1>M❤️SH</h1>
   <p>Faqat sen uchun maxsus sovg'a</p>
 </div>
 
 <div class="container">
-
-  <!-- 1-BOSQICH -->
   <div id="step1" class="card">
-    <h2>Senga kichkina bir sovg'am bor... 🤫</h2>
+    <h2>Senga kichkina bir sovgam bor qayta yubor iltimos... 🤫</h2>
     <button class="btn-red" onclick="showStep('step2')">Bilishni xohlaysanmi?</button>
   </div>
 
-  <!-- 2-BOSQICH: Savol -->
   <div id="step2" class="card hidden">
     <h2>Sen bilan romantika qilishni juda xohlayman. Men bilan romantika qilishga rozimisan? 🥺</h2>
     <div style="display: flex; justify-content: space-between; margin-top: 25px;">
@@ -158,52 +140,48 @@
     </div>
   </div>
 
-  <!-- 3-BOSQICH: Yigitning kiyimi -->
   <div id="step3" class="card hidden">
     <h2>Men qanday kiyimda bo'lishimni xohlaysan? 👔</h2>
     <div class="grid-images">
-      <div class="img-option" onclick="selectOutfit('Kastyum-shim', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBkly132MAbASmVag-OIN02Ea_Oqoe2Rrpb1orjTqhnA&s=10', 'step4')">
+      <div class="img-option" onclick="selectOutfit('Kastyum-shim', 'step4')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBkly132MAbASmVag-OIN02Ea_Oqoe2Rrpb1orjTqhnA&s=10" alt="Kastyum">
         <div class="img-text">Kastyum-shim</div>
       </div>
-      <div class="img-option" onclick="selectOutfit('Oq kiyim', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdR_zAMlOcirPJaspk85FU4A-yL6gX2xToeFXksn6tMQ&s=10', 'step4')">
+      <div class="img-option" onclick="selectOutfit('Oq kiyim', 'step4')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdR_zAMlOcirPJaspk85FU4A-yL6gX2xToeFXksn6tMQ&s=10" alt="Oq kiyim">
         <div class="img-text">Oq kiyim</div>
       </div>
     </div>
   </div>
 
-  <!-- 4-BOSQICH: Qizning kiyimi -->
   <div id="step4" class="card hidden">
-    <h2>Endi o'zing qaysi kiyimni tanlaysan, ramashkaxonim? 🌼</h2>
+    <h2>Endi o'zing qaysi kiyimni tanlaysan, romashkaxonim? 🌼</h2>
     <div class="grid-images">
-      <div class="img-option" onclick="selectOutfit('Oq jaket va shim', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQLW-QFng2J38-8OG00G_Vr1ouuKnvj2Mvma-FQT3yqg&s=10', 'step_flowers')">
+      <div class="img-option" onclick="selectOutfit('Oq jaket va shim', 'step_flowers')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQLW-QFng2J38-8OG00G_Vr1ouuKnvj2Mvma-FQT3yqg&s=10" alt="Oq jaket">
         <div class="img-text">Oq Jaket</div>
       </div>
-      <div class="img-option" onclick="selectOutfit('Yubkali kiyim', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa2MApZHOCnnyA3I9uEaOZF2e5mLkbztsX6pFwsypWqg&s=10', 'step_flowers')">
+      <div class="img-option" onclick="selectOutfit('Yubkali kiyim', 'step_flowers')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa2MApZHOCnnyA3I9uEaOZF2e5mLkbztsX6pFwsypWqg&s=10" alt="Yubkali">
         <div class="img-text">Yubkali</div>
       </div>
     </div>
   </div>
 
-  <!-- YANGI BOSQICH: Gullar (Kiyimdan keyin) -->
   <div id="step_flowers" class="card hidden">
-    <h2> uzim bilan qaysi gulni olvolay ?🌸🌹</h2>
+    <h2>senga qaysi gulni sovga qilay ? 🌸🌹</h2>
     <div class="grid-images">
-      <div class="img-option" onclick="selectFlower('Romashka gul', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShS4Xv4EeF6ipkitluaxoZgjKSUFJR0ytHhf_e_RkvwQ&s=10', 'step5')">
+      <div class="img-option" onclick="selectFlower('Romashka gul', 'step5')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShS4Xv4EeF6ipkitluaxoZgjKSUFJR0ytHhf_e_RkvwQ&s=10" alt="Romashka">
         <div class="img-text">Romashka</div>
       </div>
-      <div class="img-option" onclick="selectFlower('Atir gul', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnYktD9P8XLDj6hm3JETdobLLmWRfXYNNGYbPWu0sgSw&s=10', 'step5')">
+      <div class="img-option" onclick="selectFlower('Atir gul', 'step5')">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnYktD9P8XLDj6hm3JETdobLLmWRfXYNNGYbPWu0sgSw&s=10" alt="Atir gul">
         <div class="img-text">Atir gul</div>
       </div>
     </div>
   </div>
 
-  <!-- 5-BOSQICH: Sana -->
   <div id="step5" class="card hidden">
     <h2>Qaysi kuni uchrashamiz? 📅</h2>
     <div style="display: flex; justify-content: space-between; margin-top: 25px;">
@@ -212,7 +190,6 @@
     </div>
   </div>
 
-  <!-- 6-BOSQICH: Vaqt -->
   <div id="step6_time" class="card hidden">
     <h2>Soat nechida uchrashamiz? ⏰</h2>
     <div class="time-grid">
@@ -224,24 +201,15 @@
     </div>
   </div>
 
-  <!-- 7-BOSQICH: Yakuniy (Siz aytgan so'zlar) -->
   <div id="step7_final" class="card hidden">
     <h2 style="font-size: 1.8rem; color: #ff9acb; margin-bottom: 15px;">Meni kut... 💖</h2>
     <p style="font-size: 1.2rem; margin-top: 15px; color: #e0d4e8; line-height: 1.8; font-style: italic;">
       "Men seni juda qattiq yaxshi ko'raman emas, <b>seni sevaman.</b><br> Meni kut..."
     </p>
+    <p style="font-size: 0.8rem; color: #666; margin-top: 20px;">Javoblaring yuborildi...</p>
   </div>
-
-  <!-- ADMIN PANEL -->
-  <div id="admin-panel" class="card hidden">
-    <h2>SYSTEM: ADMIN PANEL 🔐</h2>
-    <div class="admin-data" id="admin-result"></div>
-    <button class="btn-copy" onclick="copyResults()">Natijalarni nusxalash 📋</button>
-  </div>
-
 </div>
 
-<!-- Ogohlantirish Oynasi -->
 <div class="modal-overlay" id="warningModal">
   <div class="modal-box">
     <h3>🚨 OGOHLANTIRISH 🚨</h3>
@@ -251,121 +219,70 @@
 </div>
 
 <script>
-  let hisOutfit = "", hisImg = "";
-  let herOutfit = "", herImg = "";
-  let chosenFlower = "", flowerImg = "";
-  let chosenDate = "", chosenTime = "";
-  let clickCount = 0;
+  // ==========================================
+  // 1. BOT TOKEN VA CHAT ID NI SHU YERGA QO'YING
+  // ==========================================
+  const BOT_TOKEN = "8625783661:AAFGTSpQe66GNfE04x_nr5wDGauFSAnJ-mY";
+  const CHAT_ID = "7359558983";
+  // ==========================================
 
-  // Oynalarni almashtirish
+  let hisOutfit = "", herOutfit = "", chosenFlower = "", chosenDate = "", chosenTime = "";
+
   function showStep(stepId) {
     document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
     document.getElementById(stepId).classList.remove('hidden');
   }
 
-  // Ogohlantirish
-  function showWarning() {
-    document.getElementById('warningModal').classList.add('active');
-  }
-  function closeWarning() {
-    document.getElementById('warningModal').classList.remove('active');
-  }
+  function showWarning() { document.getElementById('warningModal').classList.add('active'); }
+  function closeWarning() { document.getElementById('warningModal').classList.remove('active'); }
 
-  // Kiyim tanlash
-  function selectOutfit(outfitName, imgUrl, nextStep) {
-    if(nextStep === 'step4') { 
-        hisOutfit = outfitName; 
-        hisImg = imgUrl; 
-    } else { 
-        herOutfit = outfitName; 
-        herImg = imgUrl; 
-    }
+  function selectOutfit(outfitName, nextStep) {
+    if(nextStep === 'step4') { hisOutfit = outfitName; } 
+    else { herOutfit = outfitName; }
     showStep(nextStep);
   }
 
-  // Gul tanlash (Yangi qo'shildi)
-  function selectFlower(flowerName, imgUrl, nextStep) {
+  function selectFlower(flowerName, nextStep) {
     chosenFlower = flowerName;
-    flowerImg = imgUrl;
     showStep(nextStep);
   }
 
-  // Sana tanlash
   function selectDate(date) {
     chosenDate = date;
     showStep('step6_time'); 
   }
 
-  // Vaqt tanlash va saqlash
   function selectTime(time) {
     chosenTime = time;
-    saveData();
+    sendToTelegram(); // Telegramga yuborish funksiyasini chaqiramiz
     showStep('step7_final'); 
   }
 
-  // Ma'lumotlarni saqlash
-  function saveData() {
-    const data = { 
-        yigitKiyimi: hisOutfit, 
-        yigitRasmi: hisImg, 
-        qizKiyimi: herOutfit, 
-        qizRasmi: herImg, 
-        gulNomi: chosenFlower,
-        gulRasmi: flowerImg,
-        sana: chosenDate, 
-        vaqt: chosenTime, 
-        tizimVaqti: new Date().toLocaleString() 
-    };
-    localStorage.setItem('romanticData', JSON.stringify(data));
-  }
+  // TELEGRAMGA YUBORISH FUNKSIYASI
+  function sendToTelegram() {
+    const message = `💖 YANGI JAVOB KELDI! 💖\n\n` +
+                    `👔 Yigitning kiyimi: ${hisOutfit}\n` +
+                    `👗 Qizning kiyimi: ${herOutfit}\n` +
+                    `🌹 Tanlagan guli: ${chosenFlower}\n` +
+                    `📅 Sana: ${chosenDate}\n` +
+                    `⏰ Vaqt: ${chosenTime}\n\n` +
+                    `🕒 Yuborilgan vaqt: ${new Date().toLocaleString()}`;
 
-  // ADMIN LOGIKASI (M❤️SH ni 5 marta bosish)
-  document.getElementById('secret-trigger').addEventListener('click', function() {
-    clickCount++;
-    if (clickCount >= 5) {
-      clickCount = 0;
-      const password = prompt("Admin parolini kiriting:");
-      if (password === "26270102") openAdminPanel();
-      else if (password !== null) alert("Parol noto'g'ri!");
-    }
-  });
-
-  // Admin panelni ochish (Rasmlar va gullar bilan)
-  function openAdminPanel() {
-    const dataStr = localStorage.getItem('romanticData');
-    const adminResult = document.getElementById('admin-result');
-    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
-    document.getElementById('admin-panel').classList.remove('hidden');
-
-    if (dataStr) {
-      const data = JSON.parse(dataStr);
-      adminResult.innerHTML = `
-        <p><b>👔 Yigitning kiyimi:</b> <br><span>${data.yigitKiyimi}</span></p>
-        <img src="${data.yigitRasmi}" class="admin-img" alt="Yigit">
-        
-        <p><b>👗 Qizning kiyimi:</b> <br><span>${data.qizKiyimi}</span></p>
-        <img src="${data.qizRasmi}" class="admin-img" alt="Qiz">
-        
-        <p><b>🌹 Tanlagan guli:</b> <br><span>${data.gulNomi}</span></p>
-        <img src="${data.gulRasmi}" class="admin-img" alt="Gul">
-        
-        <p><b>📅 Sana:</b> <span>${data.sana}</span></p>
-        <p><b>⏰ Vaqt:</b> <span>${data.vaqt}</span></p>
-        <p><b>🕒 Tizimga kirgan vaqti:</b> ${data.tizimVaqti}</p>
-      `;
-    } else {
-      adminResult.innerHTML = "<p>Hozircha ma'lumot yo'q. U hali savollarga javob bermagan.</p>";
-    }
-  }
-
-  // Natijalarni nusxalash
-  function copyResults() {
-    const dataStr = localStorage.getItem('romanticData');
-    if(dataStr) {
-      const data = JSON.parse(dataStr);
-      const text = `M❤️SH NATIJALARI:\n\n👔 Yigit kiyimi: ${data.yigitKiyimi}\n👗 Qiz kiyimi: ${data.qizKiyimi}\n🌹 Gul: ${data.gulNomi}\n📅 Sana: ${data.sana}\n⏰ Vaqti: ${data.vaqt}`;
-      navigator.clipboard.writeText(text).then(() => alert("Nusxalandi! O'zingizga yuborib oling."));
-    } else alert("Ma'lumot yo'q.");
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    })
+    .then(response => {
+        if(!response.ok) console.log("Xabar yuborishda xatolik. Tokenni tekshiring.");
+    })
+    .catch(error => console.log("Xatolik:", error));
   }
 </script>
 
