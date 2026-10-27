@@ -1,481 +1,261 @@
 <!DOCTYPE html>
-<html lang="uz" class="dark">
+<html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omad Tour - Elite Service Hub</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#6366f1',
-                        accent: '#a855f7',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .icon-3d {
-            filter: drop-shadow(0 10px 15px rgba(99, 102, 241, 0.4));
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .icon-3d:hover {
-            transform: translateY(-8px) scale(1.08);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sen uchun 💖</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body {
+    min-height: 100vh; background: radial-gradient(circle at top, #2b0a3d, #0b0014 60%, #000);
+    color: #fff; display: flex; flex-direction: column; align-items: center;
+    padding: 20px; overflow-x: hidden;
+  }
+  .header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
+  .header h1 { font-size: 2rem; background: linear-gradient(90deg, #ff9acb, #ffd6e8, #c084fc); -webkit-background-clip: text; color: transparent; cursor: pointer; user-select: none; }
+  .header p { color: #ffe6f2; font-size: 1.2rem; margin-top: 10px; }
+  
+  .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+  .hidden { display: none !important; }
+  
+  .card {
+    background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 20px;
+    padding: 25px; width: 100%; text-align: center;
+    box-shadow: 0 0 40px rgba(255, 80, 160, 0.2);
+  }
+  .card h2 { font-size: 1.4rem; margin-bottom: 20px; color: #ffd6e8; }
+
+  button {
+    padding: 14px 28px; border: none; border-radius: 999px;
+    font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+  }
+  .btn-red { background: linear-gradient(135deg, #ff4d94, #ff004c); color: white; box-shadow: 0 8px 25px rgba(255, 0, 76, 0.4); }
+  .btn-red:hover { transform: scale(1.05); }
+  
+  .btn-yes { background: linear-gradient(135deg, #10b981, #059669); color: white; width: 45%; }
+  .btn-no { background: #4b5563; color: white; width: 45%; }
+
+  .grid-images { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+  .img-option {
+    background: rgba(255,255,255,0.1); border-radius: 15px; padding: 10px;
+    cursor: pointer; transition: 0.3s; border: 2px solid transparent;
+  }
+  .img-option:hover { border-color: #ff9acb; background: rgba(255,255,255,0.2); transform: translateY(-5px); }
+  .img-option img { width: 100%; border-radius: 10px; height: 200px; object-fit: cover; }
+  .img-option p { margin-top: 10px; font-size: 0.9rem; color: #ffe6f2; font-weight: bold; }
+
+  /* Admin Panel */
+  #admin-panel { background: #111; border: 1px solid #ff4d94; }
+  #admin-panel h2 { color: #ff4d94; }
+  .admin-data { text-align: left; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-top: 15px; font-family: monospace; }
+  .admin-data p { margin-bottom: 8px; }
+  .btn-copy { background: #3b82f6; color: white; margin-top: 15px; width: 100%; }
+
+  /* Floating Hearts */
+  .heart { position: absolute; bottom: -50px; font-size: 20px; animation: float linear infinite; opacity: 0.8; pointer-events: none; }
+  @keyframes float { to { transform: translateY(-115vh) rotate(360deg); opacity: 0; } }
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+<body>
 
-    <!-- 1. MAJBURIY AVTORIZATSIYA EKRANI -->
-    <div id="authGate" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900/90 border border-slate-800/80 backdrop-blur-2xl rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-indigo-500/10 text-center relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-600/20 rounded-full blur-3xl"></div>
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-600/30 icon-3d">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-            </div>
-            <h2 id="authGateTitle" class="text-2xl font-extrabold mb-2 text-white">Omad Tour Xizmatiga Xush Kelibsiz</h2>
-            <p id="authGateDesc" class="text-slate-400 text-sm mb-6">Tizimga kirish va shaxsiy ma'lumotlaringizni ko'rish uchun telefon raqamingizni kiriting.</p>
-            
-            <form onsubmit="handleInitialAuth(event)" class="space-y-4 text-left">
-                <div>
-                    <label id="phoneInputLabel" class="block text-xs font-semibold uppercase text-slate-400 mb-2">Telefon raqam</label>
-                    <input type="tel" id="gatePhone" required placeholder="+998 90 123 45 67" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-indigo-500 transition-all font-medium">
-                </div>
-                <button type="submit" id="gateSubmitBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition-all">Tizimga Kirish</button>
-            </form>
-        </div>
+<div class="header">
+  <!-- Admin panelni ochish uchun shu yozuvni 5 marta bosing -->
+  <h1 id="secret-trigger">M❤️SH</h1>
+  <p>Sevgilim shaxzoda, senga savolim bor...</p>
+</div>
+
+<div class="container">
+
+  <!-- 1-BOSQICH: Qizil knopka -->
+  <div id="step1" class="card">
+    <h2>Menga ustimdan bosishing kerak 😉</h2>
+    <button class="btn-red" onclick="showStep('step2')">( ustiga bos )</button>
+  </div>
+
+  <!-- 2-BOSQICH: Savol -->
+  <div id="step2" class="card hidden">
+    <h2>Sen bilan romantika qilishni juda xohlayman. Men bilan romantika qilishga rozimisan? 🥺👉👈</h2>
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+      <button class="btn-yes" onclick="showStep('step3')">Roziman ❤️</button>
+      <button class="btn-no" id="no-btn" onclick="rejectRomantic()">Yo'q, rozimasman 💔</button>
     </div>
+  </div>
 
-    <!-- MAIN APP CONTENT -->
-    <div id="mainApp" class="hidden flex flex-col min-h-screen">
-        
-        <!-- HEADER / NAVIGATION -->
-        <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-                <!-- Logo & Brand -->
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 icon-3d">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-400 bg-clip-text text-transparent">OMAD TOUR</span>
-                        <span class="block text-xs font-medium text-indigo-400 tracking-wider">SECURE CLIENT PORTAL</span>
-                    </div>
-                </div>
-
-                <!-- Controls & User Info -->
-                <div class="flex items-center gap-4">
-                    <!-- Language Selector -->
-                    <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-800 border border-slate-700 text-sm rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500 transition-all cursor-pointer">
-                        <option value="uz">O'zbekcha</option>
-                        <option value="ru">Русский</option>
-                        <option value="en">English</option>
-                        <option value="tk">Türkmençe</option>
-                    </select>
-
-                    <!-- Client Profile / Logout -->
-                    <div class="flex items-center gap-3 bg-slate-800/80 border border-slate-700/80 px-4 py-2 rounded-xl">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span id="currentUserDisplay" class="text-sm font-semibold text-white"></span>
-                        <button onclick="logout()" class="text-xs text-rose-400 hover:text-rose-300 ml-2 font-medium">Chiqish</button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- MAIN HERO & SERVICES -->
-        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-            <!-- Hero Section -->
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h1 id="heroTitle" class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-white via-indigo-200 to-purple-400 bg-clip-text text-transparent">
-                    Professional Xizmatlar Markazi
-                </h1>
-                <p id="heroDesc" class="text-slate-400 text-lg leading-relaxed">
-                    Barcha buyurtma va so'rovlaringiz to'g'ridan-to'g'ri Telegram botimiz orqali tezkor ko'rib chiqiladi.
-                </p>
-            </div>
-
-            <!-- Services Grid with 3D SVG Icons -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                <!-- 1. Aviabilet -->
-                <div onclick="selectService('aviabilet')" class="group relative bg-slate-900/80 border border-slate-800/80 hover:border-indigo-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 cursor-pointer overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-6 icon-3d">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                    </div>
-                    <h3 id="srv1Title" class="text-xl font-bold mb-2 text-slate-100">Aviabilet</h3>
-                    <p id="srv1Desc" class="text-slate-400 text-sm leading-relaxed">Istalgan yo'nalishga eng qulay biletlarni bron qilish va botga yuborish.</p>
-                </div>
-
-                <!-- 2. Uzviza Javobi (Barcode Scanner with Image) -->
-                <div onclick="selectService('viza')" class="group relative bg-slate-900/80 border border-slate-800/80 hover:border-purple-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 cursor-pointer overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-6 icon-3d">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    </div>
-                    <h3 id="srv2Title" class="text-xl font-bold mb-2 text-slate-100">Uzb Vizasi & Barcode</h3>
-                    <p id="srv2Desc" class="text-slate-400 text-sm leading-relaxed">Pasport rasmini yuklang, shtrix-kod avtomatik aniqlanib tekshiriladi.</p>
-                </div>
-
-                <!-- 3. Notarial Xizmat -->
-                <div onclick="selectService('notarius')" class="group relative bg-slate-900/80 border border-slate-800/80 hover:border-emerald-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 cursor-pointer overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-6 icon-3d">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    </div>
-                    <h3 id="srv3Title" class="text-xl font-bold mb-2 text-slate-100">Notarial Xizmat</h3>
-                    <p id="srv3Desc" class="text-slate-400 text-sm leading-relaxed">Hujjatlarni tarjima qilish va notarius tasdigi uchun so'rov yuborish.</p>
-                </div>
-
-                <!-- 4. Call Sentr & Yordam -->
-                <div onclick="selectService('support')" class="group relative bg-slate-900/80 border border-slate-800/80 hover:border-amber-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-amber-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-6 icon-3d">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636l3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    </div>
-                    <h3 id="srv4Title" class="text-xl font-bold mb-2 text-slate-100">Call Sentr & Yordam</h3>
-                    <p id="srv4Desc" class="text-slate-400 text-sm leading-relaxed">24/7 operatorlar bilan bog'lanish va shoshilinch bildirishnomalar olish.</p>
-                </div>
-            </div>
-
-            <!-- DYNAMIC WORKSPACE PANEL -->
-            <div id="workspacePanel" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 mb-16 hidden shadow-2xl relative">
-                <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4">
-                    <h2 id="workspaceTitle" class="text-2xl font-bold text-indigo-400">Xizmatni tanlang</h2>
-                    <button onclick="closeWorkspace()" class="text-slate-400 hover:text-white text-sm bg-slate-800 px-3 py-1.5 rounded-xl transition-all">✕ Yopish</button>
-                </div>
-                <div id="workspaceContent">
-                    <!-- Dinamik forma contenti -->
-                </div>
-            </div>
-
-            <!-- MIJOZNING SHAXSIY JAVOB VA BILDIRISHNOMA KABINETI -->
-            <div class="bg-slate-900/50 border border-slate-800/80 rounded-3xl p-6 sm:p-8">
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 id="notifTitle" class="text-xl font-bold text-slate-100">Mening Bildirishnomalarim & Telegram Javoblarim</h3>
-                        <p id="notifDesc" class="text-slate-400 text-sm">Operatorlar va bot tomonidan sizning raqamingizga yuborgan rasmiy javoblar.</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="simulateAdminReplyPrompt()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-xl transition-all shadow-lg">📥 Admin Javobini Qo'shish</button>
-                        <button onclick="loadClientNotifications()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm px-4 py-2 rounded-xl transition-all border border-slate-700">🔄 Yangilash</button>
-                    </div>
-                </div>
-                <div id="notificationContainer" class="space-y-4">
-                    <!-- Dinamik xabarlar -->
-                </div>
-            </div>
-        </main>
-
-        <!-- FOOTER -->
-        <footer class="border-t border-slate-800 bg-slate-900/40 py-8 text-center text-sm text-slate-500">
-            <p>&copy; 2026 OMAD TOUR. Barcha huquqlar himoyalangan. Admin ID: 7359558983</p>
-        </footer>
+  <!-- 3-BOSQICH: Yigitning kiyimi -->
+  <div id="step3" class="card hidden">
+    <h2>Men qanday kiyimda bo'lishimni xohlaysan? 👔</h2>
+    <div class="grid-images">
+      <div class="img-option" onclick="selectOutfit('Oq kiyim', 'img1.jpg', 'step4')">
+        <!-- 1-RASM LINKINI O'ZINGIZNIKIGA ALMASHTIRING -->
+        <img src="https://images.unsplash.com/photo-1593030103066-0093718efeb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Oq kiyim">
+        <p>Oq kiyim</p>
+      </div>
+      <div class="img-option" onclick="selectOutfit('Kostyum-shim', 'img2.jpg', 'step4')">
+        <!-- 2-RASM LINKINI O'ZINGIZNIKIGA ALMASHTIRING -->
+        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Kostyum shim">
+        <p>Kostyum-shim</p>
+      </div>
     </div>
+  </div>
 
-    <!-- JAVASCRIPT LOGIC & TELEGRAM API BOT CONFIGURATION -->
-    <script>
-        // Xavfsiz saqlangan Telegram Bot API Tokeni va siz ko'rsatgan Admin Chat ID
-        const TELEGRAM_BOT_TOKEN = "8616201229:AAECvm032z3CQaQhRIAHgY6rCbJZopJqujI";
-        const TELEGRAM_CHAT_ID = "7359558983"; // Sizning Admin Telegram ID raqamingiz
+  <!-- 4-BOSQICH: Qizning kiyimi -->
+  <div id="step4" class="card hidden">
+    <h2>Endi sen qanday kiyimda bo'lishni xohlaysan, romashkaxonim? 🌼👗</h2>
+    <div class="grid-images">
+      <div class="img-option" onclick="selectOutfit('Oq jaket va qora yubka', 'img3.jpg', 'step5')">
+        <!-- 3-RASM LINKINI O'ZINGIZNIKIGA ALMASHTIRING -->
+        <img src="https://images.unsplash.com/photo-1515347619252-60a6bf4fffce?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Oq jaket va qora yubka">
+        <p>Oq jaket va yubka</p>
+      </div>
+      <div class="img-option" onclick="selectOutfit('Oq kostyum', 'img4.jpg', 'step5')">
+        <!-- 4-RASM LINKINI O'ZINGIZNIKIGA ALMASHTIRING -->
+        <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Oq kostyum">
+        <p>Oq kostyum</p>
+      </div>
+    </div>
+  </div>
 
-        const translations = {
-            uz: {
-                authGateTitle: "Omad Tour Xizmatiga Xush Kelibsiz",
-                authGateDesc: "Tizimga kirish va shaxsiy ma'lumotlaringizni ko'rish uchun telefon raqamingizni kiriting.",
-                phoneInputLabel: "Telefon raqam",
-                gateSubmitBtn: "Tizimga Kirish",
-                heroTitle: "Professional Xizmatlar Markazi",
-                heroDesc: "Barcha buyurtma va so'rovlaringiz to'g'ridan-to'g'ri Telegram botimiz orqali tezkor ko'rib chiqiladi.",
-                srv1Title: "Aviabilet", srv1Desc: "Istalgan yo'nalishga eng qulay biletlarni bron qilish va botga yuborish.",
-                srv2Title: "Uzb Vizasi & Barcode", srv2Desc: "Pasport rasmini yuklang, shtrix-kod avtomatik aniqlanib tekshiriladi.",
-                srv3Title: "Notarial Xizmat", srv3Desc: "Hujjatlarni tarjima qilish va notarius tasdigi uchun so'rov yuborish.",
-                srv4Title: "Call Sentr & Yordam", srv4Desc: "24/7 operatorlar bilan bog'lanish va shoshilinch bildirishnomalar olish.",
-                notifTitle: "Mening Bildirishnomalarim & Telegram Javoblarim",
-                notifDesc: "Operatorlar va bot tomonidan sizning raqamingizga yuborgan rasmiy javoblar."
-            },
-            ru: {
-                authGateTitle: "Добро пожаловать в Omad Tour",
-                authGateDesc: "Введите свой номер телефона для входа в систему и просмотра личных запросов.",
-                phoneInputLabel: "Номер телефона",
-                gateSubmitBtn: "Войти в систему",
-                heroTitle: "Центр Профессиональных Услуг",
-                heroDesc: "Все ваши заказы и запросы оперативно обрабатываются через наш Telegram-бот.",
-                srv1Title: "Авиабилеты", srv1Desc: "Бронирование удобных авиабилетов и отправка в бот.",
-                srv2Title: "Виза Узб & Баркод", srv2Desc: "Загрузите фото паспорта, штрих-код распознается автоматически.",
-                srv3Title: "Нотариальные услуги", srv3Desc: "Перевод документов и отправка запроса нотариусу.",
-                srv4Title: "Колл-центр & Помощь", srv4Desc: "Круглосуточная связь с операторами и уведомления.",
-                notifTitle: "Мои уведомления и ответы из Telegram",
-                notifDesc: "Официальные ответы и статусы, отправленные операторами на ваш номер."
-            },
-            en: {
-                authGateTitle: "Welcome to Omad Tour",
-                authGateDesc: "Enter your phone number to sign in and view your personal requests.",
-                phoneInputLabel: "Phone Number",
-                gateSubmitBtn: "Sign In",
-                heroTitle: "Professional Services Center",
-                heroDesc: "All your orders and inquiries are processed instantly via our Telegram bot.",
-                srv1Title: "Airline Tickets", srv1Desc: "Book convenient flights and send directly to bot.",
-                srv2Title: "Uzb Visa & Barcode", srv2Desc: "Upload passport photo, barcode is automatically detected.",
-                srv3Title: "Notary Service", srv3Desc: "Document translation and notary consultation requests.",
-                srv4Title: "Call Center & Help", srv4Desc: "24/7 operator connection and emergency notifications.",
-                notifTitle: "My Notifications & Telegram Replies",
-                notifDesc: "Official replies and statuses sent by operators to your phone number."
-            },
-            tk: {
-                authGateTitle: "Omad Tour Hoş Geldiňiz",
-                authGateDesc: "Ulgama girmek we şahsy maglumatlaryňyzy görmek üçin telefon belgiňizi giriziň.",
-                phoneInputLabel: "Telefon belgi",
-                gateSubmitBtn: "Ulgama Girmek",
-                heroTitle: "Hünärmen Hyzmatlar Merkezi",
-                heroDesc: "Ähli sargytlaryňyz Telegram botymyz arkaly göni we çalt ýerine ýetirilýär.",
-                srv1Title: "Awtobiletler", srv1Desc: "Amatly biletleri bron etmek we bota ugratmak.",
-                srv2Title: "Özbegistan Wiza & Barcode", srv2Desc: "Pasport suratyny ýükläň, shtrix-kod awtomatik kesgitlenýär.",
-                srv3Title: "Noter Hyzmaty", srv3Desc: "Resminamalary terjime etmek we noter üçin ýüz tutmak.",
-                srv4Title: "Call-sentr & Ýardam", srv4Desc: "24/7 operator goldawy we bildirişler almak.",
-                notifTitle: "Bildirişlerim & Telegram Jogaplarym",
-                notifDesc: "Operatorlar tarapyndan siziň belgiňize iberilen resmi jogaplar."
-            }
-        };
+  <!-- 5-BOSQICH: Sana tanlash -->
+  <div id="step5" class="card hidden">
+    <h2>Qachon uchrashamiz? 📅</h2>
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+      <button class="btn-yes" onclick="selectDate('Bugun kechqurun')">Bugun kechqurun 🌙</button>
+      <button class="btn-yes" onclick="selectDate('Ertaga')">Ertaga ☀️</button>
+    </div>
+  </div>
 
-        let currentLang = 'uz';
-        let currentUser = localStorage.getItem('omad_secure_user') || null;
+  <!-- 6-BOSQICH: Yakuniy xabar -->
+  <div id="step6" class="card hidden">
+    <h2>Rahmat, sevgilim! 🥰</h2>
+    <p style="font-size: 1.2rem; margin-top: 15px;">Tez orada ko'rishamiz! Seni juda-juda yaxshi ko'raman ❤️</p>
+  </div>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (currentUser) {
-                document.getElementById('authGate').classList.add('hidden');
-                document.getElementById('mainApp').classList.remove('hidden');
-                document.getElementById('currentUserDisplay').innerText = currentUser;
-                loadClientNotifications();
-            }
-            updateLanguageUI();
-        });
+  <!-- ADMIN PANEL (Yashirin) -->
+  <div id="admin-panel" class="card hidden">
+    <h2>Admin Bo'limi 🔐</h2>
+    <div class="admin-data" id="admin-result">
+      <!-- Natijalar shu yerda chiqadi -->
+    </div>
+    <button class="btn-copy" onclick="copyResults()">Natijalarni nusxalash 📋</button>
+  </div>
 
-        function changeLanguage(lang) {
-            currentLang = lang;
-            updateLanguageUI();
-        }
+</div>
 
-        function updateLanguageUI() {
-            const t = translations[currentLang];
-            document.getElementById('authGateTitle').innerText = t.authGateTitle;
-            document.getElementById('authGateDesc').innerText = t.authGateDesc;
-            document.getElementById('phoneInputLabel').innerText = t.phoneInputLabel;
-            document.getElementById('gateSubmitBtn').innerText = t.gateSubmitBtn;
-            document.getElementById('heroTitle').innerText = t.heroTitle;
-            document.getElementById('heroDesc').innerText = t.heroDesc;
-            document.getElementById('srv1Title').innerText = t.srv1Title;
-            document.getElementById('srv1Desc').innerText = t.srv1Desc;
-            document.getElementById('srv2Title').innerText = t.srv2Title;
-            document.getElementById('srv2Desc').innerText = t.srv2Desc;
-            document.getElementById('srv3Title').innerText = t.srv3Title;
-            document.getElementById('srv3Desc').innerText = t.srv3Desc;
-            document.getElementById('srv4Title').innerText = t.srv4Title;
-            document.getElementById('srv4Desc').innerText = t.srv4Desc;
-            document.getElementById('notifTitle').innerText = t.notifTitle;
-            document.getElementById('notifDesc').innerText = t.notifDesc;
-        }
+<script>
+  // O'zgaruvchilar
+  let hisOutfit = "";
+  let herOutfit = "";
+  let dateChoice = "";
+  let clickCount = 0;
 
-        function handleInitialAuth(e) {
-            e.preventDefault();
-            const phone = document.getElementById('gatePhone').value.trim();
-            if(!phone) return;
-            currentUser = phone;
-            localStorage.setItem('omad_secure_user', phone);
-            
-            document.getElementById('authGate').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            document.getElementById('currentUserDisplay').innerText = phone;
-            loadClientNotifications();
-        }
+  // Bosqichlarni ko'rsatish
+  function showStep(stepId) {
+    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
+    document.getElementById(stepId).classList.remove('hidden');
+    createHearts(); // Romantik yuraklar
+  }
 
-        function logout() {
-            localStorage.removeItem('omad_secure_user');
-            location.reload();
-        }
+  // "Yo'q" tugmasi bosilganda
+  function rejectRomantic() {
+    alert("OGOHLANTIRISH: Rozi bo'lishga majbursan! 😡❤️");
+    const noBtn = document.getElementById('no-btn');
+    noBtn.innerText = "Hazillashdim, roziman 😅";
+    noBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+    noBtn.onclick = function() { showStep('step3'); };
+  }
 
-        // Telegram Botga xabar yuborish funksiyasi (7359558983 ga boradi)
-        async function sendToTelegramBot(serviceName, details) {
-            const message = `🚨 *YANGI SO'ROV - OMAD TOUR* 🚨\n\n👤 *Mijoz Tel:* \`${currentUser}\`\n🛠 *Xizmat:* *${serviceName}*\n📝 *Tafsilotlar:* \n${details}\n\n⏱ *Vaqt:* ${new Date().toLocaleString()}`;
-            
-            try {
-                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
-                });
-            } catch(err) {
-                console.error("Telegramga yuborishda xatolik:", err);
-            }
+  // Kiyim tanlash
+  function selectOutfit(outfitName, imgName, nextStep) {
+    if(nextStep === 'step4') {
+      hisOutfit = outfitName + " (" + imgName + ")";
+    } else {
+      herOutfit = outfitName + " (" + imgName + ")";
+    }
+    showStep(nextStep);
+  }
 
-            saveClientNotification(serviceName, "So'rovingiz qabul qilindi va Telegram orqali mutaxassisga yuborildi. Tez orada javob olasiz.", "Jarayonda ⏳");
-        }
+  // Sana tanlash
+  function selectDate(date) {
+    dateChoice = date;
+    saveData();
+    showStep('step6');
+  }
 
-        function saveClientNotification(serviceName, responseText, statusBadge) {
-            let key = `omad_notifs_${currentUser}`;
-            let notifs = JSON.parse(localStorage.getItem(key)) || [];
-            notifs.unshift({
-                service: serviceName,
-                text: responseText,
-                status: statusBadge || "Javob keldi ✅",
-                time: new Date().toLocaleString()
-            });
-            localStorage.setItem(key, JSON.stringify(notifs));
-            loadClientNotifications();
-        }
+  // Ma'lumotlarni brauzer xotirasiga saqlash
+  function saveData() {
+    const data = {
+      yigitKiyimi: hisOutfit,
+      qizKiyimi: herOutfit,
+      sana: dateChoice,
+      vaqt: new Date().toLocaleString()
+    };
+    localStorage.setItem('romanticData', JSON.stringify(data));
+  }
 
-        function loadClientNotifications() {
-            if(!currentUser) return;
-            const container = document.getElementById('notificationContainer');
-            let key = `omad_notifs_${currentUser}`;
-            let notifs = JSON.parse(localStorage.getItem(key)) || [];
+  // Yashirin Admin panelni ochish (M❤️SH ni 5 marta bosish)
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    clickCount++;
+    if (clickCount >= 5) {
+      clickCount = 0;
+      const password = prompt("Admin parolini kiriting:");
+      if (password === "26270102") {
+        openAdminPanel();
+      } else if (password !== null) {
+        alert("Parol noto'g'ri!");
+      }
+    }
+  });
 
-            if(notifs.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 text-sm italic">Hozircha bildirishnomalar mavjud emas. Xizmatlardan birini tanlab so'rov yuboring.</p>`;
-                return;
-            }
+  // Admin panelni ochish va ma'lumotlarni ko'rsatish
+  function openAdminPanel() {
+    const dataStr = localStorage.getItem('romanticData');
+    const adminResult = document.getElementById('admin-result');
+    
+    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
+    document.getElementById('admin-panel').classList.remove('hidden');
 
-            container.innerHTML = '';
-            notifs.forEach(n => {
-                let badgeColor = n.status.includes('✅') ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-                container.innerHTML += `
-                    <div class="bg-slate-800/60 border border-slate-700/60 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${n.service}</span>
-                                <span class="text-xs font-medium px-2 py-0.5 rounded-md border ${badgeColor}">${n.status}</span>
-                            </div>
-                            <p class="text-slate-200 text-sm font-medium mt-2">${n.text}</p>
-                        </div>
-                        <span class="text-xs text-slate-400">${n.time}</span>
-                    </div>
-                `;
-            });
-        }
+    if (dataStr) {
+      const data = JSON.parse(dataStr);
+      adminResult.innerHTML = `
+        <p><b>👔 Yigitning kiyimi:</b> ${data.yigitKiyimi}</p>
+        <p><b>👗 Qizning kiyimi:</b> ${data.qizKiyimi}</p>
+        <p><b>📅 Uchrashuv sanasi:</b> ${data.sana}</p>
+        <p><b>⏰ Tanlagan vaqti:</b> ${data.vaqt}</p>
+      `;
+    } else {
+      adminResult.innerHTML = "<p>Hozircha hech qanday ma'lumot kiritilmagan. Qiz do'stingiz hali savollarga javob bermagan ko'rinadi.</p>";
+    }
+  }
 
-        // Admin tomonidan mijozga javob yuborishni simulyatsiya qilish (Telegram Webhook orqali ham ishlaydi)
-        function simulateAdminReplyPrompt() {
-            const replyText = prompt("Admin tomonidan yuboriladigan javob matnini kiriting:");
-            if(replyText) {
-                saveClientNotification("Admin Javobi", replyText, "Javob keldi ✅");
-                alert("Javob mijozning shaxsiy kabinetiga yuborildi!");
-            }
-        }
+  // Natijalarni nusxalash
+  function copyResults() {
+    const dataStr = localStorage.getItem('romanticData');
+    if(dataStr) {
+      const data = JSON.parse(dataStr);
+      const text = `M❤️SH dan xabar:\nYigit kiyimi: ${data.yigitKiyimi}\nQiz kiyimi: ${data.qizKiyimi}\nSana: ${data.sana}`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Natijalar nusxalandi! Endi ularni o'zingizga yuborishingiz mumkin.");
+      });
+    } else {
+      alert("Nusxalash uchun ma'lumot yo'q.");
+    }
+  }
 
-        // Xizmatni tanlash va Workspace ochish
-        function selectService(type) {
-            const panel = document.getElementById('workspacePanel');
-            const title = document.getElementById('workspaceTitle');
-            const content = document.getElementById('workspaceContent');
-            panel.classList.remove('hidden');
-            panel.scrollIntoView({ behavior: 'smooth' });
+  // Orqa fonda yuraklar uchrashi
+  function createHearts() {
+    for (let i = 0; i < 10; i++) {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = ['💖','💕','✨','💗','🌹'][Math.floor(Math.random() * 5)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDuration = (3 + Math.random() * 3) + 's';
+      h.style.fontSize = (15 + Math.random() * 25) + 'px';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 6000);
+    }
+  }
+</script>
 
-            if(type === 'aviabilet') {
-                title.innerText = "✈️ Aviabilet Bron Qilish va Botga Yuborish";
-                content.innerHTML = `
-                    <form onsubmit="submitAviabilet(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Qayerdan (Shahar)</label><input type="text" id="aviaFrom" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Tashkent"></div>
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Qayerga (Shahar)</label><input type="text" id="aviaTo" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="St. Petersburg"></div>
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Uchish sanasi</label><input type="date" id="aviaDate" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white"></div>
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Yo'lovchi F.I.O</label><input type="text" id="aviaName" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Ism Familiya"></div>
-                        <div class="sm:col-span-2 mt-2"><button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition-all text-white">Telegram Botga Yuborish</button></div>
-                    </form>
-                `;
-            } else if(type === 'viza') {
-                title.innerText = "🔍 Uzb Vizasi & Barcode (Shtrix-kod Skaner)";
-                content.innerHTML = `
-                    <form onsubmit="submitViza(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs uppercase text-slate-400 mb-1">Pasport yoki Viza Rasmini Yuklang</label>
-                            <input type="file" id="vizaFile" accept="image/*" required onchange="simulateBarcodeScan(this)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
-                        </div>
-                        <div id="barcodeResultBox" class="hidden bg-purple-950/40 border border-purple-500/30 p-4 rounded-xl">
-                            <p class="text-xs text-purple-300 font-semibold uppercase">Aniqlangan Shtrix-kod (Barcode):</p>
-                            <p id="detectedBarcodeText" class="text-lg font-mono font-bold text-white tracking-widest mt-1">OMAD-BARCODE-778921</p>
-                        </div>
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Qo'shimcha izoh</label><input type="text" id="vizaNote" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Pasport seriyasi..."></div>
-                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 font-bold py-3.5 rounded-xl shadow-lg shadow-purple-600/30 transition-all text-white">Vizani Bot Orqali Tekshirish</button>
-                    </form>
-                `;
-            } else if(type === 'notarius') {
-                title.innerText = "⚖️ Notarial Xizmat va Hujjat Tasdiqlash";
-                content.innerHTML = `
-                    <form onsubmit="submitNotarius(event)" class="space-y-4">
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Hujjat turi</label><select id="notaryType" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white"><option>Ishonchnoma</option><option>Tarjima va Notarial Tasdiق</option><option>Ariza rasmiylashtirish</option></select></div>
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Batafsil ma'lumot</label><textarea id="notaryDesc" rows="3" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Kerakli tafsilotlarni yozing..."></textarea></div>
-                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-600/30 transition-all text-white">Botga So'rov Yo'llash</button>
-                    </form>
-                `;
-            } else if(type === 'support') {
-                title.innerText = "📞 Call Sentr & Shoshilinch Yordam";
-                content.innerHTML = `
-                    <form onsubmit="submitSupport(event)" class="space-y-4">
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Murojaat mavzusi</label><input type="text" id="supTopic" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Masalan: Konsultatsiya olish"></div>
-                        <div><label class="block text-xs uppercase text-slate-400 mb-1">Xabar matni</label><textarea id="supText" rows="3" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white" placeholder="Savolingizni yozing..."></textarea></div>
-                        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 font-bold py-3.5 rounded-xl shadow-lg shadow-amber-600/30 transition-all text-white">Operatorga Yo'llash</button>
-                    </form>
-                `;
-            }
-        }
-
-        function closeWorkspace() {
-            document.getElementById('workspacePanel').classList.add('hidden');
-        }
-
-        function simulateBarcodeScan(input) {
-            if(input.files && input.files[0]) {
-                const box = document.getElementById('barcodeResultBox');
-                const textElem = document.getElementById('detectedBarcodeText');
-                box.classList.remove('hidden');
-                const randomBarcode = "UZB-BAR-" + Math.floor(100000 + Math.random() * 900000);
-                textElem.innerText = randomBarcode;
-            }
-        }
-
-        function submitAviabilet(e) {
-            e.preventDefault();
-            const details = `Qayerdan: ${document.getElementById('aviaFrom').value}\nQayerga: ${document.getElementById('aviaTo').value}\nSana: ${document.getElementById('aviaDate').value}\nYo'lovchi: ${document.getElementById('aviaName').value}`;
-            sendToTelegramBot("Aviabilet Broni", details);
-            alert("Aviabilet so'rovingiz Telegram botga yuborildi!");
-            closeWorkspace();
-        }
-
-        function submitViza(e) {
-            e.preventDefault();
-            const barcode = document.getElementById('detectedBarcodeText').innerText;
-            const details = `Shtrix-kod (Barcode): ${barcode}\nIzoh: ${document.getElementById('vizaNote').value}`;
-            sendToTelegramBot("Viza Holati & Barcode", details);
-            alert("Viza so'rovi va Barcode ma'lumotlari botga yuborildi!");
-            closeWorkspace();
-        }
-
-        function submitNotarius(e) {
-            e.preventDefault();
-            const details = `Hujjat turi: ${document.getElementById('notaryType').value}\nTafsilot: ${document.getElementById('notaryDesc').value}`;
-            sendToTelegramBot("Notarial Xizmat", details);
-            alert("Notarius so'rovingiz botga yuborildi!");
-            closeWorkspace();
-        }
-
-        function submitSupport(e) {
-            e.preventDefault();
-            const details = `Mavzu: ${document.getElementById('supTopic5').value || document.getElementById('supTopic').value}\nXabar: ${document.getElementById('supText').value}`;
-            sendToTelegramBot("Call Sentr Murojaati", details);
-            alert("Murojaatingiz operatorlarga yuborildi!");
-            closeWorkspace();
-        }
-    </script>
 </body>
 </html>
